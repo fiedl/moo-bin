@@ -275,7 +275,7 @@ detectdistro () {
 				done
 			fi
 
-			if [[ "${distro_detect}" == "archlinux" || "${distro_detect}" == "Arch Linux" || "${distro_detect}" == "arch" ]]; then
+			if [[ "${distro_detect}" == "archlinux" || "${distro_detect}" == "Arch Linux - pdq" || "${distro_detect}" == "Arch Linux" || "${distro_detect}" == "arch" ]]; then
 				distro="Arch Linux"
 				distro_release="n/a"
 			elif [[ "${distro_detect}" == "Chakra" ]]; then
@@ -488,7 +488,7 @@ detectdistro () {
 		declare -l lcase
 		lcase=$distro
 		case $lcase in
-			arch*linux*old) distro="Arch Linux - Old" ;;
+			arch*linux*pdq) distro="Arch Linux - pdq" ;;
 			arch*linux) distro="Arch Linux" ;;
 			fedora) distro="Fedora" ;;
 			mageia) distro="Mageia" ;;
@@ -578,7 +578,7 @@ detectuptime () {
 detectpkgs () {
 	pkgs="Unknown"
 	case $distro in
-		'Arch Linux'|'ParabolaGNU/Linux-libre'|'Chakra'|'Manjaro') pkgs=$(pacman -Qq | wc -l) ;;
+		'Arch Linux - pdq'|'Arch Linux'|'ParabolaGNU/Linux-libre'|'Chakra'|'Manjaro') pkgs=$(pacman -Qq | wc -l) ;;
 		'Frugalware') pkgs=$(pacman-g2 -Q | wc -l) ;;
 		'Fuduntu'|'Ubuntu'|'Mint'|'SolusOS'|'Debian'|'LMDE'|'CrunchBang'|'Peppermint'|'LinuxDeepin'|'Trisquel') pkgs=$(dpkg --get-selections | wc -l) ;;
 		'Slackware') pkgs=$(ls -1 /var/log/packages | wc -l) ;;
@@ -1284,7 +1284,7 @@ takeShot () {
 asciiText () {
 # Distro logos and ASCII outputs
 	case $distro in
-		"Arch Linux - Old")
+		"Arch Linux - pdq")
 			c1="\e[1;37m" # White
 			c2="\e[1;34m" # Light Blue
 			if [ -n "${my_lcolor}" ]; then c1="${my_lcolor}"; c2="${my_lcolor}"; fi
@@ -2131,7 +2131,7 @@ infoDisplay () {
 	[[ "$my_hcolor" ]] && textcolor="${my_hcolor}"
 	#TODO: Centralize colors and use them across the board so we only change them one place.
 	case $distro in
-		"Arch Linux - Old"|"Fedora"|"Mandriva"|"Mandrake"|"Chakra") labelcolor="\e[1;34m";;
+		"Arch Linux - pdq"|"Fedora"|"Mandriva"|"Mandrake"|"Chakra") labelcolor="\e[1;34m";;
 		"Arch Linux"|"Frugalware"|"Mageia") labelcolor="\e[1;36m";;
 		"Mint"|"LMDE"|"openSUSE"|"LinuxDeepin"|"DragonflyBSD") labelcolor="\e[1;32m";;
 		"Ubuntu"|"FreeBSD"|"Debian"|"BSD"|"Red Hat Linux"|"Peppermint"|"Cygwin"|"Fuduntu"|"NetBSD") labelcolor="\e[1;31m";;
