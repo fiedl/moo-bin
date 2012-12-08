@@ -4,9 +4,9 @@
 ## Backup installed packages
 
 ## Create main.lst remove local, base
-pacman -Qqe | grep -vx "$(pacman -Qqg base)" | grep -vx "$(pacman -Qqm)" > main.lst
+pacman -Qqe | grep -vx "$(pacman -Qqg base)" | grep -vx "$(pacman -Qqm)" | grep -vx  "$(cat $HOME/bin/backup_exclude_pkgs)" > $HOME/github/pdq/main.lst
 
 ## Create local.lst of local (includes AUR) packages installed
-pacman -Qqm | grep -vx  "$(cat $HOME/bin/backup_exclude_pkgs)" > local.lst
+pacman -Qqm | grep -vx  "$(cat $HOME/bin/backup_exclude_pkgs)" > $HOME/github/pdq/local.lst
 
 exit 0
