@@ -7,5 +7,6 @@
 pacman -Qqe | grep -vx "$(pacman -Qqg base)" | grep -vx "$(pacman -Qqm)" > main.lst
 
 ## Create local.lst of local (includes AUR) packages installed
-pacman -Qqm > local.lst
+pacman -Qqm | grep -vx  "$(cat $HOME/bin/backup_exclude_pkgs)" > local.lst
+
 exit 0
