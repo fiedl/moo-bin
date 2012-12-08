@@ -1,0 +1,11 @@
+#!/bin/sh
+## 12-02-2012 pdq
+
+## Backup installed packages
+
+## Create main.lst remove local, base
+pacman -Qqe | grep -vx "$(pacman -Qqg base)" | grep -vx "$(pacman -Qqm)" > main.lst
+
+## Create local.lst of local (includes AUR) packages installed
+pacman -Qqm > local.lst
+exit 0
