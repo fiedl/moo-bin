@@ -3,10 +3,15 @@
 
 ## Backup installed packages
 
-## Create main.lst remove local, base
+## Create main.lst remove local, base x86_64
 pacman -Qqe | grep -vx "$(pacman -Qqg base)" | grep -vx "$(pacman -Qqm)" | grep -vx  "$(cat $HOME/bin/backup_exclude_pkgs)" > $HOME/github/pdq/main.lst
 
-## Create local.lst of local (includes AUR) packages installed
+## Create local.lst of local (includes AUR) packages installed x86_64
 pacman -Qqm | grep -vx  "$(cat $HOME/bin/backup_exclude_pkgs)" > $HOME/github/pdq/local.lst
 
+## Create main.lst remove local, base i686
+pacman -Qqe | grep -vx "$(pacman -Qqg base)" | grep -vx "$(pacman -Qqm)" | grep -vx  "$(cat $HOME/bin/backup_exclude_pkgs)" | sed 's/lib32-//g' | sed 's/-multilib//g' > $HOME/github/pdq/main-i686.lst
+
+## Create local.lst of local (includes AUR) packages installed i686
+pacman -Qqm | grep -vx  "$(cat $HOME/bin/backup_exclude_pkgs)" | sed 's/lib32-//g' | sed 's/-multilib//g' > $HOME/github/pdq/local-i686.lst
 exit 0
