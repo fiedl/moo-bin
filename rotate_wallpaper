@@ -3,7 +3,7 @@
 shopt -s nullglob
  
 cd ~/Pictures/wallpaper
-#cd ~/Pictures/adultpaper
+#cd ~/Pictures/nsfwpaper
 
 while true; do
 	files=()
