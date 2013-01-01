@@ -1,6 +1,15 @@
-#!/bin/bash
+#!/bin/sh
+
+if pidof -x dropboxd > /dev/null ; then
+	echo
+else
+	dropboxd &
+	sleep 10s
+fi
 
 IMAGEPATH=Dropbox/Public/$(date +%m%d%S).png && scrot $IMAGEPATH && dropbox puburl $IMAGEPATH | xclip
+notify-send "Screenshot Done" "URL copied to clipboard $IMAGEPATH"
+
 # # API Key provided by Alan@imgur.com
 # . /media/truecrypt1/private/imgur_api
 # apikey=$imgur_api
