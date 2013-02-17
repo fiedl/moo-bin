@@ -1,0 +1,16 @@
+#!/bin/bash
+
+function echo {
+  /bin/echo `date` $* | tee -a ~/checksite.log
+}
+
+URL="https://duckdfuckgo.com/"
+
+while :
+do
+	resp=$(curl --write-out "%{http_code}\n" --silent --output /dev/null "$URL")
+	if [ $resp != "200" ]; then
+		echo "$resp"
+	fi
+	sleep 5s
+done
