@@ -48,7 +48,8 @@
           if [ ${#SLEEP} -gt 0 ]; then
             sleep $SLEEP
           fi
-          #sudo vlc $DEST_DIR/$TR_TORRENT_NAME.* --playlist-enqueue
+          
+          #vlc "$DEST_DIR/$TR_TORRENT_NAME.*" --playlist-enqueue
           #transmission-remote -n $TR_USERNAME:$TR_PASSWORD -t$TR_TORRENT_ID --remove-and-delete
         fi
         echo $NOW "Unrarred $TR_TORRENT_NAME" >> $LOG_FILE
