@@ -1,0 +1,24 @@
+#!/bin/bash
+## usage: check_url URL
+
+curl_cmd=$([ "$3" == "noproxy" ] && echo "curl -s -o" || echo "torsocks curl -s -o")
+amt=${2:-10}
+
+function check {
+	if [ $? -ne 0 ] ; then
+		echo "Error occurred getting URL $1: rechecking in $amt"
+	elif [ $? -eq 6 ]; then
+		echo "Unable to resolve host: rechecking in $amt"
+	elif [ $? -eq 7 ]; then
+		echo "Unable to connect to host: rechecking in $amt"
+	else
+		echo "URL is up: rechecking in $amt"
+	fi
+}
+
+while true
+do
+	$curl_cmd "/dev/null" $1
+	check
+	sleep $amt
+done
