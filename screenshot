@@ -1,11 +1,3 @@
 #!/bin/sh
-
-# if pidof -x dropboxd > /dev/null ; then
-# 	echo
-# else
-# 	dropboxd &
-# 	sleep 10s
-# fi
-sleep 3s
-IMAGEPATH=Dropbox/Public/$(date +%m%d%S).png && scrot $IMAGEPATH && dropbox puburl $IMAGEPATH | xclip
+IMAGEPATH=Dropbox/Public/$(date +%m%d%S).png && scrot -cd 3 $IMAGEPATH && dropbox puburl $IMAGEPATH | xclip
 notify-send "Screenshot Done" "URL copied to clipboard $IMAGEPATH"
