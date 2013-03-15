@@ -1,19 +1,28 @@
 #!/bin/sh
 case "${1:-''}" in
 'start')
-systemctl start httpd
-systemctl start mysqld
-/usr/bin/memcached -d -m 512 -l 127.0.0.1 -p 11211 -u nobody
+sudo systemctl start httpd
 tput bold;
-echo ":: Starting Memcached Daemon                                                [DONE]"
+echo ":: Starting Apache Daemon [DONE]"
+sudo systemctl start mysqld
+tput bold;
+echo ":: Starting MySQL Daemon [DONE]"
+sudo /usr/bin/memcached -d -m 512 -l 127.0.0.1 -p 11211 -u nobody
+tput bold;
+echo ":: Starting Memcached Daemon [DONE]"
+
 ;;
 
 'stop')
-systemctl stop httpd
-systemctl stop mysqld
-killall memcached
+sudo systemctl stop httpd
 tput bold;
-echo ":: Stopping Memcached Daemon                                                [DONE]"
+echo ":: Stopping Apache Daemon [DONE]"
+sudo systemctl stop mysqld
+tput bold;
+echo ":: Stopping MySQL Daemon [DONE]"
+sudo killall memcached
+tput bold;
+echo ":: Stopping Memcached Daemon [DONE]"
 ;;
 
 'restart')
