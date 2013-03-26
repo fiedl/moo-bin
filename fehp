@@ -1,0 +1,10 @@
+#!/bin/bash
+
+images_dir="/tmp/irc_images"
+if [ $1 ]; then
+	mkdir -p $images_dir && cd $images_dir
+	torsocks wget "$1"
+	feh -xFZ
+	rm -f $images_dir/*
+	cd ~
+fi
