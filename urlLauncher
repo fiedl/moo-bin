@@ -1,0 +1,40 @@
+#!/bin/bash
+# original code by skizzhg
+
+BROWSER=firefox
+
+case "$1" in
+	-video)
+		# { xmessage -title 'Video Title' -center -timeout 11 -file - < <(clive -f mp4_360p -n "$2" 2>/dev/null | grep video); } &
+		
+		#quvi -v mute -f mp4_360p "$2" --exec "mplayer -ontop -really-quiet -cache 7777 -cache-min 11 -cache-seek-min 99 %u" > /dev/null 2>&1
+		### default version
+		#title=$(quvi -v quiet "$2" | grep page_title | cut -d \" -f4)
+		#quvi -v mute -f mp4_360p "$2" --exec "mplayer -title \"$title\" -ontop -really-quiet -cache 7777 -cache-min 11 -cache-seek-min 99 %u" > /dev/null 2>&1
+		### File Descriptor version
+		exec 3< <(quvi -v quiet -f mp4_720p "$2" | grep -E '"page_title"|"url"')
+		title=$(read -u 3 line; printf "$line" | cut -d \" -f4)
+		url=$(read -u 3 line; printf '%b' "$line" | cut -d \" -f4)
+		mplayer -title "$title" -ontop -really-quiet -cache 7777 -cache-min 11 -cache-seek-min 99 "$url" < /dev/null &
+		exec 3>&-
+		;;
+	-audio)
+		#screen -S fugu -X screen -t uLplay 19 mplayer -cache 1111 "$2"
+		# tmux new-window -n uLplay -t fugu:19 "mplayer -cache 1111 \"$2\"" ### for tmux users
+		xterm -e mplayer -cache 1111 "$2"  ### for non-screen users
+		;;
+	-image)
+		img=$(torsocks wget "$2" --spider -o /dev/stdout | grep '\[image/')
+		if [[ -n "$img" ]]; then
+			feh -xZF "$2"
+		else
+			$BROWSER "$2" &>/dev/null
+		fi
+		;;
+	-www)
+		$BROWSER "$2" &>/dev/null
+		;;
+	*)
+		$BROWSER "$1" &>/dev/null
+		;;
+esac
