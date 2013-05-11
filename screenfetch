@@ -5,7 +5,7 @@
 # Script to fetch system and theme settings for screenshots in most mainstream
 # Linux distributions.
 
-# Copyright (c) 2010-2012 Brett Bohnenkamper < kittykatt AT kittykatt DOT us >
+# Copyright (c) 2010-2012 Brett Bohnenkamper < kittykatt AT archlinux DOT us >
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 # and associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -26,7 +26,7 @@
 # to put forth suggestions/ideas. Thank you.
 #
 
-scriptVersion="2.8.0"
+scriptVersion="2.8.1"
 
 ######################
 # Settings for fetcher
@@ -177,13 +177,17 @@ while getopts ":hsmevVntlS:D:o:Bc:" flags; do
 			echo -e "   ${bold}-s(m)${c0}              Using this flag tells the script that you want it"
 			echo -e "		      to take a screenshot. Use the -m flag if you would like"
 			echo -e "		      to move it to a new location afterwards."
-			echo -e "   ${bold}-B${c0}                 Enable background detection."
+			#echo -e "   ${bold}-B${c0}                 Enable background detection."
 			echo -e "   ${bold}-e${c0}                 When this flag is specified, screenFetch will attempt"
 			echo -e "		      to export all of your theme settings and archive them"
 			echo -e "		      up for uploading."
-			echo -e "   ${bold}-l${c0}                 Specify that you have a light background. This turns"
-			echo -e "		      all white text into dark gray text (in ascii logos and"
-			echo -e "		      in information output)."
+			#echo -e "   ${bold}-l${c0}                 Specify that you have a light background. This turns"
+			#echo -e "		      all white text into dark gray text (in ascii logos and"
+			#echo -e "		      in information output)."
+			echo -e "   ${bold}-c string${c0}          You may change the outputted colors with -c. The format is"
+			echo -e "                      as follows: [0-9][0-9],[0-9][0-9]. The first argument controls the ASCII"
+			echo -e "                      logo colors and the label colors. The second argument controls the colors"
+			echo -e "                      of the information found. One argument may be used without the other."
 			echo -e "   ${bold}-S 'COMMAND'${c0}       Here you can specify a custom screenshot command for"
 			echo -e "		      the script to execute. Surrounding quotes are required."
 			echo -e "   ${bold}-D 'DISTRO'${c0}        Here you can specify your distribution for the script"
@@ -344,7 +348,7 @@ detectdistro () {
 					distro_codename=null
 					distro_release=null
 				fi
-			elif [[ "${distro_detect}" == "SUSE LINUX" ]]; then
+			elif [[ "${distro_detect}" == "SUSE LINUX" || "${distro_detect}" == "openSUSE project" ]]; then
 				distro="openSUSE"
 			elif [[ "${distro_detect}" == "ParabolaGNU/Linux-libre" ]]; then
 				distro="ParabolaGNU/Linux-libre"
@@ -498,6 +502,22 @@ detectdistro () {
 					}' /etc/issue)
 				fi
 			fi
+			if [[ "${distro}" == "Unknown" ]] && [[ "${OSTYPE}" == "linux-gnu" || "${OSTYPE}" == "linux" ]]; then
+				if [[ -f /etc/system-release ]]; then
+					distro=$(awk 'BEGIN {
+						distro = "Unknown"
+					}
+					{
+						if ($0 ~ /"Scientific\ Linux"/) {
+							distro = "Scientific Linux"
+							exit
+						}
+					} END {
+						print distro
+					}' /etc/system-release)
+				fi
+			fi
+
 
 
 		fi
@@ -563,10 +583,10 @@ detectuptime () {
 		boot=`sysctl -n kern.boottime | cut -d "=" -f 2 | cut -d "," -f 1`
 		now=`date +%s`
 		uptime=$(($now-$boot))
-	elif [ "$distro" == "FreeBSD" ]; then
-		uptime=`sysctl -n kern.boottime | awk -F' ' '{print $4}' | tr -d ","`
-		now=`date +%s`
-		uptime=$(($now-$uptime))
+	elif [[ "${distro}" == "FreeBSD" || "${distro}" == "OpenBSD" ]]; then
+		boot=$(sysctl -n kern.boottime)
+		now=$(date +%s)
+		uptime=$((${now} - ${boot}))
 	else
 		if [[ -f /proc/uptime ]]; then
 			uptime=$(</proc/uptime)
@@ -777,7 +797,7 @@ detectshell () {
 		shell_type=$(ps -p $(ps -p $PPID -o pid | tail -1) -o args| tail -1)
 		shell_type=${shell_type/-}
 		shell_type=${shell_type//*\/}
-	elif [[ "${distro}" == "FreeBSD" ]]; then
+	elif [[ "${distro}" == "FreeBSD" || "${distro}" == "OpenBSD" ]]; then
 		shell_type=$(ps -p $(ps -p $PPID -o pid | tail -1) -o args| tail -1)
 		shell_type=${shell_type/-}
 		shell_type=${shell_type//*\/}
@@ -827,7 +847,7 @@ detectres () {
 			xResolution=$(xdpyinfo | sed -n 's/.*dim.* \([0-9]*x[0-9]*\) .*/\1/pg' | sed ':a;N;$!ba;s/\n/ /g')
 		fi
 	elif [[ ${distro} == "Mac OS X" ]]; then
-		xResolution=$(system_profiler SPDisplaysDataType | awk '/Resolution:/ {print $2"x"$4}')
+		xResolution=$(system_profiler SPDisplaysDataType | awk '/Resolution:/ {print $2"x"$4" "}')
 	else
 		xResolution="No X Server"
 	fi
@@ -937,6 +957,12 @@ detectde () {
 					DEver=$(mate-session --version)
 					DE="${DE} ${DEver//* }"
 				fi
+
+			elif [[ ${DE} == "Unity" ]]; then
+				if type -p unity >/dev/null 2>&1; then
+					DEver=$(unity --version)
+					DE="${DE} ${DEver//* }"
+				fi
 			fi
 		fi
 
@@ -971,6 +997,10 @@ detectwm () {
 		if type -p xprop >/dev/null 2>&1; then
 			WM=$(xprop -root _NET_SUPPORTING_WM_CHECK)
 			if [[ "$WM" =~ "not found" ]]; then
+				WM="Not Found"
+			elif [[ "$WM" =~ "invalid window id format" ]]; then
+				WM="Not Found"
+			elif [[ "$WM" =~ "no such" ]]; then
 				WM="Not Found"
 			else
 				WM=${WM//* }
@@ -1073,11 +1103,11 @@ detectwm () {
 detectwmtheme () {
 	Win_theme="Not Found"
 	case $WM in
-		'Awesome') if [ -f ${XDG_CONFIG_HOME:-${HOME}/.config}/awesome/rc.lua ]; then Win_theme="$(grep -e '^[^-].*\(theme\|beautiful\).*lua' ${XDG_CONFIG_HOME:-${HOME}/.config}/awesome/rc.lua | grep '[a-zA-Z0-9]\+/[a-zA-Z0-9]\+.lua' -o | cut -d'/' -f1)"; fi;;
+		'Awesome') if [ -f ${XDG_CONFIG_HOME:-${HOME}/.config}/awesome/rc.lua ]; then Win_theme="$(grep -e '^[^-].*\(theme\|beautiful\).*lua' ${XDG_CONFIG_HOME:-${HOME}/.config}/awesome/rc.lua | grep '[a-zA-Z0-9]\+/[a-zA-Z0-9]\+.lua' -o | cut -d'/' -f1 | head -n1)"; fi;;
 		'BlackBox') if [ -f $HOME/.blackboxrc ]; then Win_theme="$(awk -F"/" '/styleFile/ {print $NF}' $HOME/.blackboxrc)"; fi;;
 		'Beryl') Win_theme="Not Present";;
 		'Cinnamon') Win_theme="$(gsettings get org.cinnamon.theme name)";;
-		'Compiz'|'Marco'|'Mutter'*)
+		'Compiz'|'Marco'|'Mutter'*|'GNOME Shell')
 			if type -p gsettings >/dev/null 2>&1; then
 				Win_theme="$(gsettings get org.gnome.desktop.wm.preferences theme)"
 				Win_theme=${Win_theme//"'"}
@@ -1088,6 +1118,13 @@ detectwmtheme () {
 		'dminiwm') Win_theme="Not Present";;
 		'DWM') Win_theme="Not Present";;
 		'E16') Win_theme="$(awk -F"= " '/theme.name/ {print $2}' $HOME/.e16/e_config--0.0.cfg)";;
+		'E17'|'Enlightenment') 
+			if [ "$(which eet 2>/dev/null)" ]; then
+				econfig="$(eet -d $HOME/.e/e/config/standard/e.cfg config | awk '/value \"file\" string.*.edj/{ print $4 }')"
+				econfigend="${econfig##*/}"
+				Win_theme=${econfigend%.*}
+			fi
+		;;
 		#E17 doesn't store cfg files in text format so for now get the profile as opposed to theme. atyoung
 		#TODO: Find a way to extract and read E17 .cfg files ( google seems to have nothing ). atyoung
 		'E17') Win_theme=${E_CONF_PROFILE};;
@@ -1097,12 +1134,48 @@ detectwmtheme () {
 			ThemeFile="$(cygpath -u $ThemeFile)"
 			Win_theme="$(cat $ThemeFile | grep '^Path=.*$' | grep -o '[0-9A-z. ]*$' | grep -o '^[0-9A-z ]*')"
 		;;
-		'Finder') Win_theme="not present";;
+		'Finder') Win_theme="Not Present";;
 		'FluxBox'|'Fluxbox') if [ -f $HOME/.fluxbox/init ]; then Win_theme="$(awk -F"/" '/styleFile/ {print $NF}' $HOME/.fluxbox/init)"; fi;;
 		'FVWM') Win_theme="Not Present";;
 		'i3') Win_theme="Not Present";;
 		'IceWM') if [ -f $HOME/.icewm/theme ]; then Win_theme="$(awk -F"[\",/]" '!/#/ {print $2}' $HOME/.icewm/theme)"; fi;;
-		'KWin') if [ -f $HOME/.kde/share/config/kdeglobals ]; then Win_theme="$(grep '^widgetStyle' $HOME/.kde/share/config/kdeglobals | awk -F'=' '{print $2}')"; fi;;
+		'KWin'*)
+			if [[ -z $KDE_CONFIG_DIR ]]; then
+				if type -p kde5-config >/dev/null 2>&1; then
+					KDE_CONFIG_DIR=$(kde5-config --localprefix)
+				elif type -p kde4-config >/dev/null 2>&1; then
+					KDE_CONFIG_DIR=$(kde4-config --localprefix)
+				elif type -p kde-config >/dev/null 2>&1; then
+					KDE_CONFIG_DIR=$(kde-config --localprefix)
+				fi
+			fi
+
+			if [[ -n $KDE_CONFIG_DIR ]]; then
+				Win_theme=$(awk '/PluginLib=kwin3_/{gsub(/PluginLib=kwin3_/,"",$0); print $0; exit}' $KDE_CONFIG_DIR/share/config/kwinrc)
+				if [[ -z $Win_theme ]]; then
+					if [[ -f $KDE_CONFIG_DIR/share/config/kdebugrc ]]; then
+						Win_theme=$(awk '/(decoration)/ {gsub(/\[/,"",$1); print $1; exit}' $KDE_CONFIG_DIR/share/config/kdebugrc)
+						if [[ -z $Win_theme ]]; then
+							Win_theme="Not Found"
+						fi
+					else
+						Win_theme="Not Found"
+					fi
+				fi
+
+				if [[ $Win_theme != 'Not Found' ]]; then
+					if [[ ${BASH_VERSINFO[0]} -ge 4 ]]; then
+						if [[ ${BASH_VERSINFO[0]} -eq 4 && ${BASH_VERSINFO[1]} -gt 1 ]] || [[ ${BASH_VERSINFO[0]} -gt 4 ]]; then
+							Win_theme=${Win_theme^}
+						else
+							Win_theme="$(tr '[:lower:]' '[:upper:]' <<< ${Win_theme:0:1})${Win_theme:1}"
+						fi
+					else
+						Win_theme="$(tr '[:lower:]' '[:upper:]' <<< ${Win_theme:0:1})${Win_theme:1}"
+					fi
+				fi
+			fi
+		;;
 		'Metacity') if [ "`gconftool-2 -g /apps/metacity/general/theme`" ]; then Win_theme="$(gconftool-2 -g /apps/metacity/general/theme)"; fi ;;
 		'monsterwm') Win_theme="Not Present";;
 		'Musca') Win_theme="Not Present";;
@@ -1273,7 +1346,7 @@ detectgtk () {
 				fi
 
 				if grep -q icon-theme $HOME/.gtkrc-2.0; then
-					gtkIcons=$(awk -F'"' '/icon-theme/ {print $2}' $HOME/.gtkrc-2.0)
+					gtkIcons=$(awk -F'"' '/gtk-icon-theme/ {print $2}' $HOME/.gtkrc-2.0)
 				fi
 
 				if grep -q font $HOME/.gtkrc-2.0; then
@@ -1405,7 +1478,7 @@ detectdroid () {
 takeShot () {
 	if [[ -z $screenCommand ]]; then
 		if [[ "$hostshot" == "1" ]]; then
-			if [ "$distro" == "Mac OS X" ]; then screencapture -xT 3 "${shotfile}"
+			if [ "$distro" == "Mac OS X" ]; then screencapture -x -T 3 ${serverdir}${shotfile} &> /dev/null
 			else scrot -cd3 "${shotfile}"; fi
 			if [ -f "${shotfile}" ]; then
 				[[ "$verbosity" -eq "1" ]] && verboseOut "Screenshot saved at '${shotfile}'"
@@ -1415,7 +1488,7 @@ takeShot () {
 				verboseOut "ERROR: Problem saving screenshot to ${shotfile}"
 			fi
 		else
-			if [ "$distro" == "Mac OS X" ]; then screencapture -xT 3 "${shotfile}"
+			if [ "$distro" == "Mac OS X" ]; then screencapture -x -T 3 "${shotfile} 2>dev/null"
 			else scrot -cd3 "${shotfile}"; fi
 			if [ -f "${shotfile}" ]; then
 				[[ "$verbosity" -eq "1" ]] && verboseOut "Screenshot saved at '${shotfile}'"
@@ -1952,29 +2025,30 @@ asciiText () {
 
 
 		"Mageia")
-			c1="\e[1;34m" # Light Blue
-			c2="\e[0;36m" # Light Cyan
+		#	c1="\e[1;34m" # Light Blue
+			c1="\e[1;37m" # White
+		 	c2="\e[0;36m" # Light Cyan
 			if [ -n "${my_lcolor}" ]; then c1="${my_lcolor}"; c2="${my_lcolor}"; fi
 			startline="1"
-			fulloutput=("$c2             .''   "
-"$c2              '.     ..           %s"
-"$c2                    .,,.         %s"
-"$c2                 ,;;.            %s"
-"$c2                 ... ...         %s"
-"$c2              ',,'  .:::.        %s"
-"$c1            .$c2,:c,$c1    .. .        %s"
+			fulloutput=("$c2               .°°."
+"$c2                °°   .°°.         %s"
+"$c2                .°°°. °°         %s"
+"$c2                .   .            %s"
+"$c2                 °°° .°°°.       %s"
+"$c2             .°°°.   '___'       %s"
+"$c1            .${c2}'___'     $c1   .      %s"
 "$c1          :dkxc;'.  ..,cxkd;     %s"
-"$c1        .dkkxxkkkkkkkkkkxxkkd.   %s"
-"$c1       .dkko. ';cloolc;. .dkkd   %s"
-"$c1       ckkx.              .xkk;  %s"
-"$c1       xOO:                cOOd  %s"
-"$c1       xOO:                lOOd  %s"
-"$c1       lOOx.              .kOO:  %s"
-"$c1       .k00d.            .x00x   %s"
-"$c1        .k00O;          ;k00O.   %s"
-"$c1         .lO0KOdc;,,;cdO0KOc.    %s"
-"$c1            ;d0KKKKKKKK0d;         "
-"$c1               .,;::;,.            ")
+"$c1        .dkk. kkkkkkkkkk .kkd.   %s"
+"$c1       .dkk.  ';cloolc;.  .kkd   %s"
+"$c1       ckk.                .kk;  %s"
+"$c1       xO:                  cOd  %s"
+"$c1       xO:                  lOd  %s"
+"$c1       lOO.                .OO:  %s"
+"$c1       .k00.              .00x   %s"
+"$c1        .k00;            ;00O.   %s"
+"$c1         .lO0Kc;,,,,,,;c0KOc.    %s"
+"$c1            ;d00KKKKKK00d;         "
+"$c1               .,KKKK,.            ")
 		;;
 
 
@@ -2137,7 +2211,7 @@ asciiText () {
 "${c6}      \`:+oo+/:-..-:/+o+/-      %s\n")
 		;;
 
-        "Cygwin")
+        "Windows")
             c1="\e[1;31m" # Red
             c2="\e[1;32m" # Green
             c3="\e[1;36m" # Blue
@@ -2262,6 +2336,62 @@ asciiText () {
 "${c2}        uu    uu")
 		;;
 
+		"Scientific Linux")
+			c1="\033[1;34m" 
+			c2="\033[1;31m" 
+			c3="\033[1;37m" 
+			if [ -n "${my_lcolor}" ]; then c1="${my_lcolor}"; c2="${my_lcolor}"; fi
+			startline="2"
+			fulloutput=("${c1}                  =/;;/-"
+"${c1}                 +:    //"
+"${c1}                /;      /;                   %s"
+"${c1}               -X        H.                 %s"
+"${c1} .//;;;:;;-,   X=        :+   .-;:=;:;#;.   %s"
+"${c1} M-       ,=;;;#:,      ,:#;;:=,       ,@   %s"
+"${c1} :#           :#.=/++++/=.$=           #=   %s"
+"${c1}  ,#;         #/:+/;,,/++:+/         ;+.    %s"
+"${c1}    ,+/.    ,;@+,        ,#H;,    ,/+,      %s"
+"${c1}       ;+;;/= @.  ${c2}.H${c3}#${c2}#X   ${c1}-X :///+;         %s"
+"${c1}       ;+=;;;.@,  ${c3}.X${c2}M${c3}@$.  ${c1}=X.//;=#/.        %s"
+"${c1}    ,;:      :@#=        =\$H:     .+#-      %s"
+"${c1}  ,#=         #;-///==///-//         =#,    %s"
+"${c1} ;+           :#-;;;:;;;;-X-           +:   %s"
+"${c1} @-      .-;;;;M-        =M/;;;-.      -X   %s"
+"${c1}  :;;::;;-.    #-        :+    ,-;;-;:==    %s"
+"${c1}               ,X        H.                 %s"
+"${c1}                ;/      #=                  %s"
+"${c1}                 //    +;"
+"${c1}                  '////'")
+		;;
+
+		"BackTrack Linux")
+			c1="\033[1;37m" # White
+			c2="\033[1;31m" # Light Red
+			if [ -n "${my_lcolor}" ]; then c1="${my_lcolor}"; c2="${my_lcolor}"; fi
+			startline="2"
+			fulloutput=("${c1}................."
+"${c1}               ..,;:ccc,."
+"${c1}             ......''';lxO."
+"${c1}........''''..........,:ld;"
+"${c1}              .';;;:::;,,.x,"
+"${c1}         ..'''.            0Xxoc:,.  ..."
+"${c1}     ....                ,ONkc;,;cokOdc',."
+"${c1}    .                   OMo           ':"${c2}"dd"${c1}"o."
+"${c1}                       dMc               :OO;"
+"${c1}                       0M.                 .:o."
+"${c1}                       ;Wd"
+"${c1}                        ;XO,"
+"${c1}                          ,d0Odlc;,.."
+"${c1}                              ..',;:cdOOd::,."
+"${c1}                                       .:d;.':;."
+"${c1}                                          'd,  .'"
+"${c1}                                            ;l   .."
+"${c1}                                             .o"
+"${c1}                                               c"
+"${c1}                                               .'"
+"${c1}                                                .")
+		;;
+
 		*)
 			c1="\e[1;37m" # White
 			c2="\e[1;30m" # Light Gray
@@ -2362,7 +2492,7 @@ infoDisplay () {
 		"Arch Linux - Old"|"Fedora"|"Mandriva"|"Mandrake"|"Chakra") labelcolor="\e[1;34m";;
 		"Arch Linux"|"Frugalware"|"Mageia") labelcolor="\e[1;36m";;
 		"Mint"|"LMDE"|"openSUSE"|"LinuxDeepin"|"DragonflyBSD"|"Manjaro"|"Android") labelcolor="\e[1;32m";;
-		"Ubuntu"|"FreeBSD"|"Debian"|"BSD"|"Red Hat Linux"|"Peppermint"|"Cygwin"|"Fuduntu"|"NetBSD") labelcolor="\e[1;31m";;
+		"Ubuntu"|"FreeBSD"|"Debian"|"BSD"|"Red Hat Linux"|"Peppermint"|"Cygwin"|"Fuduntu"|"NetBSD"|"Scientific Linux") labelcolor="\e[1;31m";;
 		"CrunchBang"|"SolusOS"|"Viperr"|"Elementary OS")
 			if [[ -n "$colors_light" ]]; then labelcolor="\e[1;37m"
 			else labelcolor="\e[1;30m"; fi
@@ -2383,7 +2513,7 @@ infoDisplay () {
 		myhostname=$(echo -e "${labelcolor}${hostname}"); out_array=( "${out_array[@]}" "$myhostname" )
 		mydistro=$(echo -e "$labelcolor OS:$textcolor $distro $distro_ver"); out_array=( "${out_array[@]}" "$mydistro" )
 		mydevice=$(echo -e "$labelcolor Device:$textcolor $device"); out_array=( "${out_array[@]}" "$mydevice" )
-		myrom=$(echo -e "$labelcolor ROM:$textcolor $rom"); out_array=( "${out_array[@]}" "$myrom" )
+4		myrom=$(echo -e "$labelcolor ROM:$textcolor $rom"); out_array=( "${out_array[@]}" "$myrom" )
 		mybaseband=$(echo -e "$labelcolor Baseband:$textcolor $baseband"); out_array=( "${out_array[@]}" "$mybaseband" )
 		mykernel=$(echo -e "$labelcolor Kernel:$textcolor $kernel"); out_array=( "${out_array[@]}" "$mykernel" )
 		myuptime=$(echo -e "$labelcolor Uptime:$textcolor $uptime"); out_array=( "${out_array[@]}" "$myuptime" )
@@ -2418,7 +2548,11 @@ infoDisplay () {
 		if [[ "${display[@]}" =~ "shell" ]]; then myshell=$(echo -e "$labelcolor Shell:$textcolor $myShell"); out_array=( "${out_array[@]}" "$myshell" ); ((display_index++)); fi
 		if [[ -n "$DISPLAY" ]]; then
 			if [[ "${display[@]}" =~ "res" ]]; then myres=$(echo -e "$labelcolor Resolution:${textcolor} $xResolution"); out_array=( "${out_array[@]}" "$myres" ); ((display_index++)); fi
-			if [[ "${display[@]}" =~ "de" ]]; then myde=$(echo -e "$labelcolor DE:$textcolor $DE"); out_array=( "${out_array[@]}" "$myde" ); ((display_index++)); fi
+			if [[ "${display[@]}" =~ "de" ]]; then
+				if [[ "${DE}" != "Not Present" ]]; then
+					myde=$(echo -e "$labelcolor DE:$textcolor $DE"); out_array=( "${out_array[@]}" "$myde" ); ((display_index++))
+				fi
+			fi
 			if [[ "${display[@]}" =~ "wm" ]]; then mywm=$(echo -e "$labelcolor WM:$textcolor $WM"); out_array=( "${out_array[@]}" "$mywm" ); ((display_index++)); fi
 			if [[ "${display[@]}" =~ "wmtheme" ]]; then
 					if [[ "${Win_theme}" == "Not Present" ]]; then
@@ -2428,13 +2562,37 @@ infoDisplay () {
 					fi
 			if [[ "${display[@]}" =~ "gtk" ]]; then
 				if [ "$distro" == "Mac OS X" ]; then
-					myicons=$(echo -e "$labelcolor Icon Theme:$textcolor $gtkIcons"); out_array=( "${out_array[@]}" "$myicons" ); ((display_index++))
-					myfont=$(echo -e "$labelcolor Font:$textcolor $gtkFont"); out_array=( "${out_array[@]}" "$myfont" ); ((display_index++))
+					if [ "$gtkIcons" != "Not Found" ]; then
+						if [ -n "$gtkIcons" ]; then 
+							myicons=$(echo -e "$labelcolor Icon Theme:$textcolor $gtkIcons"); out_array=( "${out_array[@]}" "$myicons" ); ((display_index++))
+						fi
+					fi
+					if [ "$gtkFont" != "Not Found" ]; then
+						if [ -n "$gtkFont" ]; then 
+							myfont=$(echo -e "$labelcolor Font:$textcolor $gtkFont"); out_array=( "${out_array[@]}" "$myfont" ); ((display_index++))
+						fi
+					fi
 				else
-					if [ "$gtk2Theme" != "Not Found" ]; then mygtk2=$(echo -e "$labelcolor GTK2 Theme:$textcolor $gtk2Theme"); out_array=( "${out_array[@]}" "$mygtk2" ); ((display_index++)); fi
-					mygtk3=$(echo -e "$labelcolor GTK3 Theme:$textcolor $gtk3Theme"); out_array=( "${out_array[@]}" "$mygtk3" ); ((display_index++))
-					myicons=$(echo -e "$labelcolor Icon Theme:$textcolor $gtkIcons"); out_array=( "${out_array[@]}" "$myicons" ); ((display_index++))
-					myfont=$(echo -e "$labelcolor Font:$textcolor $gtkFont"); out_array=( "${out_array[@]}" "$myfont" ); ((display_index++))
+					if [ "$gtk2Theme" != "Not Found" ]; then
+						if [ -n "$gtk2Theme" ]; then 
+							mygtk2=$(echo -e "$labelcolor GTK2 Theme:$textcolor $gtk2Theme"); out_array=( "${out_array[@]}" "$mygtk2" ); ((display_index++))
+						fi
+					fi
+					if [ "$gtk3Theme" != "Not Found" ]; then
+						if [ -n "$gtk3Theme" ]; then 
+							mygtk3=$(echo -e "$labelcolor GTK3 Theme:$textcolor $gtk3Theme"); out_array=( "${out_array[@]}" "$mygtk3" ); ((display_index++))
+						fi
+					fi
+					if [ "$gtkIcons" != "Not Found" ]; then
+						if [ -n "$gtkIcons" ]; then 
+							myicons=$(echo -e "$labelcolor Icon Theme:$textcolor $gtkIcons"); out_array=( "${out_array[@]}" "$myicons" ); ((display_index++))
+						fi
+					fi
+					if [ "$gtkFont" != "Not Found" ]; then
+						if [ -n "$gtkFont" ]; then 
+							myfont=$(echo -e "$labelcolor Font:$textcolor $gtkFont"); out_array=( "${out_array[@]}" "$myfont" ); ((display_index++))
+						fi
+					fi
 					# [ "$gtkBackground" ] && mybg=$(echo -e "$labelcolor BG:$textcolor $gtkBackground"); out_array=( "${out_array[@]}" "$mybg" ); ((display_index++))
 				fi
 			fi
