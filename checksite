@@ -1,6 +1,6 @@
 #!/bin/bash
 
-URL="https://duckdfuckgo.com/"
+URL="https://duckduckgo.com/"
 
 while :
 do
