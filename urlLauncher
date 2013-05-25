@@ -15,8 +15,9 @@ case "$1" in
 		exec 3< <(quvi -v quiet -f mp4_720p "$2" | grep -E '"page_title"|"url"')
 		title=$(read -u 3 line; printf "$line" | cut -d \" -f4)
 		url=$(read -u 3 line; printf '%b' "$line" | cut -d \" -f4)
-		mplayer -title "$title" -ontop -really-quiet -cache 7777 -cache-min 11 -cache-seek-min 99 "$url" -ao pcm:file=test.wav < /dev/null &
-		exec 3>&-
+		#mplayer -title "$title" -ontop -really-quiet -cache 7777 -cache-min 11 -cache-seek-min 99 "$url" -ao pcm:file=test.wav < /dev/null &
+		#exec 3>&-
+		cvlc "$url" &
 		;;
 	-audio)
 		#screen -S fugu -X screen -t uLplay 19 mplayer -cache 1111 "$2"
