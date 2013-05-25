@@ -1,7 +1,7 @@
 #!/bin/bash
 # original code by skizzhg
 
-BROWSER=dwb
+#BROWSER=dwb
 
 case "$1" in
 	-video)
@@ -13,7 +13,7 @@ case "$1" in
 		#quvi -v mute -f mp4_360p "$2" --exec "mplayer -title \"$title\" -ontop -really-quiet -cache 7777 -cache-min 11 -cache-seek-min 99 %u" > /dev/null 2>&1
 		### File Descriptor version
 		exec 3< <(quvi -v quiet -f mp4_720p "$2" | grep -E '"page_title"|"url"')
-		title=$(read -u 3 line; printf "$line" | cut -d \" -f4)
+		#title=$(read -u 3 line; printf "$line" | cut -d \" -f4)
 		url=$(read -u 3 line; printf '%b' "$line" | cut -d \" -f4)
 		#mplayer -title "$title" -ontop -really-quiet -cache 7777 -cache-min 11 -cache-seek-min 99 "$url" -ao pcm:file=test.wav < /dev/null &
 		#exec 3>&-
