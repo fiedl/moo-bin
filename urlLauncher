@@ -22,7 +22,7 @@ case "$1" in
 	-audio)
 		#screen -S fugu -X screen -t uLplay 19 mplayer -cache 1111 "$2"
 		# tmux new-window -n uLplay -t fugu:19 "mplayer -cache 1111 \"$2\"" ### for tmux users
-		xterm -e mplayer -cache 1111 "$2"  ### for non-screen users
+		cvlc "$2" &  ### for non-screen users
 		;;
 	-image)
 		img=$(torsocks wget "$2" --spider -o /dev/stdout | grep '\[image/')
