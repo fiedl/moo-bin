@@ -1,0 +1,52 @@
+#!/bin/bash
+# YouTerm by Jerry Bezencon, 2013.
+# Requirements: VLC Media Player
+
+bold=`tput bold`
+normal=`tput sgr0`
+clear
+echo "${bold}************************************************"
+echo "YouTerm - Watch Youtube videos without a browser"
+echo "************************************************${normal}"
+echo ""
+
+
+youterm_url() {
+	echo -n "Input the url: "
+	read url
+	if [ $url = "" ] ; then
+		return
+	fi
+	echo ""
+}
+
+youterm_res() {
+	echo "[1] 240p"
+	echo "[2] 360p"
+	echo "[3] 480p"
+	echo "[4] 720p"
+	echo "[5] 1080p"
+	echo "[6] Exit"
+
+	echo -n "Enter your menu choice [1-6]: "
+	read res
+	case $res in
+
+	1) vlc --preferred-resolution "240p" $url ;;
+	2) vlc --preferred-resolution "360p" $url ;;
+	3) vlc --preferred-resolution "480p" $url ;;
+	4) vlc --preferred-resolution "720p" $url ;;
+	5) vlc --preferred-resolution "1080p" $url ;;
+	6) exit 6;;
+	*) echo "Oops! Please select choice 1,2,3,4,5 or 6";
+
+	esac
+
+}
+
+youterm_url
+
+while true
+do
+    youterm_res
+done
