@@ -1,0 +1,178 @@
+#!/bin/sh
+## ver 0.3 ##
+IFS=$'\n'
+
+## makes sure station name is not exact match with any other ###########
+## Video stream list updated 05.08.2012 ################################
+STREAMLIST='
+ABC HD| -r "rtmp://198.154.96.141/live" -W "http://www.skystreamlive.com//player/skystreamlive.com.swf" -p "http://www.skystreamlive.com/channel.php?n=00033.stream" --live -y "00033.stream" 
+NBC HD| -r "rtmp://198.154.96.141/live" -W "http://www.skystreamlive.com//player/skystreamlive.com.swf" -p "http://www.skystreamlive.com/channel.php?n=00006.stream" --live -y "00006.stream" 
+FOX 11 HD| -r "rtmp://198.154.96.141/live" -W "http://www.skystreamlive.com//player/skystreamlive.com.swf" -p "http://www.skystreamlive.com/channel.php?n=00001.stream" --live -y "00001.stream" 
+FX HD| -r "rtmp://198.154.96.141/live" -W "http://www.skystreamlive.com//player/skystreamlive.com.swf" -p "http://www.skystreamlive.com/channel.php?n=00003.stream" --live -y "00003.stream" 
+TNT HD| -r "rtmp://198.154.96.141/live" -W "http://www.skystreamlive.com//player/skystreamlive.com.swf" -p "http://www.skystreamlive.com/channel.php?n=00008.stream" --live -y "00008.stream" 
+Cinemax HD|  -r "rtmp://198.154.96.141/live" -W "http://www.skystreamlive.com//player/skystreamlive.com.swf" -p "http://www.skystreamlive.com/channel.php?n=00004.stream" --live -y "00004.stream" 
+Showtime HD| -r "rtmp://198.154.96.141/live" -W "http://www.skystreamlive.com//player/skystreamlive.com.swf" -p "http://www.skystreamlive.com/channel.php?n=00010.stream" --live -y "00010.stream" 
+HBO HD| -r "rtmp://198.154.96.141/live" -W "http://www.skystreamlive.com//player/skystreamlive.com.swf" -p "http://www.skystreamlive.com/channel.php?n=00011.stream" --live -y "00011.stream" 
+CBS HD| -r "rtmp://198.154.96.141/live" -W "http://www.skystreamlive.com//player/skystreamlive.com.swf" -p "http://www.skystreamlive.com/channel.php?n=00012.stream" --live -y "00012.stream" 
+ESPN 2 HD| -r "rtmp://198.154.96.141/live" -W "http://www.skystreamlive.com//player/skystreamlive.com.swf" -p "http://www.skystreamlive.com/channel.php?n=00013.stream" --live -y "00013.stream" 
+TRUE BLOOD| -r "rtmp://198.154.96.141/live" -W "http://www.veohcast.tv/player/veohcast.tv.swf" -p "http://www.veohcast.tv/videoV.php?n=00017.stream&vw=468&vh=368" --live -y "00017.stream" 
+skysports1| -r "rtmpe://95.211.188.38/live" -W "http://www.launchlive.tv/player/player-licensed.swf" -p "http://www.launchlive.tv/embed.php?v=dsdsdsds99&vw=570&vh=400" --live -y "dsdsdsds99" 
+skysports2| -r "rtmpe://95.211.188.38/live" -W "http://www.launchlive.tv/player/player-licensed.swf" -p "http://www.launchlive.tv/embed.php?v=regegrrthwer&vw=570&vh=400" --live -y "regegrrthwer" 
+skysports3| -r "rtmpe://95.211.174.130/live" -W "http://www.launchlive.tv/player/player-licensed.swf" -p "http://www.launchlive.tv/embed.php?v=tsjsrjrhsdagf&vw=570&vh=400" --live -y "tsjsrjrhsdagf" 
+skysports4| -r "rtmpe://95.211.188.38/live" -W "http://www.launchlive.tv/player/player-licensed.swf" -p "http://www.launchlive.tv/embed.php?v=tsjsrjrhsdagf&vw=570&vh=400" --live -y "tsjsrjrhsdagf" 
+Al Jazeera English| -v -r rtmp://aljazeeraflashlivefs.fplive.net/aljazeeraflashlive-live/aljazeera_eng_med 
+BBC World News| -v -r rtmp://a.cdn.msnbclive.eu/edge/bbcworld_vh -W http://msnbclive.eu/getswf.php?name=player.swf -p http://blog.livenewschat.tv/world-newsroom 
+Bloomberg| -v -r rtmp://cp116697.live.edgefcs.net:80/live/BnazlkNDpCIcD-QkfyZCQKlRiiFnVa5I_640_360_440@18679  -W http://player.ooyala.com/cacheable/c78f866930724ffedfe8cf5349712569/player_v2.swf -p http://tvpc.com 
+CNN| -r rtmp://a.cdn.msnbclive.eu/edge/cnn_live -W http://msnbclive.eu/player.swf  -p http://blog.livenewschat.tv/situation-chatroom 
+CNN International News| -v -r rtmp://a.cdn.msnbclive.eu/edge/cnni_live -W http://msnbclive.eu/getswf.php?name=player.swf -p http://blog.livenewschat.tv/international-room-chat 
+CSPAN1| -v -r rtmp://cp82346.live.edgefcs.net:1935/live -y CSPAN1@14845 -W http://www.c-span.org/cspanVideoHD.swf -p http://www.c-span.org/Live-Video/C-SPAN/ 
+CSPAN2| -v -r rtmp://cp82347.live.edgefcs.net:1935/live -y CSPAN2@14846 -W http://www.c-span.org/cspanVideoHD.swf -p http://www.c-span.org/Live-Video/C-SPAN2/ 
+CSPAN3| -v -r rtmp://cp82348.live.edgefcs.net:1935/live -y CSPAN3@14847 -W http://www.c-span.org/cspanVideoHD.swf -p http://www.c-span.org/Live-Video/C-SPAN3/ 
+FOX Movies| -v -r rtmp://50.7.161.37/flash/tfxm  -W http://95.211.149.228/player/player-licensed.swf -p http://www.casti.tv 
+FOX News| -v -r rtmp://176.31.231.124/edge/vjl7szzy9ztawjn  -W http://cdn.static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to 
+FOX 11| -v -r rtmp://198.154.96.141/live/00001.stream -W http://www.skyonetv.com/player/skyonetv.com.swf -p http://www.skyonetv.com 
+France24, English| -v -r rtmp://stream2.france24.yacast.net/france24_live/en -a france24_live/en -W http://www.france24.com/en/sites/all/mo â¦ player.swf -p http://www.france24.com/en/aef_player_p â¦ e24_player -y f24_liveen 
+France24, Francais| -v -r rtmp://stream2.france24.yacast.net/france24_live/fr -a france24_live/fr -W http://www.france24.com/fr/sites/all/mo â¦ player.swf -p http://www.france24.com/fr/aef_player_p â¦ e24_player -y f24_livefr 
+HBO| -r rtmp://198.154.96.141/live/00011.stream  -W http://www.skyonetv.com/player/skyonetv.com.swf -p http://www.skyonetv.com 
+MSNBC| -v -r rtmp://a.cdn.msnbclive.eu/edge -y msnbc_live -W http://msnbclive.eu/getswf.php?name=player.swf -p http://www.rentadrone.tv/msnbc-live-rockinroosters/ 
+Russia Today News, English| -v -r rtmp://fms5.visionip.tv/live -a live -W http://rt.com/s/swf/player5.4.viral.swf -p http://rt.com/on-air/ -y RT_2 
+Russia Today News, Spanish| -v -r rtmp://rt.fms.visionip.tv/live/ -a live -W http://actualidad.rt.com/swf/player.swf -p http://actualidad.rt.com/mas/envivo/ -y RT_Spanish_2 
+Russia Today News, Arabic| -v -r rtmp://russiatoday.fms.visionip.tv/rt/Russia_al_yaum_1000k_1 -a rt/Russia_al_yaum_1000k_1 -W http://arabic.rt.com/style/liveplayer.swf -p http://arabic.rt.com/live_high -y 1000k_1 
+EuroSport, Spanish, French| -r rtmp://81.17.24.58:190/vod --playpath 50ehyqk50ehyoy --swfUrl http://31.7.62.218/player.swf --live --pageUrl http://www.dinozap.tv/redirect/
+
+NASA TV 1| -v -r "rtmp://cp39920.live.edgefcs.net:1935/live/nasahd@55196" -W "http://www.ustream.tv/flash/viewer.swf"
+NASA TV 2|-v -r "rtmp://ustreamlivefs.fplive.net/ustream3live-live/stream_live_6_1_6540154" -W "http://static-cdn1.ustream.tv/swf/live/viewer.rsl:255.swf" 
+
+E4, UK|rtmp://rtsp-02.g-box.tv/live/e4_8448.sdp
+Channel 5, UK|rtmp://rtsp-02.g-box.tv/live/channel5_8500.sdp
+Dave HD, UK| -v -r rtmp://rtsp-02.g-box.tv/live -a live  -W http://www.skystreamlive.com/player/skystreamlive.com.swf  -p http://www.skystreamlive.com/stream.php?n=dave_22272.sdp  -f LNX 10,3,183,20  -y dave_22272.sdp
+SyFy HD| -v -r rtmp://198.154.96.141/live -a live -W http://www.skystreamlive.com//player/skystreamlive.com.swf -p http://www.skystreamlive.com/channel.php?n=00007.stream -f LNX 10,3,183,20 -y 00007.stream
+MTV HD| -v -r rtmp://198.154.96.141/live -f LNX 10,3,183,20 -a live -W http://www.skystreamlive.com//player/skystreamlive.com.swf -p http://www.skystreamlive.com/channel.php?n=00011.stream -y 00011.stream
+Channel 4 HD, UK| -v -r rtmp://rtsp-02.g-box.tv/live -a live -f LNX 10,3,183,20 -W http://www.skystreamlive.com/player/skystreamlive.com.swf -p http://www.skystreamlive.com/stream.php?n=c4_8384.sdp -y c4_8384.sdp
+FOX News 8| -v -r rtmp://cp86438.live.edgefcs.net/live -a live -f LNX 10,3,183,20 -W http://cdn.livestream.com/chromelessPlayer/v21/playerapi.swf -p http://www.livestream.com/embed/fox8news -y livestream6_139@31225
+Island TV| -v -r rtmp://cp86438.live.edgefcs.net/live -a live -f LNX 10,3,183,20 -p http://www.livestream.com/embed/islandtvlive -W http://cdn.livestream.com/chromelessPlayer/v21/playerapi.swf?autoPlay=true -y livestream6_146@41333
+
+Discovery HD | -r "rtmp://198.154.96.141/live" -W http://www.skystreamlive.com//player/skystreamlive.com.swf -p " http://www.skystreamlive.com/channel.php?n=00014.stream" --live -y "00014.stream" 
+Comedy Central | -r rtmp://31.204.153.190/live -a live -f LNX 10,3,183,20 -W http://95.211.149.228/player/player-licensed.swf -p http://www.casti.tv/embed.php -y cood 
+Spike TV |  -v -r rtmp://46.105.115.183/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y zmt2swezlswh9nz 
+Disney Channel | -v -r rtmp://live.ilive.to/redirect -a redirect -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y xxwt9pjxpgv4tu2 
+History Channel | -v -r rtmp://46.105.109.122/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y notzlkijdubh0bd 
+Movie City | -v -r rtmp://46.105.109.122/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y 874d69ibkcgpzbg 
+TNT Movies | -v -r rtmp://46.105.109.122/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y 2zw54vppbepmfad
+
+Movie Super | -v -r rtmp://46.105.109.122/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y 874d69ibkcgpzbg 
+Movie 1 | -v -r rtmp://176.31.231.124/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y bs3z5tu4h14q5ly
+A and E | -v -r rtmp://176.31.231.57/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y at89h1bs45p5j5h
+Movies HBO | -v -r  rtmp://176.31.231.124/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y z28ie9oqoku4qoy
+Discovery | -v -r  rtmp://176.31.231.57/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y 4urzgsozilyle83
+Family Guy | -v -r  rtmp://46.105.115.183/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y xwdhqeyhz6hek7u
+Movies Sifi Horror | -v -r rtmp://176.31.231.124/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y kdcazjd8awpwkgb
+Movies Comedy | -v -r rtmp://46.105.115.183/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y a1wn1j3ra1w0cv0
+Movies StarZ | -v -r rtmp://46.105.115.183/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y 8g7x80ozu6hz2ds
+Movies Action | -v -r rtmp://176.31.231.57/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y 89q9ebwqdp2pkut
+Bleach | -v -r rtmp://46.105.115.183/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y cqq87pn1lkxra4k
+WWE PPV | -v -r rtmp://176.31.231.57/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y i6v9xr1b3u8fc3u
+Movies True | -v -r rtmp://46.105.115.183/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y w0lygboj3rj3nbr
+Bleach 1 | -v -r rtmp://46.105.109.122/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y wjqv7iw4g6qf1sy
+South Park | -v -r rtmp://46.105.115.183/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y obnfjkmhudvbxqt
+AMC | -v -r rtmp://46.105.109.122/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y la20uo8un252id9
+Friends Show | -v -r rtmp://46.105.109.122/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y wg2fmaake2sfjbr
+DragonBallz| -v -r rtmp://176.31.231.57/edge -a edge -f LNX 10,3,183,20 -W http://static.ilive.to/jwplayer/player_embed.swf -p http://www.ilive.to/embedplayer.php -y 8aplmwsbez7rack
+'
+########################################################################
+
+
+## VIDEO ###############################################################
+
+function VIDEO () {
+clear
+
+  tput smul
+   echo ""
+   echo ":: Streaming Meida Player ::"
+   echo ":: Select Channel to Play ::"
+   tput rmul
+   echo " "
+   
+   ## selection entry text
+   PS3="`tput bold`Enter Station Number To Play > `tput sgr0`"
+   
+   select STREAM in `echo "$STREAMLIST" | cut -d"|" -f1 | sort -u`  "Quit" ; do
+  
+    [[ "$STREAM" == "Quit" ]] && echo "Goodbye...." && exit	      ## exit script
+    
+    ## get stream command / urls
+    GETURL=`echo "$STREAMLIST" | grep -w -m1 "^$STREAM" | cut -d"|" -f2 `
+    
+    if [[ -n "$GETURL" ]]; then 
+    ## show selected channel name
+    tput smso &&  echo " >:Attempt connection to video stream $STREAM:< "  && tput rmso 
+    ## play stream - remove -q to see what rtmpdump is doing - change media player here   
+    eval rtmpdump -q "$GETURL" | vlc -  &>/dev/null
+    else
+    ## no selection message
+    tput setf 4 && echo "Not a menu entry - please select again" && tput sgr0
+    fi
+  
+ done
+}
+
+## RADIO ###############################################################
+function RADIO () {
+
+## Get station list
+if [[ ! -f "/tmp/ice-stations" ]]; then
+curl -s "http://dir.xiph.org/yp.xml" | awk -F"[>,<]" '/<listen_url>/{print $3}' | sort -u > /tmp/ice-stations
+fi
+
+clear
+
+  tput smul
+   echo ""
+   echo ":: Streaming Ice Cast Player ::"
+   echo ":: Select Station to Play    ::"
+   tput rmul
+   echo " "
+   
+   ## radio stations file
+   STREAMLIST=`cat /tmp/ice-stations`
+   
+   ## selection entry text
+   PS3="`tput bold`Enter Station Number To Play > `tput sgr0`"
+   
+   select STREAM in `echo "$STREAMLIST" | rev | cut -d"/" -f1 | rev | sort -u`  "Quit" ; do
+  
+    [[ "$STREAM" == "Quit" ]] && echo "Goodbye...." && exit	      ## exit script
+    
+    ## get stream command / urls
+    GETURL=`echo "$STREAMLIST" | grep -w -m1 "$STREAM$" `
+    
+    if [[ -n "$STREAM" ]]; then 
+    ## show selected channel name
+    tput smso &&  echo " >:Attempt connection to $STREAM :< "  && tput rmso 
+    ## play stream - remove -really-quiet to see what mplayer is doing  
+    eval vlc ""$GETURL"" 
+    else
+    ## no selection message
+    tput setf 4 && echo "Not a menu entry - please select again" && tput sgr0
+    fi
+  
+ done
+}
+
+########################################################################
+
+case $1 in
+  "-v")
+  VIDEO
+  ;;
+  
+  "-r")
+  RADIO
+  ;;
+  
+  *) 
+  echo -e "Use /path/to/streamplay \n  -v For Video \n  -r For Radio"
+  ;;
+  esac
+ exit 
