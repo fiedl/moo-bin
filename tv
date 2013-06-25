@@ -1,0 +1,12 @@
+#!/bin/sh
+
+rtmpdump -q -v -r "rtmp://aljazeeraflashlivefs.fplive.net/aljazeeraflashlive-live/aljazeera_eng_med" | vlc --input-title-format "Aljazeera" - & &>/dev/null
+rtmpdump -q -v -r "rtmp://a.cdn.msnbclive.eu/edge/cnn_live" -W "http://msnbclive.eu/player.swf" -p "http://blog.livenewschat.tv/situation-chatroom" | vlc --input-title-format "CNN Live" - & &>/dev/null
+rtmpdump -q -v -r "rtmp://a.cdn.msnbclive.eu/edge/cnni_live" -W "http://msnbclive.eu/getswf.php?name=player.swf" -p "http://blog.livenewschat.tv/international-room-chat" | vlc --input-title-format "CNN International" - & &>/dev/null
+rtmpdump -q -v -r "rtmp://cp82346.live.edgefcs.net:1935/live" -y CSPAN1@14845 -W "http://www.c-span.org/cspanVideoHD.swf" -p "http://www.c-span.org/Live-Video/C-SPAN/" | vlc --input-title-format "CSPAN" - & &>/dev/null
+rtmpdump -q -v -r "rtmp://cp82347.live.edgefcs.net:1935/live" -y CSPAN2@14846 -W "http://www.c-span.org/cspanVideoHD.swf" -p "http://www.c-span.org/Live-Video/C-SPAN2/" | vlc --input-title-format "CSPAN2" - & &>/dev/null
+rtmpdump -q -v -r "rtmp://cp82348.live.edgefcs.net:1935/live" -y CSPAN3@14847 -W "http://www.c-span.org/cspanVideoHD.swf" -p "http://www.c-span.org/Live-Video/C-SPAN3/" | vlc --input-title-format "CSPAN3" - & &>/dev/null
+rtmpdump -q -v -r "rtmp://a.cdn.msnbclive.eu/edge" -y msnbc_live -W "http://msnbclive.eu/getswf.php?name=player.swf" -p "http://www.rentadrone.tv/msnbc-live-rockinroosters/" | vlc --input-title-format "MSNBC" - & &>/dev/null
+rtmpdump -q -v -r "rtmp://rt.fms-04.visionip.tv/live/rt-global-live-HD" -a live -W "http://rt.com/s/swf/player5.4.viral.swf" | vlc --input-title-format "Russia Today" - & &>/dev/null
+
+exit 0
