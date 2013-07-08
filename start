@@ -1,0 +1,91 @@
+#!/bin/bash
+# autostart
+# author pdq 11-27-2012 - 04-18-2013
+#urxvtc -name "Screencaster" -e ffmpeg -f alsa -ac 2 -i pulse -f x11grab -r 30 -s 1920x1080 -i :0.0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -crf 0 -threads 0 startx.mkv
+#sleep 2s
+
+# Grab window manager name
+# if [ ! -z $DISPLAY ]; then
+# 	WM_WINDOW=$(xprop -root _NET_SUPPORTING_WM_CHECK)
+# 	WM_WINDOW=${WM_WINDOW##* }
+# 	WM_NAME=$(xprop -id $WM_WINDOW 8s _NET_WM_NAME)
+# 	WM_NAME=${WM_NAME##* }
+# 	WM_NAME=`echo $WM_NAME | sed 's/\"//g'`
+# else
+# 	WM_NAME=""
+# fi
+
+# start daemons and services not auto started at boot
+#[ -z "$(pidof httpd)" ] && sudo lamp.sh start
+#[ -z "$(pidof transmission-daemon)" ] && sudo systemctl start transmission.service
+
+# Mount @linux
+urxvtc -name "SSH" -e ssh 192.168.0.10 -p34567
+urxvtc -name "SSH2" -e ssh 192.168.0.10 -p34567
+sshfs pdq@192.168.0.10:/ /mnt/linux-pdq -C -p 34567
+
+#if [ "$WM_NAME" = "awesome" ]; then
+	#[ -z "$(pidof compton)" ] && compton -cF &
+	#sleep 2s
+	#feh --bg-scale $HOME/Pictures/wallpaper/1088253-bludragon.jpg &
+	##sh ~/bin/rotate_wallpaper &
+#else
+	## Start drop down terminal emulator
+[ -z "$(pidof yeahconsole)" ] && yeahconsole &
+#fi
+
+# Start dmenu clipboard (dmenuclip/dmenurl)
+#killall -q clipbored
+#clipbored 
+
+# Start system information display
+#[ -z "$(pidof conky)" ] && conky -d -c "$HOME"/.config/conky/.conkye17 &
+
+# Start IM server and IRC client
+[ -z "$(pidof weechat-curses)" ] && urxvtc -name "IRC1" -e weechat-curses && urxvtc -name "IRC2" -e weechat-curses -d ~/.weechat-priv
+
+# Start custom ksseyboard shortcuts
+[ -z "$(pidof xbindkeys)" ] && xbindkeys &
+
+# Main terminals
+urxvtc -name "Term"
+urxvtc -name "Term2"
+urxvtc -name "Term3"
+
+#[ -z "$(pidof nxmon)" ] && urxvtc -name "nmon" -e nmon -s 5 &
+#[ -z "$(pidof mocp)" ] && urxvtc -name "MOCP" -e mocp &
+#[ -z "$(pidof saidar)" ] && urxvtc -name "Saidar" -e saidar -c
+#[ -z "$(pidof ttyload)" ] && urxvtc -name "TTYload" -e ttyload
+urxvtc -name "Logs" -e sudo journalctl -f
+
+# if [ "$WM_NAME" = "awesome" ]; then
+# 	[ -z "$(pidof tail)" ] && urxvtc -name "STDerr" -e tail -f "$HOME/.cache/awesome/stderr"
+# fi
+
+# Start vlc media player and playlist
+if [ -d "$HOME/Videos/tempvideo" ] ; then
+	[ -z "$(pidof vlc)" ] && vlc "/home/pdq/Videos/tempvideo" &
+fi
+
+# Start text editor
+[ -z "$(pidof sublime_text)" ] && subl3 &
+
+# Start gui applications
+#[ -z "$(pidof kdenlive)" ] && kdenlive &
+#[ -z "$(pidof gkrellm)" ] && gkrellm &
+#[ -z "$(pidof firefox)" ] && firefox &
+[ -z "$(pidof gtk-youtube-viewer)" ] && gtk-youtube-viewer &
+#[ -z "$(pidof dolphin)" ] && dolphin &
+#[ -z "$(pidof steam)" ] && steam &
+[ -z "$(pidof claws-mail)" ] && usewithtor claws-mail &
+
+# Start systray applications
+[ -z "$(pidof dropbox)" ] && dropboxd &
+
+# Start update notifier
+#killall -q aarchup && sleep 1s
+#[ -z "$(pidof aarchup)" ] && /usr/bin/aarchup --loop-time 60 --aur --icon "$HOME/.config/awesome/icons/pacman_icon_48x48.png" &
+
+# Focus tag 1
+#xdotool key alt+F1
+#wmctrl -s 0

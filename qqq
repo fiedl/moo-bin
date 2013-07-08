@@ -1,0 +1,4 @@
+#!/bin/sh
+
+urxvtc -name "qqq" -e ssh 192.168.0.10 -p34567 -t "truecrypt -t -d && sudo reboot"
+truecrypt -t -d && reboot
