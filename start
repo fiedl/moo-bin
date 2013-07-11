@@ -77,10 +77,10 @@ fi
 [ -z "$(pidof gtk-youtube-viewer)" ] && gtk-youtube-viewer &
 #[ -z "$(pidof dolphin)" ] && dolphin &
 #[ -z "$(pidof steam)" ] && steam &
-[ -z "$(pidof claws-mail)" ] && usewithtor claws-mail &
+#[ -z "$(pidof claws-mail)" ] && usewithtor claws-mail &
 
 # Start systray applications
-[ -z "$(pidof dropbox)" ] && dropboxd &
+#[ -z "$(pidof dropbox)" ] && dropboxd &
 
 # Start update notifier
 #killall -q aarchup && sleep 1s
