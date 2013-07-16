@@ -91,5 +91,8 @@ if __name__ == '__main__':
     GObject.threads_init()
     Gdk.threads_init()
     Notify.init('RSS Tray')
-    aStatusIcon([('http://rss.pdq/public.php?op=rss&id=-2&view-mode=all_articles&key=ecf0a9f069b976f433c6b971a4f17711b10979c2', 86400), ('http://feeds.arstechnica.com/arstechnica/index?format=xml', 86400)])
+    aStatusIcon([('https://www.archlinux.org/feeds/news/', 900), ('http://www.commandlinefu.com/feed/tenup', 900), ('http://www.howtoforge.com/node/feed', 900), 
+        ('http://feeds.howtogeek.com/howtogeek', 900), ('http://www.infowars.com/feed/', 900), ('http://feeds.feedburner.com/LiberianGeek?format=xml', 900), 
+        ('http://feeds.gawker.com/lifehacker/full', 900), ('http://feeds.feedburner.com/d0od?format=xml', 900), ('http://slashdot.org/slashdot.rss', 900), 
+        ('http://www.reddit.com/r/linux/.rss', 900), ('http://feeds.feedburner.com/techdrivein?format=xml', 900), ('http://feeds.feedburner.com/webupd8?format=xml', 900),('http://feeds.arstechnica.com/arstechnica/index?format=xml', 900)])
     Gtk.main()
