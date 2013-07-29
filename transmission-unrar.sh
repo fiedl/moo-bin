@@ -53,8 +53,13 @@
           #transmission-remote -n $TR_USERNAME:$TR_PASSWORD -t$TR_TORRENT_ID --remove-and-delete
         fi
         echo $NOW "Unrarred $TR_TORRENT_NAME" >> $LOG_FILE
-        notify-send "Unrarred $TR_TORRENT_NAME"
+        #notify-send "Unrarred $TR_TORRENT_NAME"
+      else
+        cp -R $SRC_DIR $DEST_DIR
+        echo $NOW "Copied $TR_TORRENT_NAME" >> $LOG_FILE
+        #notify-send "Copied $TR_TORRENT_NAME"
       fi
+      vlc --playlist-enqueue "$DEST_DIR/$TR_TORRENT_NAME" &
     fi
   fi
 } &

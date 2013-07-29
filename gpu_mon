@@ -1,0 +1,3 @@
+#!/bin/sh
+
+nvidia-smi -q -d MEMORY | grep -A 2 "Memory Usage" 

@@ -1,38 +1,16 @@
-#!/bin/bash
+#!/bin/sh
 # autostart
-# author pdq 11-27-2012 - 04-18-2013
+# author pdq 11-27-2012 - 04-18-2013 07-30-2013
 #urxvtc -name "Screencaster" -e ffmpeg -f alsa -ac 2 -i pulse -f x11grab -r 30 -s 1920x1080 -i :0.0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -crf 0 -threads 0 startx.mkv
-#sleep 2s
 
-# Grab window manager name
-# if [ ! -z $DISPLAY ]; then
-# 	WM_WINDOW=$(xprop -root _NET_SUPPORTING_WM_CHECK)
-# 	WM_WINDOW=${WM_WINDOW##* }
-# 	WM_NAME=$(xprop -id $WM_WINDOW 8s _NET_WM_NAME)
-# 	WM_NAME=${WM_NAME##* }
-# 	WM_NAME=`echo $WM_NAME | sed 's/\"//g'`
-# else
-# 	WM_NAME=""
-# fi
+# Mount @linux - ssh keys
+urxvtc -name "ssh Term" -e ssh 192.168.0.10 -p34567
+urxvtc -name "ssh htop" -e ssh -t 192.168.0.10 -p34567 htop
+urxvtc -name "ssh top" -e ssh -t 192.168.0.10 -p34567 top
+[ ! -d "/mnt/linux-pdq/home" ] && sshfs pdq@192.168.0.10:/ /mnt/linux-pdq -C -p 34567
 
-# start daemons and services not auto started at boot
-#[ -z "$(pidof httpd)" ] && sudo lamp.sh start
-#[ -z "$(pidof transmission-daemon)" ] && sudo systemctl start transmission.service
-
-# Mount @linux
-urxvtc -name "SSH" -e ssh 192.168.0.10 -p34567
-urxvtc -name "SSH2" -e ssh 192.168.0.10 -p34567
-sshfs pdq@192.168.0.10:/ /mnt/linux-pdq -C -p 34567
-
-#if [ "$WM_NAME" = "awesome" ]; then
-	#[ -z "$(pidof compton)" ] && compton -cF &
-	#sleep 2s
-	#feh --bg-scale $HOME/Pictures/wallpaper/1088253-bludragon.jpg &
-	##sh ~/bin/rotate_wallpaper &
-#else
-	## Start drop down terminal emulator
+# Drop down urxvtc terminal console
 [ -z "$(pidof yeahconsole)" ] && yeahconsole &
-#fi
 
 # Start dmenu clipboard (dmenuclip/dmenurl)
 #killall -q clipbored
@@ -44,23 +22,22 @@ sshfs pdq@192.168.0.10:/ /mnt/linux-pdq -C -p 34567
 # Start IM server and IRC client
 [ -z "$(pidof weechat-curses)" ] && urxvtc -name "IRC1" -e weechat-curses && urxvtc -name "IRC2" -e weechat-curses -d ~/.weechat-priv
 
-# Start custom ksseyboard shortcuts
+# Start custom keyboard shortcuts
 [ -z "$(pidof xbindkeys)" ] && xbindkeys &
 
 # Main terminals
 urxvtc -name "Term"
-urxvtc -name "Term2"
-urxvtc -name "Term3"
+urxvtc -name "tERM" # large font size
 
-#[ -z "$(pidof nxmon)" ] && urxvtc -name "nmon" -e nmon -s 5 &
-#[ -z "$(pidof mocp)" ] && urxvtc -name "MOCP" -e mocp &
-#[ -z "$(pidof saidar)" ] && urxvtc -name "Saidar" -e saidar -c
+# Terminal applications
+[ -z "$(pidof htop)" ] && urxvtc -name "HTOP" -e htop 
+[ -z "$(pidof top)" ] && urxvtc -name "TOP" -e top
+[ -z "$(pidof mocp)" ] && urxvtc -name "MOCP" -e mocp
+[ -z "$(pidof watch)" ] && urxvtc -name "CPU Freq" -e watch grep \"cpu MHz\" /proc/cpuinfo
+[ -z "$(pidof nvidia-smi)" ] && urxvtc -name "GPU" -e nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
+[ -z "$(pidof multitail)" ] && urxvtc -name "More Logs" -e multitail -c -n 5 -f "/mnt/linux-pdq/media/truecrypt1/private/transmission-daemon/posttorrent.log"
 #[ -z "$(pidof ttyload)" ] && urxvtc -name "TTYload" -e ttyload
 urxvtc -name "Logs" -e sudo journalctl -f
-
-# if [ "$WM_NAME" = "awesome" ]; then
-# 	[ -z "$(pidof tail)" ] && urxvtc -name "STDerr" -e tail -f "$HOME/.cache/awesome/stderr"
-# fi
 
 # Start vlc media player and playlist
 if [ -d "$HOME/Videos/tempvideo" ] ; then
@@ -72,20 +49,17 @@ fi
 
 # Start gui applications
 #[ -z "$(pidof kdenlive)" ] && kdenlive &
-#[ -z "$(pidof gkrellm)" ] && gkrellm &
 #[ -z "$(pidof firefox)" ] && firefox &
-[ -z "$(pidof gtk-youtube-viewer)" ] && gtk-youtube-viewer &
 #[ -z "$(pidof dolphin)" ] && dolphin &
-#[ -z "$(pidof steam)" ] && steam &
-[ -z "$(pidof claws-mail)" ] && usewithtor claws-mail &
+[ -z "$(pidof steam)" ] && steam &
+[ -z "$(pidof gtk-youtube-viewer)" ] && gtk-youtube-viewer &
 
 # Start systray applications
-#[ -z "$(pidof dropbox)" ] && dropboxd &
+[ -z "$(pidof dropbox)" ] && dropboxd &
 
 # Start update notifier
 #killall -q aarchup && sleep 1s
 #[ -z "$(pidof aarchup)" ] && /usr/bin/aarchup --loop-time 60 --aur --icon "$HOME/.config/awesome/icons/pacman_icon_48x48.png" &
 
-# Focus tag 1
-#xdotool key alt+F1
-#wmctrl -s 0
+# Email client (start delay of 30 seconds to give proxy time to start)
+[ -z "$(pidof claws-mail)" ] && sleep 30s && usewithtor claws-mail &
