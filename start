@@ -1,9 +1,9 @@
 #!/bin/sh
-# autostart
+# autostart script - ran after startx
 # author pdq 11-27-2012 - 04-18-2013 07-30-2013
 #urxvtc -name "Screencaster" -e ffmpeg -f alsa -ac 2 -i pulse -f x11grab -r 30 -s 1920x1080 -i :0.0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -crf 0 -threads 0 startx.mkv
 
-# Mount @linux - ssh keys
+# Mount @linux, term, htop and top - ssh keys read by keychain from ~/.zprofile
 urxvtc -name "ssh Term" -e ssh 192.168.0.10 -p34567
 urxvtc -name "ssh htop" -e ssh -t 192.168.0.10 -p34567 htop
 urxvtc -name "ssh top" -e ssh -t 192.168.0.10 -p34567 top
@@ -35,8 +35,7 @@ urxvtc -name "tERM" # large font size
 [ -z "$(pidof mocp)" ] && urxvtc -name "MOCP" -e mocp
 [ -z "$(pidof watch)" ] && urxvtc -name "CPU Freq" -e watch grep \"cpu MHz\" /proc/cpuinfo
 [ -z "$(pidof nvidia-smi)" ] && urxvtc -name "GPU" -e nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
-[ -z "$(pidof multitail)" ] && urxvtc -name "More Logs" -e multitail -c -n 5 -f "/mnt/linux-pdq/media/truecrypt1/private/transmission-daemon/posttorrent.log"
-#[ -z "$(pidof ttyload)" ] && urxvtc -name "TTYload" -e ttyload
+[ -z "$(pidof multitail)" ] && urxvtc -name "More Logs" -e multitail -ci green -n 5 -f "/mnt/linux-pdq/media/truecrypt1/private/transmission-daemon/posttorrent.log" -ci yellow -n 5 -f "/var/log/pacman.log"
 urxvtc -name "Logs" -e sudo journalctl -f
 
 # Start vlc media player and playlist
