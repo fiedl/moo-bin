@@ -11,8 +11,6 @@
 
 # If data is mounted, ie: 
 if [ -f "/mnt/linux-pdq/media/truecrypt1/test" ] ; then
-	killall -9 cmatrix
-	killall -9 mplayer
 
 	# Mount @linux, term, htop and top - ssh keys read by keychain from ~/.zprofile
 	urxvtc -name "ssh Term" -e ssh 192.168.0.10 -p34567
