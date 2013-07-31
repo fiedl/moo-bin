@@ -26,11 +26,11 @@ case "$1" in
 		;;
 	-image)
 		img=$(torsocks wget "$2" --spider -o /dev/stdout | grep '\[image/')
-		if [[ -n "$img" ]]; then
+		#if [[ -n "$img" ]]; then
 			feh -xZF "$2"
-		else
-			$BROWSER "$2" &>/dev/null
-		fi
+		#else
+		#	$BROWSER "$2" &>/dev/null
+		#fi
 		;;
 	-www)
 		$BROWSER "$2" &>/dev/null
