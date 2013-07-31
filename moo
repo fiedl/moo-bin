@@ -40,7 +40,9 @@ if [ -f "/mnt/linux-pdq/media/truecrypt1/test" ] ; then
 	[ -z "$(pidof nvidia-smi)" ] && urxvtc -name "GPU" -e nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
 	[ -z "$(pidof multitail)" ] && urxvtc -name "More Logs" -e multitail -ci green -n 5 -f "/mnt/linux-pdq/media/truecrypt1/private/transmission-daemon/posttorrent.log" -ci yellow -n 5 -f "/var/log/pacman.log"
 	urxvtc -name "Logs" -e sudo journalctl -f
-	[ -z "$(pidof canto-fetch)" ] && canto-fetch -db
+	[ -z "$(pidof canto-curses)" ] && urxvtc -name "RSS" -e canto-curses
+	[ -z "$(pidof ctw)" ] && urxvtc -name "Weather" -e ctw CAXX0548
+	[ -z "$(pidof tty-clock)" ] && urxvtc -name "Clock" -e tty-clock -tc
 
 	# Start vlc media player and playlist
 	if [ -d "$HOME/Videos/tempvideo" ] ; then
