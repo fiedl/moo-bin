@@ -54,7 +54,7 @@ urxvtc -name "MOCP" -e mocp
 ## Start GPU monitor
 [ -z "$(pidof nvidia-smi)" ] && urxvtc -name "GPU" -e nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
 ## Start local logs
-[ -z "$(pidof multitail)" ] && urxvtc -name "More Logs" -e multitail -ci green -n 5 -f "/mnt/linux-pdq/media/truecrypt1/private/transmission-daemon/posttorrent.log" -ci yellow -n 5 -f "/var/log/pacman.log"
+[ -z "$(pidof multitail)" ] && urxvtc -name "More Logs" -e multitail -ci red -n 6 -f "/mnt/linux-pdq/media/truecrypt1/private/transmission-daemon/posttorrent.log"
 ## Start system logs
 urxvtc -name "Logs" -e sudo journalctl -f
 ## Start RSS reader
@@ -66,16 +66,13 @@ urxvtc -name "Logs" -e sudo journalctl -f
 ## Start CPU temperature monitor
 urxvtc -name "CPUS" -e sh /home/pdq/bin/cpus_temp
 
+## GUI applications
 ## Start vlc media player and playlist
 if [ -d "$HOME/Videos/tempvideo" ] ; then
 	[ -z "$(pidof vlc)" ] && vlc "$VID_QUEUE" &
 fi
-
 ## Start text editor
 [ -z "$(pidof sublime_text)" ] && subl3 &
-
-## GUI applications
-
 ## Start video editor
 #[ -z "$(pidof kdenlive)" ] && kdenlive &
 ## Start web browser
@@ -86,13 +83,10 @@ fi
 [ -z "$(pidof steam)" ] && steam &
 ## Start youtube viewer
 [ -z "$(pidof gtk-youtube-viewer)" ] && gtk-youtube-viewer &
-
 ## Start dropbox
 [ -z "$(pidof dropbox)" ] && dropboxd &
-
 ## Start Arch Linux update notifier
 [ -z "$(pidof aarchup)" ] && /usr/bin/aarchup --loop-time 60 --aur --icon "$HOME/.icons/pacman_icon_48x48.png" &
-
 ## Start email client (start delay of 30 seconds to give proxy time to start)
 [ -z "$(pidof claws-mail)" ] && sleep 30s && usewithtor claws-mail &
 
