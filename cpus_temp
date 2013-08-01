@@ -1,0 +1,2 @@
+#!/usr/bin/sh
+while :; do sensors|grep ^Core|while read x; do printf '% .23s\n' "$x"; done; sleep 3 && clear; done;

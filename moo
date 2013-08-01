@@ -1,96 +1,101 @@
-#!/bin/sh
-# autostart script - ran after startx
-# author pdq 11-27-2012 - 04-18-2013 07-30-2013
+#!/usr/bin/sh
+## Autostart Script - ran after startx
+## Author pdq 11-27-2012 - 04-18-2013 07-30-2013
+
+## pdq@alice
+
+## Path to video directory queue
+VID_QUEUE="/home/pdq/Videos/24 Complete Series DVDRip XviD"
+#VID_QUEUE="/home/pdq/Videos/tempvideo"
+#VID_QUEUE="/home/pdq/Videos/movies"
+#VID_QUEUE="/home/pdq/Videos/Star Trek TNG"
+
+## Ensure rxvt-unicode daemon is running
+[ -z "$(pidof urxvtd)" ] && urxvtd -q -o -f
+
+## Screencast start (edit for your specific needs/hardware configuration)
 #urxvtc -name "Screencaster" -e ffmpeg -f alsa -ac 2 -i pulse -f x11grab -r 30 -s 1920x1080 -i :0.0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -crf 0 -threads 0 startx.mkv
 
-# Drop down urxvtc terminal console
+## Start drop down urxvtc terminal console
 [ -z "$(pidof yeahconsole)" ] && yeahconsole &
 
-# Start system information display
+## Start system information display
 #[ -z "$(pidof conky)" ] && conky -d -c "$HOME"/.config/conky/.conkye17 &
 
-# If data is mounted, ie: 
-if [ -f "/mnt/linux-pdq/media/truecrypt1/test" ] ; then
+## Remote applications (pdq@linux / pdq@192.168.0.10 - ssh keys read by keychain from ~/.zprofile
+## Main term
+urxvtc -name "ssh Term" -e ssh 192.168.0.10 -p34567
+## Start SSH top (terminal task manager)
+urxvtc -name "ssh top" -e ssh -t 192.168.0.10 -p34567 top
+## Mount server filesystem to localhost
+[ ! -d "/mnt/linux-pdq/home" ] && sshfs pdq@192.168.0.10:/ /mnt/linux-pdq -C -p 34567
 
-	# Mount @linux, term, htop and top - ssh keys read by keychain from ~/.zprofile
-	urxvtc -name "ssh Term" -e ssh 192.168.0.10 -p34567
-	#urxvtc -name "ssh htop" -e ssh -t 192.168.0.10 -p34567 htop
-	urxvtc -name "ssh top" -e ssh -t 192.168.0.10 -p34567 top
-	[ ! -d "/mnt/linux-pdq/home" ] && sshfs pdq@192.168.0.10:/ /mnt/linux-pdq -C -p 34567
+## Start dmenu clipboard (dmenuclip/dmenurl)
+#killall -q clipbored
+#clipbored 
 
-	# Start dmenu clipboard (dmenuclip/dmenurl)
-	#killall -q clipbored
-	#clipbored 
+## Start IM server and IRC client
+[ -z "$(pidof weechat-curses)" ] && urxvtc -name "IRC1" -e weechat-curses && urxvtc -name "IRC2" -e weechat-curses -d ~/.weechat-priv
 
-	# Start IM server and IRC client
-	[ -z "$(pidof weechat-curses)" ] && urxvtc -name "IRC1" -e weechat-curses && urxvtc -name "IRC2" -e weechat-curses -d ~/.weechat-priv
+## Start custom keyboard shortcuts
+[ -z "$(pidof xbindkeys)" ] && xbindkeys &
 
-	# Start custom keyboard shortcuts
-	[ -z "$(pidof xbindkeys)" ] && xbindkeys &
+## Main terms
+urxvtc -name "Term"
+urxvtc -name "tERM" ## large font size
 
-	# Main terminals
-	urxvtc -name "Term"
-	urxvtc -name "tERM" # large font size
+## Terminal applications
+## Start top (terminal task manager)
+[ -z "$(pidof top)" ] && urxvtc -name "TOP" -e top
+## Start music on console player
+urxvtc -name "MOCP" -e mocp
+## Start CPU frequency monitor
+[ -z "$(pidof watch)" ] && urxvtc -name "CPU Freq" -e watch grep \"cpu MHz\" /proc/cpuinfo
+## Start GPU monitor
+[ -z "$(pidof nvidia-smi)" ] && urxvtc -name "GPU" -e nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
+## Start local logs
+[ -z "$(pidof multitail)" ] && urxvtc -name "More Logs" -e multitail -ci green -n 5 -f "/mnt/linux-pdq/media/truecrypt1/private/transmission-daemon/posttorrent.log" -ci yellow -n 5 -f "/var/log/pacman.log"
+## Start system logs
+urxvtc -name "Logs" -e sudo journalctl -f
+## Start RSS reader
+[ -z "$(pidof canto-curses)" ] && urxvtc -name "RSS" -e canto-curses
+## Start weather monitor
+[ -z "$(pidof ctw)" ] && urxvtc -name "Weather" -e ctw CAXX0548
+## Start clock
+[ -z "$(pidof tty-clock)" ] && urxvtc -name "Clock" -e tty-clock -tc
+## Start CPU temperature monitor
+urxvtc -name "CPUS" -e sh /home/pdq/bin/cpus_temp
 
-	# Terminal applications
-	#[ -z "$(pidof htop)" ] && urxvtc -name "HTOP" -e htop 
-	[ -z "$(pidof top)" ] && urxvtc -name "TOP" -e top
-	urxvtc -name "MOCP" -e mocp
-	[ -z "$(pidof watch)" ] && urxvtc -name "CPU Freq" -e watch grep \"cpu MHz\" /proc/cpuinfo
-	[ -z "$(pidof nvidia-smi)" ] && urxvtc -name "GPU" -e nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
-	[ -z "$(pidof multitail)" ] && urxvtc -name "More Logs" -e multitail -ci green -n 5 -f "/mnt/linux-pdq/media/truecrypt1/private/transmission-daemon/posttorrent.log" -ci yellow -n 5 -f "/var/log/pacman.log"
-	urxvtc -name "Logs" -e sudo journalctl -f
-	[ -z "$(pidof canto-curses)" ] && urxvtc -name "RSS" -e canto-curses
-	[ -z "$(pidof ctw)" ] && urxvtc -name "Weather" -e ctw CAXX0548
-	[ -z "$(pidof tty-clock)" ] && urxvtc -name "Clock" -e tty-clock -tc
-
-	# Start vlc media player and playlist
-	if [ -d "$HOME/Videos/tempvideo" ] ; then
-		[ -z "$(pidof vlc)" ] && vlc "/home/pdq/Videos/24 Complete Series DVDRip XviD" &
-	fi
-
-	# Start text editor
-	[ -z "$(pidof sublime_text)" ] && subl3 &
-
-	# Start gui applications
-	#[ -z "$(pidof kdenlive)" ] && kdenlive &
-	#[ -z "$(pidof firefox)" ] && firefox &
-	#[ -z "$(pidof dolphin)" ] && dolphin &
-	[ -z "$(pidof steam)" ] && steam &
-	[ -z "$(pidof gtk-youtube-viewer)" ] && gtk-youtube-viewer &
-
-	# Start systray applications
-	[ -z "$(pidof dropbox)" ] && dropboxd &
-
-	# Start update notifier
-	#killall -q aarchup && sleep 1s
-	#[ -z "$(pidof aarchup)" ] && /usr/bin/aarchup --loop-time 60 --aur --icon "$HOME/.config/awesome/icons/pacman_icon_48x48.png" &
-
-	# Email client (start delay of 30 seconds to give proxy time to start)
-	[ -z "$(pidof claws-mail)" ] && sleep 30s && usewithtor claws-mail &
-else
-	[ -z "$(pidof cmatrix)" ] && urxvtc -name "Shall we play a game" -e cmatrix -C cyan
-	mplayer ~/nude.mp4 -noconsolecontrols -loop 0 &
-	#notify-send "Shall we play a game?" && sleep 5s
-	#MOO='blue'
-	#while true
-	#do
-		#notify-send "Shall we play a game?" && sleep 5s
-		# urxvtc -name "" -e cmatrix -C $MOO
-		# if [[ "$MOO" == "white" ]]; then
-		# 	MCOLOR='yellow'
-		# elif [[ "$MOO" == "blue" ]]; then
-		# 	MOO="red"
-		# elif [[ "$MOO" == "green" ]]; then
-		# 	MCOLOR='white'
-		# elif [[ "$MOO" == "red" ]]; then
-		# 	MCOLOR='green'
-		# elif [[ "$MOO" == "cyan" ]]; then
-		# 	MCOLOR='magenta'
-		# elif [[ "$MOO" == "yellow" ]]; then
-		# 	MCOLOR='cyan'
-		# elif [[ "$MOO" == "magenta" ]]; then
-		# 	MCOLOR='blue'
-		# fi
-	#done
+## Start vlc media player and playlist
+if [ -d "$HOME/Videos/tempvideo" ] ; then
+	[ -z "$(pidof vlc)" ] && vlc "$VID_QUEUE" &
 fi
+
+## Start text editor
+[ -z "$(pidof sublime_text)" ] && subl3 &
+
+## GUI applications
+
+## Start video editor
+#[ -z "$(pidof kdenlive)" ] && kdenlive &
+## Start web browser
+#[ -z "$(pidof firefox)" ] && firefox &
+## Start dolphin
+#[ -z "$(pidof dolphin)" ] && dolphin &
+## Start steam
+[ -z "$(pidof steam)" ] && steam &
+## Start youtube viewer
+[ -z "$(pidof gtk-youtube-viewer)" ] && gtk-youtube-viewer &
+
+## Start dropbox
+[ -z "$(pidof dropbox)" ] && dropboxd &
+
+## Start Arch Linux update notifier
+[ -z "$(pidof aarchup)" ] && /usr/bin/aarchup --loop-time 60 --aur --icon "$HOME/.icons/pacman_icon_48x48.png" &
+
+## Start email client (start delay of 30 seconds to give proxy time to start)
+[ -z "$(pidof claws-mail)" ] && sleep 30s && usewithtor claws-mail &
+
+## Start sillyness
+#[ -z "$(pidof cmatrix)" ] && urxvtc -name "Shall we play a game" -e cmatrix -C cyan
+#mplayer ~/nude.mp4 -noconsolecontrols -loop 0 &
