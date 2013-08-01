@@ -64,7 +64,7 @@ urxvtc -name "Logs" -e sudo journalctl -f
 ## Start clock
 [ -z "$(pidof tty-clock)" ] && urxvtc -name "Clock" -e tty-clock -tc
 ## Start CPU temperature monitor
-urxvtc -name "CPUS" -e sh /home/pdq/bin/cpus_temp
+[ -z "$(pidof cpus_temp)" ] && urxvtc -name "CPUS" -e cpus_temp
 
 ## GUI applications
 ## Start vlc media player and playlist
