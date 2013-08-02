@@ -1,0 +1,14 @@
+#!/bin/sh
+someinput=`kdialog --inputbox "Find window named: "`
+while [ -z $someinput ];
+        do 
+                sleep 1
+        done
+var="$(wmctrl -l | awk 'tolower($0) ~ /'$someinput'/ {print $1}')"
+if [ "$var" != "" ]; then
+        for entry in $var ; do wmctrl -i -a "$entry" ; done
+else
+        kdialog --sorry "I'm giving her all she's got, Captain, but what
+ you're asking for is a bloody miracle, >>$someinput<< ain't
+ there, I'm tellin' ya, I looked!"
+fi

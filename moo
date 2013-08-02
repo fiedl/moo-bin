@@ -22,13 +22,15 @@ VID_QUEUE="/home/pdq/Videos/24 Complete Series DVDRip XviD"
 ## Start system information display
 #[ -z "$(pidof conky)" ] && conky -d -c "$HOME"/.config/conky/.conkye17 &
 
-## Remote applications (pdq@linux / pdq@192.168.0.10 - ssh keys read by keychain from ~/.zprofile
-## Main term
-urxvtc -name "ssh Term" -e ssh 192.168.0.10 -p34567
-## Start SSH top (terminal task manager)
-urxvtc -name "ssh top" -e ssh -t 192.168.0.10 -p34567 top
-## Mount server filesystem to localhost
-[ ! -d "/mnt/linux-pdq/home" ] && sshfs pdq@192.168.0.10:/ /mnt/linux-pdq -C -p 34567
+if [ ! -d "/mnt/linux-pdq/home" ] ; then
+	## Remote applications (pdq@linux / pdq@192.168.0.10 - ssh keys read by keychain from ~/.zprofile
+	## Main term
+	urxvtc -name "ssh Term" -e ssh 192.168.0.10 -p34567
+	## Start SSH top (terminal task manager)
+	urxvtc -name "ssh top" -e ssh -t 192.168.0.10 -p34567 top
+	## Mount server filesystem to localhost
+	sshfs pdq@192.168.0.10:/ /mnt/linux-pdq -C -p 34567
+fi
 
 ## Start dmenu clipboard (dmenuclip/dmenurl)
 #killall -q clipbored
@@ -42,7 +44,7 @@ urxvtc -name "ssh top" -e ssh -t 192.168.0.10 -p34567 top
 
 ## Main terms
 urxvtc -name "Term"
-urxvtc -name "tERM" ## large font size
+urxvtc -name "tERM"
 
 ## Terminal applications
 ## Start top (terminal task manager)
@@ -64,7 +66,7 @@ urxvtc -name "Logs" -e sudo journalctl -f
 ## Start clock
 [ -z "$(pidof tty-clock)" ] && urxvtc -name "Clock" -e tty-clock -tc
 ## Start CPU temperature monitor
-[ -z "$(pidof cpus_temp)" ] && urxvtc -name "CPUS" -e cpus_temp
+[ -z "$(pidof cpus_temp  )" ] && urxvtc -name "CPUS" -e cpus_temp
 
 ## GUI applications
 ## Start vlc media player and playlist
@@ -76,20 +78,23 @@ fi
 ## Start video editor
 #[ -z "$(pidof kdenlive)" ] && kdenlive &
 ## Start web browser
-#[ -z "$(pidof firefox)" ] && firefox &
+[ -z "$(pidof firefox)" ] && firefox &
 ## Start dolphin
 #[ -z "$(pidof dolphin)" ] && dolphin &
 ## Start steam
 [ -z "$(pidof steam)" ] && steam &
 ## Start youtube viewer
-[ -z "$(pidof gtk-youtube-viewer)" ] && gtk-youtube-viewer &
+[ -z "$(pidof youtube-viewer)" ] && urxvtc -name "youtube" -e youtube-viewer -7 -S -C --mplayer="/usr/bin/vlc" --mplayer-args="-q"
 ## Start dropbox
 [ -z "$(pidof dropbox)" ] && dropboxd &
 ## Start Arch Linux update notifier
 [ -z "$(pidof aarchup)" ] && /usr/bin/aarchup --loop-time 60 --aur --icon "$HOME/.icons/pacman_icon_48x48.png" &
 ## Start email client (start delay of 30 seconds to give proxy time to start)
-[ -z "$(pidof claws-mail)" ] && sleep 30s && usewithtor claws-mail &
+#[ -z "$(pidof claws-mail)" ] && sleep 30s && usewithtor claws-mail &
+[ -z "$(pidof mutt)" ] &&  urxvtc -name "Mail" -e torsocks mutt
 
 ## Start sillyness
 #[ -z "$(pidof cmatrix)" ] && urxvtc -name "Shall we play a game" -e cmatrix -C cyan
 #mplayer ~/nude.mp4 -noconsolecontrols -loop 0 &
+
+exit 0
