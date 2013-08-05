@@ -1,9 +1,7 @@
 #!/bin/sh
+TR_TORRENT_NAME="Deadliest.Catch.S09E16.HDTV.x264-KILLERS"
+a="$TR_TORRENT_NAME"
+echo "${a%-*}"
+sleep 10s
 
-export LANG=POSIX
-clock=$(date +%s) 
-for (( clock == 2147483641; clock < 2147483651; clock++ ))
-do
-    echo ctime$clock
-done
 exit 0

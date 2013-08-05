@@ -62,7 +62,7 @@ urxvtc -name "Logs" -e sudo journalctl -f
 ## Start RSS reader
 [ -z "$(pidof canto-curses)" ] && urxvtc -name "RSS" -e canto-curses
 ## Start weather monitor
-[ -z "$(pidof ctw)" ] && urxvtc -name "Weather" -e ctw CAXX0548
+[ -z "$(pidof t)" ] && urxvtc -name "Weather" -e ctw CAXX0548
 ## Start clock
 [ -z "$(pidof tty-clock)" ] && urxvtc -name "Clock" -e tty-clock -tc
 ## Start CPU temperature monitor
@@ -91,7 +91,7 @@ fi
 [ -z "$(pidof aarchup)" ] && /usr/bin/aarchup --loop-time 60 --aur --icon "$HOME/.icons/pacman_icon_48x48.png" &
 ## Start email client (start delay of 30 seconds to give proxy time to start)
 #[ -z "$(pidof claws-mail)" ] && sleep 30s && usewithtor claws-mail &
-[ -z "$(pidof mutt)" ] &&  urxvtc -name "Mail" -e torsocks mutt
+[ -z "$(pidof mutt)" ] && sleep 3m && urxvtc -name "Mail" -e torsocks mutt
 
 ## Start sillyness
 #[ -z "$(pidof cmatrix)" ] && urxvtc -name "Shall we play a game" -e cmatrix -C cyan

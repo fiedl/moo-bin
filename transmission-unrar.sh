@@ -7,13 +7,15 @@
   # Password for transmission remote.
 #  TR_PASSWORD="password"
   # Get current time.
-  NOW=$(date +%Y-%m-%d\ %H:%M:%S)
+  NOW=$(date +%m-%d\ %H:%M:%S)
   # Source directory, should not be changed.
   SRC_DIR="${TR_TORRENT_DIR}/${TR_TORRENT_NAME}"
   # Directory to store the un-compressed files in..
   DEST_DIR=${HOME}"/Videos/tempvideo"
   # This parameter string could be passed from Transmission in the future.
   TR_TORRENT_PARAMETER="EXTRACT SLEEP1h"
+
+  PRETTY_NAME="${TR_TORRENT_NAME%-*}"
 
   if [ -e "$SRC_DIR/keep" ]; then
     TR_TORRENT_PARAMETER="$TR_TORRENT_PARAMETER KEEP"
@@ -29,6 +31,7 @@
     exit 0
   fi
 
+  echo $NOW "Completed: $PRETTY_NAME" >> $LOG_FILE
   if [[ "$TR_TORRENT_PARAMETER" =~ "EXTRACT" ]]; then
     cd $TR_TORRENT_DIR
     if [ -d "$SRC_DIR" ]; then
@@ -52,13 +55,7 @@
           #vlc "$DEST_DIR/$TR_TORRENT_NAME.*" --playlist-enqueue
           #transmission-remote -n $TR_USERNAME:$TR_PASSWORD -t$TR_TORRENT_ID --remove-and-delete
         fi
-        echo $NOW "* $TR_TORRENT_NAME" >> $LOG_FILE
-        #notify-send "Unrarred $TR_TORRENT_NAME"
-      else
-        cp -R $SRC_DIR $DEST_DIR
-        echo $NOW "+ $TR_TORRENT_NAME" >> $LOG_FILE
-        #vlc --playlist-enqueue "$DEST_DIR/$TR_TORRENT_NAME" &
-        #notify-send "Copied $TR_TORRENT_NAME"
+        echo $NOW "Unpacked: $PRETTY_NAME" >> $LOG_FILE
       fi
     fi
   fi
