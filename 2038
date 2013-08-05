@@ -1,5 +1,5 @@
 #!/bin/sh
-TR_TORRENT_NAME="Deadliest.Catch.S09E16.HDTV.x264-KILLERS"
+TR_TORRENT_NAME="show.name.S00E00.HDTV.x264-WEE"
 a="$TR_TORRENT_NAME"
 echo "${a%-*}"
 sleep 10s

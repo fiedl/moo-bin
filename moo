@@ -62,7 +62,7 @@ urxvtc -name "Logs" -e sudo journalctl -f
 ## Start RSS reader
 [ -z "$(pidof canto-curses)" ] && urxvtc -name "RSS" -e canto-curses
 ## Start weather monitor
-[ -z "$(pidof t)" ] && urxvtc -name "Weather" -e ctw CAXX0548
+[ -z "$(pidof ctw)" ] && urxvtc -name "Weather" -e ctw CAXX0548
 ## Start clock
 [ -z "$(pidof tty-clock)" ] && urxvtc -name "Clock" -e tty-clock -tc
 ## Start CPU temperature monitor
