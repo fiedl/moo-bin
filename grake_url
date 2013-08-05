@@ -1,0 +1,31 @@
+#!/usr/bin/sh
+## pdq@archlinux
+## 08-04-2013
+
+## can be used in firefox with addon Open With 5.3.1 https://addons.mozilla.org/en-US/firefox/addon/open-with/
+## Copy embedded video link - ~/bin/grake_url copy
+## Play embedded video link in VLC - ~/bin/grake_url
+
+## if not use a proxy remove this texts from below: --proxy="http://127.0.0.1:8118"
+
+if [ ! -f /usr/bin/grake ]; then
+	echo "Missing package: grake [Command line tool for scanning webpages for Youtube links]"
+	exit 1
+elif [ ! -f /usr/bin/xclip ]; then
+	echo "Missing package: xclip [Command line interface to the X11 clipboard]"
+	exit 1
+elif [ ! -f /usr/bin/vlc ]; then
+	echo "Missing package: vlc [A multi-platform MPEG, VCD/DVD, and DivX player]"
+	exit 1
+fi
+
+if [ "$1" != "" ]; then
+	if [ "$1" = "copy" ]; then
+		grake -q --proxy="http://127.0.0.1:8118" "$2" | xclip
+		notify-send "Link copied to clipboard"
+	else
+		grake -q --proxy="http://127.0.0.1:8118" "$1" | vlc -
+	fi
+fi
+
+exit 0

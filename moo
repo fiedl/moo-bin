@@ -66,7 +66,9 @@ urxvtc -name "Logs" -e sudo journalctl -f
 ## Start clock
 [ -z "$(pidof tty-clock)" ] && urxvtc -name "Clock" -e tty-clock -tc
 ## Start CPU temperature monitor
-[ -z "$(pidof cpus_temp  )" ] && urxvtc -name "CPUS" -e cpus_temp
+[ -z "$(pidof cpus_temp)" ] && urxvtc -name "CPUS" -e cpus_temp
+## Start Internet radio player
+[ -z "$(pidof pyradio)" ] && urxvtc -name "Radio" -e pyradio 
 
 ## GUI applications
 ## Start vlc media player and playlist
