@@ -17,7 +17,7 @@ case "$1" in
 		#url=$(read -u 3 line; printf '%b' "$line" | cut -d \" -f4)
 		#mplayer -title "$title" -ontop -really-quiet -cache 7777 -cache-min 11 -cache-seek-min 99 "$url" -ao pcm:file=test.wav < /dev/null &
 		#exec 3>&-
-		vlc --preferred-resolution "1080p" "$2" &
+		vlc --http-proxy=127.0.0.1:8118 --preferred-resolution "480p" "$2" &
 		;;
 	-audio)
 		#screen -S fugu -X screen -t uLplay 19 mplayer -cache 1111 "$2"
