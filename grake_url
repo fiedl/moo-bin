@@ -21,10 +21,10 @@ fi
 
 if [ "$1" != "" ]; then
 	if [ "$1" = "copy" ]; then
-		grake -q --proxy="http://127.0.0.1:8118" "$2" | xclip
+		grake -q --preferred-resolution "1080p" --proxy="http://127.0.0.1:8118" "$2" | xclip
 		notify-send "Link copied to clipboard"
 	else
-		grake -q --proxy="http://127.0.0.1:8118" "$1" | vlc -
+		grake -q --preferred-resolution "1080p" --proxy="http://127.0.0.1:8118" "$1" | vlc -
 	fi
 fi
 
