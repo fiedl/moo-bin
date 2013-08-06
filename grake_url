@@ -21,6 +21,9 @@ elif [ ! -f /usr/bin/vlc ]; then
 elif [ ! -f /usr/bin/zenity ]; then
 	echo "Missing package: zenity [Display graphical dialog boxes from shell scripts]"
 	exit 1
+elif [ ! -f /usr/bin/youtube-viewer ]; then
+	echo "Missing package: youtube-viewer [A command line utility for viewing youtube-videos in MPlayer."
+	exit 1
 fi
 
 if [ "$1" != "" ]; then
