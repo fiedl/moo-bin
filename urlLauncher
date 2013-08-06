@@ -1,5 +1,7 @@
 #!/usr/bin/sh
-# original code by skizzhg
+## pdq@archlinux
+## Part of FlashSucks 0.0.2
+## 08-04-2013
 
 #BROWSER=dwb
 
@@ -18,11 +20,11 @@ case "$1" in
 		elif [ "$_ACTION" == "Favorite" ]; then
 			_DOACTION="--favorite='$2'"
 		elif [ "$_ACTION" == "Subscribe" ]; then
-			_DOACTION="--subscribe='$2'"
+		##	_DOACTION="--subscribe='$2'" ## TODO
 		fi
 
-		if [ -z "$_DOACTION" ]; then
-			youtube-viewer --like="$2"  
+		if [ ! -z "$_DOACTION" ]; then
+			zenity --info --text "$(youtube-viewer --prefer-https --noI $_DOACTION)"
 		fi
 		;;
 	-audio)
