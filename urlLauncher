@@ -20,7 +20,7 @@ case "$1" in
 		elif [ "$_ACTION" == "Favorite" ]; then
 			_DOACTION="--favorite='$2'"
 		elif [ "$_ACTION" == "Subscribe" ]; then
-		##	_DOACTION="--subscribe='$2'" ## TODO
+			_DOACTION="--subscribe='$2'" ## TODO
 		fi
 
 		if [ ! -z "$_DOACTION" ]; then

@@ -40,7 +40,7 @@ if [ "$1" != "" ]; then
 		elif [ "$_ACTION" == "Favorite" ]; then
 			_DOACTION="--favorite='$1'"
 		elif [ "$_ACTION" == "Subscribe" ]; then
-			_DOACTION="--subscribe='$1'"
+			_DOACTION="--subscribe='$1'" ## TODO
 		fi
 
 		if [ ! -z "$_DOACTION" ]; then
