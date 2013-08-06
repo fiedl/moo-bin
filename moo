@@ -84,7 +84,7 @@ fi
 ## Start dolphin
 #[ -z "$(pidof dolphin)" ] && dolphin &
 ## Start steam
-[ -z "$(pidof steam)" ] && steam &
+#[ -z "$(pidof steam)" ] && steam &
 ## Start youtube viewer
 [ -z "$(pidof youtube-viewer)" ] && urxvtc -name "youtube" -e youtube-viewer --prefer-https --prefer-webm --use-colors --quiet -7 -S -C --mplayer="/usr/bin/vlc" --mplayer-args="-q"
 ## Start dropbox

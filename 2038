@@ -1,7 +1,17 @@
 #!/bin/sh
-TR_TORRENT_NAME="show.name.S00E00.HDTV.x264-WEE"
-a="$TR_TORRENT_NAME"
-echo "${a%-*}"
-sleep 10s
+TR_TORRENT_NAME="Sample 2013 HDRiP CODEC GROUP"
+SRC_DIR="/mnt/linux-pdq/media/truecrypt1/Down/$TR_TORRENT_NAME"
+
+if [ ! $(ls "$SRC_DIR/*.nfo" >/dev/null) ]; then
+    FFILE=$(find "$SRC_DIR/" -type f -exec ls -s {} \; | sort -nr | awk 'NR==1 { $1=""; sub(/^ /, ""); print }')
+    IS_VIDEO=$(file -ib "$FFILE" | grep video)
+    if [ "$IS_VIDEO" ]; then
+    	FILENAME=$(basename "$FFILE")
+        NFOFILE="$(echo $TR_TORRENT_NAME.nfo | tr -s ' ' '_')"
+        cd "$SRC_DIR"
+        /usr/bin/mediainfo "$FILENAME" > "$SRC_DIR/$NFOFILE"
+        cd ~
+    fi
+fi
 
 exit 0

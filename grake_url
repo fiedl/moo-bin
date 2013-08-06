@@ -30,26 +30,33 @@ if [ "$1" != "" ]; then
 	if [ "$1" = "copy" ]; then
 		grake -q --proxy="http://127.0.0.1:8118" "$2" | xclip
 		notify-send "Link copied to clipboard"
+		exit 0
+	elif [ "$1" = "play" ]; then
+		_PROXY=$(zenity --list --radiolist --width 200 --height 200 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Use Proxy" TRUE Yes FALSE No)
+		_RES=$(zenity --list --radiolist --width 200 --height 230 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Resolution" TRUE 240p  FALSE 480p FALSE 720p FALSE 1080p)
+		_USEPROX=$([ "$_PROXY" == "Yes" ] && echo "--http-proxy=127.0.0.1:8118 " || echo "")
+		vlc $_USEPROX--preferred-resolution "$_RES" "$2"
 	else
-		PROXY=$(zenity --list --radiolist --width 200 --height 200 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Use Proxy" TRUE Yes FALSE No)
-		RES=$(zenity --list --radiolist --width 200 --height 230 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Resolution" TRUE 240p  FALSE 480p FALSE 720p FALSE 1080p)
+		_PROXY=$(zenity --list --radiolist --width 200 --height 200 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Use Proxy" TRUE Yes FALSE No)
+		_RES=$(zenity --list --radiolist --width 200 --height 230 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Resolution" TRUE 240p  FALSE 480p FALSE 720p FALSE 1080p)
 		_USEPROX=$([ "$_PROXY" == "Yes" ] && echo "--http-proxy=127.0.0.1:8118 " || echo "")
 		grake -q --proxy="http://127.0.0.1:8118" "$1" | vlc $_USEPROX--preferred-resolution="$RES" -
-			_ACTION=$(zenity --list --radiolist --width 230 --height 230 --text "Flash sucks" --title="Rate, Favorite or Subscribe" --column "Choice" --column "Action" TRUE Nothing FALSE Like FALSE Dislike FALSE Favorite FALSE Subscribe)
-		_DOACTION=
-		if [ "$_ACTION" == "Like" ]; then
-			_DOACTION="--like='$1'"
-		elif [ "$_ACTION" == "Dislike" ]; then
-			_DOACTION="--dislike='$1'"
-		elif [ "$_ACTION" == "Favorite" ]; then
-			_DOACTION="--favorite='$1'"
-		elif [ "$_ACTION" == "Subscribe" ]; then
-			_DOACTION="--subscribe='$1'" ## TODO
-		fi
+	fi
 
-		if [ ! -z "$_DOACTION" ]; then
-			zenity --info --text "$(youtube-viewer --prefer-https --noI $_DOACTION)"
-		fi
+	_ACTION=$(zenity --list --radiolist --width 230 --height 230 --text "Flash sucks" --title="Rate, Favorite or Subscribe" --column "Choice" --column "Action" TRUE Nothing FALSE Like FALSE Dislike FALSE Favorite FALSE Subscribe)
+	_DOACTION=
+	if [ "$_ACTION" == "Like" ]; then
+		_DOACTION="--like='$1'"
+	elif [ "$_ACTION" == "Dislike" ]; then
+		_DOACTION="--dislike='$1'"
+	elif [ "$_ACTION" == "Favorite" ]; then
+		_DOACTION="--favorite='$1'"
+	elif [ "$_ACTION" == "Subscribe" ]; then
+		_DOACTION="--subscribe='$1'" ## TODO
+	fi
+
+	if [ ! -z "$_DOACTION" ]; then
+		zenity --info --text "$(youtube-viewer --prefer-https --noI $_DOACTION)"
 	fi
 fi
 
