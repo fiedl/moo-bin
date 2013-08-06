@@ -6,9 +6,24 @@
 case "$1" in
 	-video)
 		_PROXY=$(zenity --list --radiolist --width 200 --height 230 --text "Flash sucks" --title="" --column "Choice" --column "Use Proxy" TRUE Yes FALSE No)
-		_RES=$(zenity --list --radiolist --width 200 --height 200 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Resolution" TRUE 240p  FALSE 480p FALSE 720p FALSE 1080p)
+		_RES=$(zenity --list --radiolist --width 200 --height 200 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Resolution" TRUE 240p FALSE 480p FALSE 720p FALSE 1080p)
 		_USEPROX=$([ "$_PROXY" == "Yes" ] && echo "--http-proxy=127.0.0.1:8118 " || echo "")
-		vlc $_USEPROX--preferred-resolution "$_RES" "$2" &
+		vlc $_USEPROX--preferred-resolution "$_RES" "$2"
+		_ACTION=$(zenity --list --radiolist --width 230 --height 230 --text "Flash sucks" --title="Rate, Favorite or Subscribe" --column "Choice" --column "Action" FALSE Nothing TRUE Like FALSE Dislike FALSE Favorite FALSE Subscribe)
+		_DOACTION=
+		if [ "$_ACTION" == "Like" ]; then
+			_DOACTION="--like='$2'"
+		elif [ "$_ACTION" == "Dislike" ]; then
+			_DOACTION="--dislike='$2'"
+		elif [ "$_ACTION" == "Favorite" ]; then
+			_DOACTION="--favorite='$2'"
+		elif [ "$_ACTION" == "Subscribe" ]; then
+			_DOACTION="--subscribe='$2'"
+		fi
+
+		if [ -z "$_DOACTION" ]; then
+			youtube-viewer --like="$2"  
+		fi
 		;;
 	-audio)
 		vlc --http-proxy=127.0.0.1:8118 "$2" &
