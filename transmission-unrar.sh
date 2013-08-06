@@ -34,17 +34,18 @@
 
     echo $NOW "Completed: $PRETTY_NAME" >> $LOG_FILE
 
-    if [ ! $(ls "$SRC_DIR/*.nfo" >/dev/null) ]; then
+    cd "$SRC_DIR"
+    COUNT=$(ls -1 *.nfo 2>/dev/null | wc -l)
+    if [ $COUNT == 0 ]; then
         FFILE=$(find "$SRC_DIR/" -type f -exec ls -s {} \; | sort -nr | awk 'NR==1 { $1=""; sub(/^ /, ""); print }')
         IS_VIDEO=$(file -ib "$FFILE" | grep video)
         if [ "$IS_VIDEO" ]; then
           FILENAME=$(basename "$FFILE")
             NFOFILE="$(echo $TR_TORRENT_NAME.nfo | tr -s ' ' '_')"
-            cd "$SRC_DIR"
             /usr/bin/mediainfo "$FILENAME" > "$SRC_DIR/$NFOFILE"
-            cd ~
         fi
     fi
+    cd ~
 
     if [[ "$TR_TORRENT_PARAMETER" =~ "EXTRACT" ]]; then
       cd $TR_TORRENT_DIR

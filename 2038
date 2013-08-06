@@ -1,17 +1,18 @@
 #!/bin/sh
-TR_TORRENT_NAME="Sample 2013 HDRiP CODEC GROUP"
+TR_TORRENT_NAME="Epic 2013 HDRiP XViD UNiQUE"
 SRC_DIR="/mnt/linux-pdq/media/truecrypt1/Down/$TR_TORRENT_NAME"
 
-if [ ! $(ls "$SRC_DIR/*.nfo" >/dev/null) ]; then
+cd "$SRC_DIR"
+COUNT=$(ls -1 *.nfo 2>/dev/null | wc -l)
+if [ $COUNT == 0 ]; then
     FFILE=$(find "$SRC_DIR/" -type f -exec ls -s {} \; | sort -nr | awk 'NR==1 { $1=""; sub(/^ /, ""); print }')
     IS_VIDEO=$(file -ib "$FFILE" | grep video)
     if [ "$IS_VIDEO" ]; then
     	FILENAME=$(basename "$FFILE")
         NFOFILE="$(echo $TR_TORRENT_NAME.nfo | tr -s ' ' '_')"
-        cd "$SRC_DIR"
         /usr/bin/mediainfo "$FILENAME" > "$SRC_DIR/$NFOFILE"
-        cd ~
     fi
 fi
+ cd ~
 
 exit 0
