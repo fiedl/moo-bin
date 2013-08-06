@@ -86,7 +86,7 @@ fi
 ## Start steam
 [ -z "$(pidof steam)" ] && steam &
 ## Start youtube viewer
-[ -z "$(pidof youtube-viewer)" ] && urxvtc -name "youtube" -e youtube-viewer --http_proxy="http://127.0.0.1:8118" -7 -S -C --mplayer="/usr/bin/vlc" --mplayer-args="-q"
+[ -z "$(pidof youtube-viewer)" ] && urxvtc -name "youtube" -e youtube-viewer  --prefer-https --prefer-webm --use-colors --quiet --7 -S -C -q --mplayer="/usr/bin/vlc" --mplayer-args="-q"
 ## Start dropbox
 [ -z "$(pidof dropbox)" ] && dropboxd &
 ## Start Arch Linux update notifier

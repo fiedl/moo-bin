@@ -6,7 +6,6 @@
 ## Copy embedded video link - ~/bin/grake_url copy
 ## Play embedded video link in VLC - ~/bin/grake_url
 
-## if not use a proxy remove this texts from below: --proxy="http://127.0.0.1:8118" and --http-proxy=127.0.0.1:8118
 
 if [ ! -f /usr/bin/grake ]; then
 	echo "Missing package: grake [Command line tool for scanning webpages for Youtube links]"
@@ -24,7 +23,10 @@ if [ "$1" != "" ]; then
 		grake -q --proxy="http://127.0.0.1:8118" "$2" | xclip
 		notify-send "Link copied to clipboard"
 	else
-		grake -q --proxy="http://127.0.0.1:8118" "$1" | vlc --preferred-resolution="480p" --http-proxy=127.0.0.1:8118 -
+		PROXY=$(zenity --list --radiolist --width 200 --height 200 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Use Proxy" TRUE Yes FALSE No)
+		RES=$(zenity --list --radiolist --width 200 --height 230 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Resolution" TRUE 240p  FALSE 480p FALSE 720p FALSE 1080p)
+		_USEPROX=$([ "$_PROXY" == "Yes" ] && echo "--http-proxy=127.0.0.1:8118 " || echo "")
+		grake -q --proxy="http://127.0.0.1:8118" "$1" | vlc $_USEPROX--preferred-resolution="$RES" -
 	fi
 fi
 
