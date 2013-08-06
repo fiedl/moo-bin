@@ -1,6 +1,7 @@
 #!/usr/bin/sh
 ## pdq@archlinux
 ## Part of FlashSucks 0.0.2
+## This script is for playing linked videos from IRC or terminal console programs (see ~/.Xdefaults)
 ## 08-04-2013
 
 #BROWSER=dwb

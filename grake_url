@@ -1,6 +1,7 @@
 #!/usr/bin/sh
 ## pdq@archlinux
 ## Part of FlashSucks 0.0.2
+## This script is for playing embedded videos on web pages, right click link or right click when on desired page
 ## 08-04-2013
 
 ## can be used in firefox with addon Open With 5.3.1 https://addons.mozilla.org/en-US/firefox/addon/open-with/
