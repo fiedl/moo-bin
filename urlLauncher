@@ -12,7 +12,7 @@ case "$1" in
 		_RES=$(zenity --list --radiolist --width 200 --height 200 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Resolution" TRUE 240p FALSE 480p FALSE 720p FALSE 1080p)
 		_USEPROX=$([ "$_PROXY" == "Yes" ] && echo "--http-proxy=127.0.0.1:8118 " || echo "")
 		vlc $_USEPROX--preferred-resolution "$_RES" "$2"
-		_ACTION=$(zenity --list --radiolist --width 230 --height 230 --text "Flash sucks" --title="Rate, Favorite or Subscribe" --column "Choice" --column "Action" FALSE Nothing TRUE Like FALSE Dislike FALSE Favorite FALSE Subscribe)
+		_ACTION=$(zenity --list --radiolist --width 230 --height 230 --text "Flash sucks" --title="Rate, Favorite or Subscribe" --column "Choice" --column "Action" TRUE Nothing FALSE Like FALSE Dislike FALSE Favorite FALSE Subscribe)
 		_DOACTION=
 		if [ "$_ACTION" == "Like" ]; then
 			_DOACTION="--like='$2'"
