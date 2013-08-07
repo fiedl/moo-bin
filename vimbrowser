@@ -4,8 +4,8 @@
 ## This script is for launching vimb
 ## 08-04-2013
 
-WEBBROWSER=$HOME/bin/vimb 
-MANPAGE=$HOME/github/vimb/compiled/usr/local/share/man/man1/vimb.1
+WEBBROWSER=$HOME/abs/vimb/vimb
+MANPAGE=$HOME/abs/vimb/usr/local/share/man/man1/vimb.1
 TABBED="tabbed -c -n browser "
 
 if [ ! -f $WEBBROWSER ]; then
