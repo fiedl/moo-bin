@@ -1,0 +1,40 @@
+#!/usr/bin/sh
+## pdq@archlinux
+## Part of pdq-browser 0.0.1
+## This script is for launching vimb
+## 08-04-2013
+
+WEBBROWSER=$HOME/bin/vimb 
+MANPAGE=$HOME/github/vimb/compiled/usr/local/share/man/man1/vimb.1
+TABBED="tabbed -c -n browser "
+
+if [ ! -f $WEBBROWSER ]; then
+	echo "Missing package: vimb [Vimb is a WebKit-based web browser]"
+	exit 1
+elif [ ! -f /usr/bin/tabbed ]; then
+	echo "Missing package: tabbed [Simple generic tabbed fronted to xembed aware applications]"
+	exit 1
+fi
+
+URL="$1"
+while getopts u:pthm option
+do
+        case "${option}"
+        in
+                u) URL=${OPTARG};;
+                p) PROXY=YES;;
+                t) TABBED="";;
+                h) HELP=YES;;
+                m) MANUAL=YES;;
+        esac
+done
+
+if [ "$HELP" != "" ]; then
+	$WEBBROWSER -h
+elif [ "$MANUAL" != "" ]; then
+	man $MANPAGE
+elif [ "$PROXY" != "" ]; then
+	http_proxy=http://127.0.0.1:8118 $TABBED$WEBBROWSER "$URL"
+else
+	$TABBED$WEBBROWSER "$URL" -e
+fi
