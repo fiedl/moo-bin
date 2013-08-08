@@ -80,7 +80,11 @@ fi
 ## Start video editor
 #[ -z "$(pidof kdenlive)" ] && kdenlive &
 ## Start web browser
-[ -z "$(pidof firefox)" ] && firefox &
+#[ -z "$(pidof firefox)" ] && firefox &
+if [ -z "$(pidof vimb)" ]; then
+	vb &
+	vbp &
+fi
 ## Start dolphin
 #[ -z "$(pidof dolphin)" ] && dolphin &
 ## Start steam
