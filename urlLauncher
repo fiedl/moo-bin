@@ -4,7 +4,7 @@
 ## This script is for playing linked videos from IRC or terminal console programs (see ~/.Xdefaults)
 ## 08-04-2013
 
-#BROWSER=dwb
+BROWSER="vbp -u"
 
 case "$1" in
 	-video)
