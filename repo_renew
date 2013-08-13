@@ -1,9 +1,13 @@
 #!/usr/bin/sh
+REPO_BASE_DIR="/mnt/linux-pdq/media/truecrypt1/domains/mooOS/"
+REPO_BASE_URL="https://repo.mooos.pdq/"
+ABS_BASE_DIR="$HOME/abs/"
+REPO_LOG="${ABS_BASE_DIR}update.log"
+rm ${ABS_BASE_DIR}mooOS-pkgs-32/mooOS-pkgs-32.db.tar.gz ${ABS_BASE_DIR}mooOS-pkgs-32/mooOS-pkgs-32-db
+rm ${ABS_BASE_DIR}mooOS-pkgs-64/mooOS-pkgs-64.db.tar.gz ${ABS_BASE_DIR}mooOS-pkgs-64/mooOS-pkgs-64-db
+repo-add ${ABS_BASE_DIR}mooOS-pkgs-32/mooOS-pkgs-32.db.tar.gz ${ABS_BASE_DIR}mooOS-pkgs-32/*.pkg.tar.xz >> $REPO_LOG
+repo-add ${ABS_BASE_DIR}mooOS-pkgs-64/mooOS-pkgs-64.db.tar.gz ${ABS_BASE_DIR}mooOS-pkgs-64/*.pkg.tar.xz >> $REPO_LOG
 
-rm $HOME/abs/mooOS-pkgs-32/mooOS-pkgs-32.db.tar.gz $HOME/abs/mooOS-pkgs-32/mooOS-pkgs-32-db
-rm $HOME/abs/mooOS-pkgs-64/mooOS-pkgs-64.db.tar.gz $HOME/abs/mooOS-pkgs-64/mooOS-pkgs-64-db
-repo-add $HOME/abs/mooOS-pkgs-32/mooOS-pkgs-32.db.tar.gz $HOME/abs/mooOS-pkgs-32/*.pkg.tar.xz
-repo-add $HOME/abs/mooOS-pkgs-64/mooOS-pkgs-64.db.tar.gz $HOME/abs/mooOS-pkgs-64/*.pkg.tar.xz
-
+notify-send "Repo update complete"
 
 exit 0
