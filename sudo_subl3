@@ -1,0 +1,2 @@
+#!/bin/sh
+sudo subl3 $0

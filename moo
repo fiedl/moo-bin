@@ -82,8 +82,8 @@ fi
 ## Start web browser
 #[ -z "$(pidof firefox)" ] && firefox &
 if [ -z "$(pidof vimb)" ]; then
-	vb &
-	vbp &
+	vb -u "https://wiki.archlinux.org/index.php/User:Pdq" &
+	vbp -u "https://www.linuxdistrocommunity.com/forums/index.php" &
 fi
 ## Start dolphin
 #[ -z "$(pidof dolphin)" ] && dolphin &

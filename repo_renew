@@ -1,0 +1,9 @@
+#!/usr/bin/sh
+
+rm $HOME/abs/mooOS-pkgs-32/mooOS-pkgs-32.db.tar.gz $HOME/abs/mooOS-pkgs-32/mooOS-pkgs-32-db
+rm $HOME/abs/mooOS-pkgs-64/mooOS-pkgs-64.db.tar.gz $HOME/abs/mooOS-pkgs-64/mooOS-pkgs-64-db
+repo-add $HOME/abs/mooOS-pkgs-32/mooOS-pkgs-32.db.tar.gz $HOME/abs/mooOS-pkgs-32/*.pkg.tar.xz
+repo-add $HOME/abs/mooOS-pkgs-64/mooOS-pkgs-64.db.tar.gz $HOME/abs/mooOS-pkgs-64/*.pkg.tar.xz
+
+
+exit 0
