@@ -7,6 +7,8 @@ REPO_BASE_URL="https://repo.mooos.pdq/"
 ABS_BASE_DIR="${MOO_HOME}abs/"
 REPO_LOG_TEMP="/tmp/repo_renew"
 REPO_LOG="${ABS_BASE_DIR}update.log"
+ISO_DIR="/media/truecrypt3/mooOS/out"   # iso
+WORK_DIR="/media/truecrypt3/mooOS/work" # work
 
 
 ask_something() {
@@ -24,7 +26,7 @@ ask_something() {
 ##
 ## root script
 if [ $(id -u) -eq 0 ]; then
-	question="Have you ran this script as $USER 1st? You wish to  make iso (Y/N)?\n"
+	question="Have you ran this script as USER 1st? You wish to  make iso (Y/N)?\n"
 	if ask_something; then
 		cp -vr ${MOO_HOME}bin/* ${MOO_HOME}archlive/releng/root-image/etc/skel/bin
 		cp -vr ${MOO_HOME}.pentadactyl/colors/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.pentadactyl/colors
@@ -46,18 +48,31 @@ if [ $(id -u) -eq 0 ]; then
 		cp -vr ${MOO_HOME}.e/e/config/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/config
 		cp -vr ${MOO_HOME}.e/e/themes/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/themes
 
-		cd ${MOO_HOME}.archlive/releng
-		rm -r ${MOO_HOME}.archlive/releng/work
-		rm -r ${MOO_HOME}.archlive/releng/out
-		mkdir ${MOO_HOME}.archlive/releng/work && cp ${MOO_HOME}info/pacman.conf ${MOO_HOME}.archlive/releng/work/pacman.conf
+		#cd ${MOO_HOME}.archlive/releng
+		## deprecated method
+		if [ -d "${MOO_HOME}.archlive/releng/work" ]; then
+			rm -r ${MOO_HOME}.archlive/releng/work
+		fi
+		if [ -d "${MOO_HOME}.archlive/releng/out" ]; then
+			rm -r ${MOO_HOME}.archlive/releng/out
+		fi
+
+		## new method
+		if [ -d "$ISO_DIR" ]; then
+			rm -r "$ISO_DIR"
+		fi
+		if [ -d "$WORK_DIR" ]; then
+			rm -r "$WORK_DIR"
+		fi
+		mkdir "$WORK_DIR" && cp ${MOO_HOME}info/pacman.conf ${WORK_DIR}/pacman.conf
 		echo "Building iso now..."
 		sleep 3s
-		 ./build.sh -v
+		 ./build.sh -v -o "$ISO_DIR" -w "$WORK_DIR"
 	fi
 else
 	## push latest to github
 	gh -b
-
+	echo "Copying configuration files and recreating repos now..."
 	## remove existing repos
 	rm ${ABS_BASE_DIR}mooOS-pkgs-32/mooOS-pkgs-32.db.tar.gz
 	rm ${ABS_BASE_DIR}mooOS-pkgs-64/mooOS-pkgs-64.db.tar.gz
