@@ -10,6 +10,10 @@ REPO_LOG="${ABS_BASE_DIR}update.log"
 ISO_DIR="/media/truecrypt3/mooOS/out"   # iso
 WORK_DIR="/media/truecrypt3/mooOS/work" # work
 
+# Text color variables
+txtbld=$(tput bold)                # Bold
+bldred=${txtbld}$(tput setaf 1)    # red
+bldyellow=${txtbld}$(tput setaf 3) # yellow
 
 ask_something() {
 	echo -ne $question
@@ -26,7 +30,7 @@ ask_something() {
 ##
 ## root script
 if [ $(id -u) -eq 0 ]; then
-	question="Have you ran this script as USER 1st? You wish to  make iso (Y/N)?\n"
+	question="$(bldyellow)Have you ran this script as USER 1st? You wish to  make iso (Y/N)?\n"
 	if ask_something; then
 		cp -vr ${MOO_HOME}bin/* ${MOO_HOME}archlive/releng/root-image/etc/skel/bin
 		cp -vr ${MOO_HOME}.pentadactyl/colors/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.pentadactyl/colors
@@ -64,7 +68,7 @@ if [ $(id -u) -eq 0 ]; then
 			rm -r "$WORK_DIR"
 		fi
 		mkdir "$WORK_DIR" && cp ${MOO_HOME}info/pacman.conf ${WORK_DIR}/pacman.conf
-		echo "Building iso now..."
+		echo "$(bldyellow)Building iso now..."
 		sleep 3s
 		cd ${MOO_HOME}archlive/releng
 		 ./build.sh -v -o "$ISO_DIR" -w "$WORK_DIR"
@@ -72,7 +76,7 @@ if [ $(id -u) -eq 0 ]; then
 else
 	## push latest to github
 	gh -b
-	echo "Copying configuration files and recreating repos now..."
+	echo "$(bldyellow)Copying configuration files and recreating repos now..."
 	## remove existing repos
 	rm ${ABS_BASE_DIR}mooOS-pkgs-32/mooOS-pkgs-32.db.tar.gz
 	rm ${ABS_BASE_DIR}mooOS-pkgs-64/mooOS-pkgs-64.db.tar.gz
@@ -99,7 +103,7 @@ else
 
 	notify-send "Repo update complete"
 
-	echo "Now re-run this script as root!"
+	echo "$(bldyellow)Now re-run this script as root!"
 	sleep 3s
 fi
 
