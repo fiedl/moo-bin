@@ -48,6 +48,26 @@ if [ $(id -u) -eq 0 ]; then
 			cp -v ${MOO_HOME}.gtkrc-2.0 ${MOO_HOME}archlive/releng/root-image/etc/skel/.gtkrc-2.0
 			cp -v ${MOO_HOME}.nanorc ${MOO_HOME}archlive/releng/root-image/etc/skel/.nanorc
 			cp -v ${MOO_HOME}.dialogrc ${MOO_HOME}archlive/releng/root-image/etc/skel/.dialogrc
+			cp -v ${MOO_HOME}.pentadactylrc ${MOO_HOME}archlive/releng/root-image/etc/skel/.pentadactylrc
+
+			chmod g+r,o+r ${MOO_HOME}archlive/releng/root-image/etc/skel/.kde4
+
+			mkdir -p ${MOO_HOME}archlive/releng/root-image/etc/skel/.kde4/share/config
+			mkdir -p ${MOO_HOME}archlive/releng/root-image/etc/skel/.kde4/apps/dolphin
+			cp -v ${MOO_HOME}.kde4/share/config/dolphinrc ${MOO_HOME}archlive/releng/root-image/etc/skel/.kde4/share/config/dolphinrc
+			cp -v ${MOO_HOME}.kde4/share/apps/dolphin/dolphinui.rc ${MOO_HOME}archlive/releng/root-image/etc/skel/.kde4/share/apps/dolphin/dolphinui.rc
+			
+			chmod g+r,o+r ${MOO_HOME}archlive/releng/root-image/etc/skel/.config/transmission-daemon
+			mkdir -p ${MOO_HOME}archlive/releng/root-image/etc/skel/.config/transmission-daemon
+			cp -v ${MOO_HOME}.config/transmission-daemon/settings.json ${MOO_HOME}archlive/releng/root-image/etc/skel/.config/transmission-daemon/settings.json
+
+			chmod g+r,o+r ${MOO_HOME}archlive/releng/root-image/etc/skel/.moc
+			mkdir -p ${MOO_HOME}archlive/releng/root-image/etc/skel/.moc
+			cp -v ${MOO_HOME}.moc/config ${MOO_HOME}archlive/releng/root-image/etc/skel/.moc/config
+
+			sed -i "s/pdq/moo/g" ${MOO_HOME}archlive/releng/root-image/etc/skel/.config/transmission-daemonsettings.json
+      		sed -i "s/pdq/moo/g" ${MOO_HOME}archlive/releng/root-image/etc/skel/.moc/config
+        	sed -i "s/pdq/moo/g" ${MOO_HOME}archlive/releng/root-image/etc/skel/.kde4/share/config/dolphinrc
 
 			chmod g+r,o+r ${MOO_HOME}archlive/releng/root-image/etc/skel/.e
 			cp -vr ${MOO_HOME}.e/e/applications/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/applications
