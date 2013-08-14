@@ -78,6 +78,7 @@ else
 	## push latest to github
 	gh -b
 	echo "${bldyellow}Copying configuration files and recreating repos now...${txtrst}"
+	
 	## remove existing repos
 	rm ${ABS_BASE_DIR}mooOS-pkgs-32/mooOS-pkgs-32.db.tar.gz
 	rm ${ABS_BASE_DIR}mooOS-pkgs-64/mooOS-pkgs-64.db.tar.gz
@@ -94,7 +95,12 @@ else
 
 
 	## clean up stable repos
-	rm -r ${ABS_BASE_DIR}mooOS-pkgs-32-out-of-date ${ABS_BASE_DIR}mooOS-pkgs-64-out-of-date
+	if [ -d "${ABS_BASE_DIR}mooOS-pkgs-32-out-of-date" ]; then
+		rm -r ${ABS_BASE_DIR}mooOS-pkgs-32-out-of-date
+	fi
+	if [ -d "${ABS_BASE_DIR}mooOS-pkgs-64-out-of-date" ]; then
+		rm -r ${ABS_BASE_DIR}mooOS-pkgs-64-out-of-date
+	fi
 	mv ${REPO_BASE_DIR}mooOS-pkgs-32 ${ABS_BASE_DIR}mooOS-pkgs-32-out-of-date
 	mv ${REPO_BASE_DIR}mooOS-pkgs-64 ${ABS_BASE_DIR}mooOS-pkgs-64-out-of-date
 	#mv ${REPO_BASE_DIR}mooOS-utils ${ABS_BASE_DIR}mooOS-utils-out-of-date
