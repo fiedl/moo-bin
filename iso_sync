@@ -48,13 +48,12 @@ if [ $(id -u) -eq 0 ]; then
 		cp -vr ${MOO_HOME}.e/e/config/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/config
 		cp -vr ${MOO_HOME}.e/e/themes/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/themes
 
-		#cd ${MOO_HOME}.archlive/releng
 		## deprecated method
-		if [ -d "${MOO_HOME}.archlive/releng/work" ]; then
-			rm -r ${MOO_HOME}.archlive/releng/work
+		if [ -d "${MOO_HOME}archlive/releng/work" ]; then
+			rm -r ${MOO_HOME}archlive/releng/work
 		fi
-		if [ -d "${MOO_HOME}.archlive/releng/out" ]; then
-			rm -r ${MOO_HOME}.archlive/releng/out
+		if [ -d "${MOO_HOME}archlive/releng/out" ]; then
+			rm -r ${MOO_HOME}archlive/releng/out
 		fi
 
 		## new method
@@ -67,6 +66,7 @@ if [ $(id -u) -eq 0 ]; then
 		mkdir "$WORK_DIR" && cp ${MOO_HOME}info/pacman.conf ${WORK_DIR}/pacman.conf
 		echo "Building iso now..."
 		sleep 3s
+		cd ${MOO_HOME}archlive/releng
 		 ./build.sh -v -o "$ISO_DIR" -w "$WORK_DIR"
 	fi
 else
@@ -99,7 +99,7 @@ else
 
 	notify-send "Repo update complete"
 
-	echo "Now re-run this script as root! (sudo iso_sync)"
+	echo "Now re-run this script as root!"
 	sleep 3s
 fi
 
