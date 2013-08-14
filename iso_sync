@@ -77,6 +77,8 @@ if [ $(id -u) -eq 0 ]; then
 			cp -vr ${MOO_HOME}.e/e/config/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/config
 			cp -vr ${MOO_HOME}.e/e/themes/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/themes
 
+			cp -v /etc/hosts ${MOO_HOME}archlive/releng/root-image/etc/hosts
+
 			## deprecated method
 			if [ -d "${MOO_HOME}archlive/releng/work" ]; then
 				rm -r ${MOO_HOME}archlive/releng/work
