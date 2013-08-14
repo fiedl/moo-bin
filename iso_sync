@@ -69,6 +69,7 @@ if [ $(id -u) -eq 0 ]; then
 			rm -r "$WORK_DIR"
 		fi
 		mkdir "$WORK_DIR" && cp ${MOO_HOME}info/pacman.conf ${WORK_DIR}/pacman.conf
+		mkdir "${MOO_HOME}archlive/releng/work" && cp ${MOO_HOME}info/pacman.conf ${MOO_HOME}archlive/releng/work/pacman.conf
 		echo "${bldyellow}Building iso now...${txtrst}"
 		sleep 3s
 		cd ${MOO_HOME}archlive/releng
@@ -78,7 +79,7 @@ else
 	## push latest to github
 	gh -b
 	echo "${bldyellow}Copying configuration files and recreating repos now...${txtrst}"
-	
+
 	## remove existing repos
 	rm ${ABS_BASE_DIR}mooOS-pkgs-32/mooOS-pkgs-32.db.tar.gz
 	rm ${ABS_BASE_DIR}mooOS-pkgs-64/mooOS-pkgs-64.db.tar.gz
