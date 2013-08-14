@@ -33,43 +33,46 @@ ask_something() {
 if [ $(id -u) -eq 0 ]; then
 	question="${bldyellow}Have you ran this script as USER 1st? You wish to  make iso (Y/N)?\n${txtrst}"
 	if ask_something; then
-		cp -vr ${MOO_HOME}bin/* ${MOO_HOME}archlive/releng/root-image/etc/skel/bin
-		cp -vr ${MOO_HOME}.pentadactyl/colors/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.pentadactyl/colors
-		cp -vr ${MOO_HOME}.pentadactyl/plugins/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.pentadactyl/plugins
-		
-		chmod g+r,o+r ${MOO_HOME}archlive/releng/root-image/etc/skel/.mozilla/firefox/qrtww0pl.Default-User 
-		cp -vr ${MOO_HOME}.mozilla/firefox/qrtww0pl.Default-User/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.mozilla/firefox/qrtww0pl.Default-User
-		
-		cp -v ${MOO_HOME}.Xdefaults ${MOO_HOME}archlive/releng/root-image/etc/skel/.Xdefaults
-		cp -v ${MOO_HOME}.xinitrc ${MOO_HOME}archlive/releng/root-image/etc/skel/.xinitrc
-		cp -v ${MOO_HOME}.zshrc ${MOO_HOME}archlive/releng/root-image/etc/skel/.zshrc
-		cp -v ${MOO_HOME}.gtkrc-2.0 ${MOO_HOME}archlive/releng/root-image/etc/skel/.gtkrc-2.0
-		cp -v ${MOO_HOME}.nanorc ${MOO_HOME}archlive/releng/root-image/etc/skel/.nanorc
-		cp -v ${MOO_HOME}.dialogrc ${MOO_HOME}archlive/releng/root-image/etc/skel/.dialogrc
+		question="${bldyellow}You wish to skip to create iso (Y/N)? (default: no)\n${txtrst}"
+		if ! ask_something; then
+			cp -vr ${MOO_HOME}bin/* ${MOO_HOME}archlive/releng/root-image/etc/skel/bin
+			cp -vr ${MOO_HOME}.pentadactyl/colors/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.pentadactyl/colors
+			cp -vr ${MOO_HOME}.pentadactyl/plugins/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.pentadactyl/plugins
+			
+			chmod g+r,o+r ${MOO_HOME}archlive/releng/root-image/etc/skel/.mozilla/firefox/qrtww0pl.Default-User 
+			cp -vr ${MOO_HOME}.mozilla/firefox/qrtww0pl.Default-User/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.mozilla/firefox/qrtww0pl.Default-User
+			
+			cp -v ${MOO_HOME}.Xdefaults ${MOO_HOME}archlive/releng/root-image/etc/skel/.Xdefaults
+			cp -v ${MOO_HOME}.xinitrc ${MOO_HOME}archlive/releng/root-image/etc/skel/.xinitrc
+			cp -v ${MOO_HOME}.zshrc ${MOO_HOME}archlive/releng/root-image/etc/skel/.zshrc
+			cp -v ${MOO_HOME}.gtkrc-2.0 ${MOO_HOME}archlive/releng/root-image/etc/skel/.gtkrc-2.0
+			cp -v ${MOO_HOME}.nanorc ${MOO_HOME}archlive/releng/root-image/etc/skel/.nanorc
+			cp -v ${MOO_HOME}.dialogrc ${MOO_HOME}archlive/releng/root-image/etc/skel/.dialogrc
 
-		chmod g+r,o+r ${MOO_HOME}archlive/releng/root-image/etc/skel/.e
-		cp -vr ${MOO_HOME}.e/e/applications/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/applications
-		cp -vr ${MOO_HOME}.e/e/backgrounds/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/backgrounds
-		cp -vr ${MOO_HOME}.e/e/config/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/config
-		cp -vr ${MOO_HOME}.e/e/themes/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/themes
+			chmod g+r,o+r ${MOO_HOME}archlive/releng/root-image/etc/skel/.e
+			cp -vr ${MOO_HOME}.e/e/applications/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/applications
+			cp -vr ${MOO_HOME}.e/e/backgrounds/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/backgrounds
+			cp -vr ${MOO_HOME}.e/e/config/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/config
+			cp -vr ${MOO_HOME}.e/e/themes/* ${MOO_HOME}archlive/releng/root-image/etc/skel/.e/e/themes
 
-		## deprecated method
-		if [ -d "${MOO_HOME}archlive/releng/work" ]; then
-			rm -r ${MOO_HOME}archlive/releng/work
-		fi
-		if [ -d "${MOO_HOME}archlive/releng/out" ]; then
-			rm -r ${MOO_HOME}archlive/releng/out
-		fi
+			## deprecated method
+			if [ -d "${MOO_HOME}archlive/releng/work" ]; then
+				rm -r ${MOO_HOME}archlive/releng/work
+			fi
+			if [ -d "${MOO_HOME}archlive/releng/out" ]; then
+				rm -r ${MOO_HOME}archlive/releng/out
+			fi
 
-		## new method
-		if [ -d "$ISO_DIR" ]; then
-			rm -r "$ISO_DIR"
+			## new method
+			if [ -d "$ISO_DIR" ]; then
+				rm -r "$ISO_DIR"
+			fi
+			if [ -d "$WORK_DIR" ]; then
+				rm -r "$WORK_DIR"
+			fi
+			mkdir "$WORK_DIR" && cp ${MOO_HOME}info/pacman.conf ${WORK_DIR}/pacman.conf
+			mkdir "${MOO_HOME}archlive/releng/work" && cp ${MOO_HOME}info/pacman.conf ${MOO_HOME}archlive/releng/work/pacman.conf
 		fi
-		if [ -d "$WORK_DIR" ]; then
-			rm -r "$WORK_DIR"
-		fi
-		mkdir "$WORK_DIR" && cp ${MOO_HOME}info/pacman.conf ${WORK_DIR}/pacman.conf
-		mkdir "${MOO_HOME}archlive/releng/work" && cp ${MOO_HOME}info/pacman.conf ${MOO_HOME}archlive/releng/work/pacman.conf
 		echo "${bldyellow}Building iso now...${txtrst}"
 		sleep 3s
 		cd ${MOO_HOME}archlive/releng
