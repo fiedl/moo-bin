@@ -1,0 +1,37 @@
+#!/usr/bin/sh
+## create edj backgrounds by pdq 2013
+
+WALLPAPER_DIR="$HOME/info/e17wallpapers"
+E17_DEV_DIR="$HOME/info/e17backgrounds"
+
+cd "$WALLPAPER_DIR"
+COUNT_IMAGES=$(ls | wc -l) 
+i=1;
+shopt -s nullglob;
+for f in *.jpg *.gif *.png *.jpeg *.JPG *.JPEG *.GIF; do
+    EXT="${f##*.}"
+    EXT=${EXT,,}
+    EXT=${EXT/jpeg/jpg}
+    mkdir -p "$i"
+    mv -- "$f" "$WALLPAPER_DIR/$i/wallpaper$i.${EXT}";
+    ((i++));
+done
+
+cd "$E17_DEV_DIR"
+for I in $(eval echo {1..$COUNT_IMAGES})
+#for ((I=1;I<=$COUNT_IMAGES;I++));
+do
+	for OLD_FILE in $I.edc-tmp
+	do
+		let "VALUE= $I + 1"
+		NEW_FILE=${OLD_FILE/#$I/$VALUE}
+	    #echo "mv $OLD_FILE $NEW_FILE"
+	    cp "$OLD_FILE" "$WALLPAPER_DIR/$I/wallpaper$NEW_FILE"
+	    sed -i "s/wallpaper$I/wallpaper$VALUE/g" "$NEW_FILE"
+	    cd "$WALLPAPER_DIR/$I"
+	    edje_cc $@ -id . -fd . "$OLD_FILE" -o .edj
+	   	let "I++"
+	    echo "I=$I and VALUE=$VALUE"
+	    cd "$E17_DEV_DIR"
+    done
+done
