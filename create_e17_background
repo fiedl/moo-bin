@@ -91,8 +91,10 @@ echo "$(date +"%F_%T")" >> $WALLPAPER_DIR/README.txt
 echo "
 ===========
 Created $COUNT_IMAGES e17 backgrounds.
+Installed the .edj files into $E17_FINISHED_DIR.
 Created $WALLPAPER_TAR.tar.gz and $BACKGROUNDS_TAR.tar.gz
 You can copy these files somewhere for safe keeping as these will be removed next run.
+
 -----------
 " >> $WALLPAPER_DIR/README.txt
 
