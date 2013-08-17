@@ -1,0 +1,10 @@
+#!/usr/bin/sh
+
+for NEW_FILE in *.cfg
+do
+	EWW_FILE=${NEW_FILE/.cfg/.src}
+	echo "eet -l $NEW_FILE"
+	eet -l $NEW_FILE
+	echo "eet -d $NEW_FILE config $EWW_FILE"
+	eet -d $NEW_FILE config $EWW_FILE
+done

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+YESNO=$(zenity --question --title="Query" --text="Would you like to run the script?")
+ 
+if [ "$YESNO" -eq 0 ]; then
+	AFF="Yes"
+	ANS=$(zenity --info --title="#WIN" --text="It Worked" --text="The Script ran Correctly And You Said $AFF ")
+	$ANS
+else
+	AFF="No"
+	ERR=$(zenity --error --title="An Error Occurred" --text="Somthing Fucked up in $AFF ") 
+	$ERR
+fi
+ 
