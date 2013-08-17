@@ -1,14 +1,17 @@
 #!/bin/bash
 
-YESNO=$(zenity --question --title="Query" --text="Would you like to run the script?")
- 
-if [ "$YESNO" -eq 0 ]; then
-	AFF="Yes"
-	ANS=$(zenity --info --title="#WIN" --text="It Worked" --text="The Script ran Correctly And You Said $AFF ")
-	$ANS
-else
-	AFF="No"
-	ERR=$(zenity --error --title="An Error Occurred" --text="Somthing Fucked up in $AFF ") 
-	$ERR
-fi
- 
+PWD=$(pwd)
+MOO_HOME=$HOME/
+## patch config files for username
+cd ${MOO_HOME}config/standard
+for NEW_FILE in e.*
+do
+	EWW_FILE=${NEW_FILE/.cfg/.src}
+
+	eet -d $NEW_FILE config $EWW_FILE
+	sed -i "s/pdq/moo/g" $EWW_FILE
+	rm $NEW_FILE
+	eet -e $NEW_FILE config $EWW_FILE 1
+	rm $EWW_FILE
+done
+cd $PWD
