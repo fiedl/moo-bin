@@ -1,0 +1,8 @@
+#!/bin/sh
+# Install mooOS
+THIS_DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+zenity --question --title "Install mooOS" --text "Are you sure you want to proceed to install mooOS?"
+if [ "$?" -eq "0" ]; then
+	## TODO in beta
+	zenity --error --text="Contact pdq and moo. ($THIS_DIR)"
+fi
