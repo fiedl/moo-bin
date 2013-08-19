@@ -37,7 +37,7 @@ scriptVersion="2.8.0"
 
 # This sets the information to be displayed. Available: distro, Kernel, DE, WM, Win_theme, Theme, Icons, Font, Background, ASCII. To get just the information, and not a text-art logo, you would take "ASCII" out of the below variable.
 #display="host distro kernel uptime shell res de wm wmtheme gtk icons font background"
-display=( host distro kernel uptime pkgs shell res de wm wmtheme gtk cpu mem )
+display=( host distro kernel uptime pkgs shell res de wm gtk cpu mem )
 # Display Type: ASCII or Text
 display_type="ASCII"
 
@@ -154,7 +154,7 @@ while getopts ":hsmevVntlS:D:o:Bc:" flags; do
 			echo -e "${underline}Supported Distributions${c0}:      Arch Linux (Old and Current Logos), Linux Mint,"
 			echo -e "			      LMDE, Ubuntu, Crunchbang, Debian, Gentoo, Fedora, SolusOS,"
 			echo -e "			      Mandrake/Mandriva, Slackware, Frugalware, openSUSE, Mageia,"
-			echo -e "			      Peppermint, ParabolaGNU, Viperr, LinuxDeepin, Chakra, and FreeBSD, OpenBSD"
+			echo -e "			      Peppermint, ParabolaGNU, Viperr, LinuxDeepin, Chakra, and FreeBSD, OpenBSD, mooOS"
 			echo -e "${underline}Supported Desktop Managers${c0}:   KDE, GNOME, XFCE, and LXDE, and Not Present"
 			echo -e "${underline}Supported Window Managers${c0}:    PekWM, OpenBox, FluxBox, BlackBox, Xfwm4,"
 			echo -e "			      Metacity, StumpWM, KWin, IceWM, FVWM,"
@@ -337,6 +337,8 @@ detectdistro () {
 				fi
 			elif [[ "${distro_detect}" == "ManjaroLinux" ]]; then
 				distro="Manjaro"
+			elif [[ "${distro_detect}" == "mooOSLinux" ]]; then
+				distro="mooOS"
 			elif [[ "${distro_detect}" == "LinuxMint" ]]; then
 				distro="Mint"
 				if [[ "${distro_codename}" == "debian" ]]; then
@@ -537,6 +539,8 @@ detectdistro () {
 			mac*os*x) distro="Mac OS X" ;;
 			fuduntu) distro="Fuduntu" ;;
 			manjaro) distro="Manjaro" ;;
+			mooos) distro="mooOS" ;;
+
 			# cygwin) distro="Cygwin" ;;
 		esac
 	fi
@@ -599,7 +603,7 @@ detectuptime () {
 detectpkgs () {
 	pkgs="Unknown"
 	case $distro in
-		'Arch Linux'|'ParabolaGNU/Linux-libre'|'Chakra'|'Manjaro') pkgs=$(pacman -Qq | wc -l) ;;
+		'Arch Linux'|'ParabolaGNU/Linux-libre'|'Chakra'|'Manjaro'|'mooOS') pkgs=$(pacman -Qq | wc -l) ;;
 		'Frugalware') pkgs=$(pacman-g2 -Q | wc -l) ;;
 		'Fuduntu'|'Ubuntu'|'Mint'|'SolusOS'|'Debian'|'LMDE'|'CrunchBang'|'Peppermint'|'LinuxDeepin'|'Trisquel') pkgs=$(dpkg --get-selections | wc -l) ;;
 		'Slackware') pkgs=$(ls -1 /var/log/packages | wc -l) ;;
@@ -2213,6 +2217,27 @@ asciiText () {
 		;;
 
 
+	"mooOS")
+		c1="\e[1;34m" # Green
+			if [ -n "${my_lcolor}" ]; then c1="${my_lcolor}"; fi
+			startline="0"
+			fulloutput=(
+
+"${c1}                .                    %s"           
+"${c1}               .:.                  %s"             
+"${c1}              .:::.                 %s"                    
+"${c1}             .:::::.                %s"
+"${c1}         ***.:::::::.***            %s"                               
+"${c1}    *******.:::::::::.*******       %s"                                       
+"${c1}  ********.:::::::::::.********     %s"                               
+"${c1} ********.:::::::::::::.********    %s"                                       
+"${c1} *******.::::::;***;::::.*******    %s"                                       
+"${c1} ******.::::;*********;::.******    %s"                                           
+"${c1} ****.:::;*************;:.****      %s"                                            
+"${c1}    *.::;*****************;.*       %s"                                            
+"${c1}    .:;  ***************    .       %s"                                           
+"${c1}   .")
+		;;
 
 
 	"Elementary OS")
@@ -2359,7 +2384,7 @@ infoDisplay () {
 	[[ "$my_hcolor" ]] && textcolor="${my_hcolor}"
 	#TODO: Centralize colors and use them across the board so we only change them one place.
 	case $distro in
-		"Arch Linux - Old"|"Fedora"|"Mandriva"|"Mandrake"|"Chakra") labelcolor="\e[1;34m";;
+		"Arch Linux - Old"|"Fedora"|"Mandriva"|"Mandrake"|"Chakra"|"mooOS") labelcolor="\e[1;34m";;
 		"Arch Linux"|"Frugalware"|"Mageia") labelcolor="\e[1;36m";;
 		"Mint"|"LMDE"|"openSUSE"|"LinuxDeepin"|"DragonflyBSD"|"Manjaro"|"Android") labelcolor="\e[1;32m";;
 		"Ubuntu"|"FreeBSD"|"Debian"|"BSD"|"Red Hat Linux"|"Peppermint"|"Cygwin"|"Fuduntu"|"NetBSD") labelcolor="\e[1;31m";;
