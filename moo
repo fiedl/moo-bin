@@ -27,7 +27,7 @@ if [ ! -d "/mnt/linux-pdq/home" ] ; then
 	## Main term
 	urxvtc -name "ssh Term" -e ssh 192.168.0.10 -p34567
 	## Start SSH top (terminal task manager)
-	#urxvtc -name "ssh top" -e ssh -t 192.168.0.10 -p34567 top
+	urxvtc -name "ssh htop" -e ssh -t 192.168.0.10 -p34567 htop
 	## Mount server filesystem to localhost
 	sshfs pdq@192.168.0.10:/ /mnt/linux-pdq -C -p 34567
 fi
@@ -48,7 +48,7 @@ urxvtc -name "tERM"
 
 ## Terminal applications
 ## Start top (terminal task manager)
-#[ -z "$(pidof top)" ] && urxvtc -name "TOP" -e top
+#[ -z "$(pidof htop)" ] && urxvtc -name "HTOP" -e htop
 ## Start music on console player
 urxvtc -name "MOCP" -e mocp
 ## Start CPU frequency monitor
