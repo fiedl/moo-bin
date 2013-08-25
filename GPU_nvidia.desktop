@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=GPU_nvidia
+Comment=Deskop file for nvidia gpu stats - mooOS
+Exec=urxvtc -name "GPU" -e nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
+Icon=utilities-terminal
+Terminal=false
+Type=Application
+Categories=Other;Terminals

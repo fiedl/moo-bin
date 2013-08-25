@@ -1,8 +1,242 @@
 #!/bin/sh
 # Install mooOS
 THIS_DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-zenity --question --title "Install mooOS" --text "Are you sure you want to proceed to install mooOS?"
-if [ "$?" -eq "0" ]; then
-	## TODO in beta
-	zenity --error --text="Contact pdq and moo. ($THIS_DIR)"
+
+
+function installer_menu () {
+	# Display menu and interact based on the user's input
+	   
+	yad --image=preferences-system-symbolic --width 300 --title="mooOS Installer" --text="Configure Installation" --form --field="Adminstrator:CB" --field="Username" --field="Hostname" --field="Password" --field="Re-Type Password" --field="Shell:FL" --field="Default Browser:FL" --field="Install codecs:CHK" --field="Minimal Install (no X):CHK" --field="LAMP Server:CHK" --field="Configure Packages:CHK" "Yes, sudo rights" "moo" "mooOS-Desktop" "" "" "/usr/bin/zsh"  "/usr/bin/firefox" TRUE FALSE FALSE TRUE --button="Revert to Default:2" --button="Next:0" --button="gtk-cancel:1"
+
+
+
+
+	yad --image=system-run-symbolic --title="mooOS Installer" --text="Locale, Timezone and Language" --form --field="Locale:CB" --field="Language:CB" --field="Timezone:CB"  "en_US.UTF-8" "English, American" "UTC +0" --button="Revert to Default:2" --button="Next:0" --button="gtk-cancel:1"
+
+
+
+
+
+	yad --image=preferences-other-symbolic --window-icon=settings --title="mooOS Installer" --text="Package Configuration" --form --field="Proxy:CB" --field="Weechat Setup:CHK" --field="LAMP Setup:CHK" --list --text="Content of"  "Yes" TRUE FALSE --button="Revert to Default:2" --button="gtk-ok:0" --button="gtk-cancel:1"
+
+yad --image=drive-harddisk-usb-symbolic --title="mooOS Installer" --text="Partitioning and Drives" --form --field="View Disk Partitioning:CB" --field="Partition Editor:CB" "df -h" "cfdisk"  --button="Revert to Default:2" --button="gtk-ok:0" --button="gtk-cancel:1"
+
+
+
+
+eval exec yad --title="mooOS Installer" --image=drive-harddisk --text="Disk\ usage" --buttons-layout=end --multi-progress \
+	$(df -h $1 | tail -n +2 | awk '{printf "--bar=\"<b>%s</b> (%s) [%s/%s]\" %s ", $6, $1, $3, $2, $5}')
+
+
+
+
+	var2="$(kdialog --menu "Please, choose from one of the options below:" 1 'Step 1: Filesystem' 2 'Step 2: Networking' 3 'Step 3: Install Packages' 4 'Step 4: Configure' 5 'Step 5: Finish and Reboot')"
+	    
+	if [[ $? -eq 0 ]]; then
+	  # If the user did not cancel, find out what s/he chosed
+	  case $var2 in
+	    1)
+	      # open an open file dialog
+	      kdialog --getopenfilename /home/shred;;
+	    2)
+	      
+	      echo 'net';;
+	    3)
+	      # Open the video file the user picked up with VNC
+	      var3="$(kdialog --getopenfilename /home/shred/Videos)"
+	      if [[ $var3 ]]; then
+	        vlc "$var3" &
+	      fi     
+	      ;;
+	  esac
+	else
+	  # Show the text message in file 'text_message.txt' 
+	  # Note that text_message.txt should be under the same location as the script!
+	  kdialog --textbox text_message.txt
+	fi
+
+	return;
+}
+
+list_partitions() {
+    #partition_list=`blkid | grep -i 'TYPE="ext[234]"' | cut -d ' ' -f 1 | grep -i '^/dev/' | grep -v '/dev/loop' | grep -v '/dev/mapper' | sed "s/://g"`
+    fdisk -l | grep Linux | cut -b 1-9 > $TMP/pout 2>/dev/null
+    partition_list=$(cat $TMP/pout)
+    if [ "$partition_list" = "" ] ; then
+        partition_list="It appears you have no linux partitions yet."
+    fi
+
+    dialog --clear --backtitle "$upper_title" --title "Partitions" --msgbox "$partition_list \n\n Hit enter to return to menu" 15 40
+}
+
+partition_editor() {
+    dialog --clear --backtitle "$upper_title" --title "Partition editor" --cancel-label "Cancel" --msgbox "pdq is not responsible for loss of data or anything else. When in doubt, cancel and read the code.\n\nIf you accept this, you can start cfdisk now!\n\nYou can return to the main menu at any time by hitting <ESC> key." 20 70
+    if [ $? = 255 ] ; then
+        installer_menu
+        return 0            
+    fi
+
+    dialog --clear --backtitle "$upper_title" --title "Partition editor" --yesno "Create a / (primary, bootable* and recommended minimum 6GB in size) and a /home (primary and remaining size) partition.\n\n* Optionally create a /swap (primary and recommended twice the size of your onboard RAM) and /boot (primary, bootable and recommended minimum 1GB in size) partition.\n\nJust follow the menu, store your changes and quit cfdisk to go on!\n\nIMPORTANT: Read the instructions and the output of cfdisk carefully.\n\nProceed?" 20 70
+    if [ $? = 0 ] ; then
+        umount /mnt/* 2>/dev/null
+        cfdisk
+    fi
+}
+
+make_filesystems() {
+    fdisk -l | grep Linux | sed -e '/swap/d' | cut -b 1-9 > $TMP/pout 2>/dev/null
+
+    dialog --clear --backtitle "$upper_title" --title "ROOT PARTITION DETECTED" --exit-label OK --msgbox "Installer has detected\n\n `cat /tmp/tmp/pout` \n\n as your linux partition(s).\n\nIn the next box you can choose the linux filesystem for your root partition or choose the partition if you have more linux partitions!" 20 70
+    if [ $? = 255 ] ; then
+        installer_menu
+        return 0 
+    fi
+
+    # choose root partition
+    dialog --clear --backtitle "$upper_title" --title "CHOOSE ROOT PARTITION" --inputbox "Please choose your preferred root partition in this way:\n\n/dev/hdaX --- X = number of the partition, e. g. 1 for /dev/hda1!" 10 70 2> $TMP/pout
+    if [ $? = 1 ] || [ $? = 255 ] ; then
+        installer_menu
+        return 0 
+    fi
+
+    pout=$(cat $TMP/pout)
+
+    dialog --clear --backtitle "$upper_title" --title "ROOT  PARTITION" --yesno "Create the filesystem? [Select No to skip to mounting]" 20 70
+    if [ $? = 0 ] ; then
+        dialog --clear --backtitle "$upper_title" --title "FORMAT ROOT PARTITION" --radiolist "Now you can choose the filesystem for your root partition.\n\next4 is the recommended filesystem." 20 70 30 \
+        "1" "ext2" off \
+        "2" "ext3" off \
+        "3" "ext4" on \
+        2> $TMP/part
+        if [ $? = 1 ] || [ $? = 255 ] ; then
+            installer_menu
+            return 0 
+        fi
+
+        part=$(cat $TMP/part)
+        fs_type=
+
+        if [ "$part" == "2" ] ; then
+            fs_type="ext3"
+        elif [ "$part" == "3" ] ; then
+            fs_type="ext4"
+        else
+            fs_type="ext2"
+        fi
+
+        mkfs -t $fs_type $pout
+        typefs=" as $fs_type"
+    fi
+
+    mount $pout /mnt
+
+    dialog --clear --backtitle "$upper_title" --title "ROOT PARTITION MOUNTED" --msgbox "Your $pout partition has been mounted at /mnt$typefs" 10 70
+    if [ $? = 255 ] ; then
+        installer_menu
+        return 0 
+    fi
+
+    # choose home partition
+    dialog --clear --backtitle "$upper_title" --title "CHOOSE HOME PARTITION" --inputbox "Please choose your preferred home partition in this way:\n\n/dev/hdaX --- X = number of the partition, e. g. 2 for /dev/hda2!" 10 70 2> $TMP/plout
+    if [ $? = 1 ] || [ $? = 255 ] ; then
+        installer_menu
+        return 0 
+    fi
+    
+    plout=$(cat $TMP/plout)
+
+    dialog --clear --backtitle "$upper_title" --title "HOME  PARTITION" --yesno "Create the filesystem? [Select No to skip to mounting]" 20 70
+    if [ $? = 0 ] ; then
+        dialog --clear --backtitle "$upper_title" --title "FORMAT HOME PARTITION" --radiolist "Now you can choose the filesystem for your home partition.\n\next4 is the recommended filesystem." 20 70 30 \
+        "1" "ext2" off \
+        "2" "ext3" off \
+        "3" "ext4" on \
+        2> $TMP/plart
+        if [ $? = 1 ] || [ $? = 255 ] ; then
+            installer_menu
+            return 0 
+        fi
+
+        plart=$(cat $TMP/plart)
+        fs_type=
+
+        if [ "$plart" == "2" ] ; then
+            fs_type="ext3"
+        elif [ "$plart" == "3" ] ; then
+            fs_type="ext4"
+        else
+            fs_type="ext2"
+        fi
+
+        mkdir -vp /mnt/home
+        mkfs -t $fs_type $plout
+        typefs=" as $fs_type"
+    fi
+
+    mount $plout /mnt/home
+
+    dialog --clear --backtitle "$upper_title" --title "HOME PARTITION MOUNTED" --msgbox "Your $plout partition has been mounted at /mnt/home$typefs" 10 70
+
+
+    dialog --clear --backtitle "$upper_title" --title "BOOT  PARTITION" --defaultno --yesno "Create the boot filesystem?" 20 70
+    if [ $? = 0 ] ; then
+        # choose boot partition
+        dialog --clear --backtitle "$upper_title" --title "CHOOSE BOOT PARTITION" --inputbox "Please choose your preferred boot partition in this way:\n\n/dev/hdaX --- X = number of the partition, e. g. 3 for /dev/hda3!" 10 70 2> $TMP/pbout
+        if [ $? = 1 ] || [ $? = 255 ] ; then
+            installer_menu
+            return 0 
+        fi
+        
+        pbout=$(cat $TMP/pbout)
+
+        dialog --clear --backtitle "$upper_title" --title "BOOT PARTITION" --yesno "Create the filesystem? [Select No to skip to mounting]" 20 70
+        if [ $? = 0 ] ; then
+            dialog --clear --backtitle "$upper_title" --title "FORMAT BOOT PARTITION" --radiolist "Now you can choose the filesystem for your boot partition.\n\next4 is the recommended filesystem." 20 70 30 \
+            "1" "ext2" off \
+            "2" "ext3" off \
+            "3" "ext4" on \
+            2> $TMP/pbart
+            if [ $? = 1 ] || [ $? = 255 ] ; then
+                installer_menu
+                return 0 
+            fi
+
+            pbart=$(cat $TMP/pbart)
+            fs_type=
+
+            if [ "$pbart" == "2" ] ; then
+            fs_type="ext3"
+            elif [ "$pbart" == "3" ] ; then
+            fs_type="ext4"
+            else
+            fs_type="ext2"
+            fi
+
+            mkdir -vp /mnt/boot
+            mkfs -t $fs_type $pbout
+            typefs=" as $fs_type"
+        fi
+        mount $pbout /mnt/boot
+
+        dialog --clear --backtitle "$upper_title" --title "BOOT PARTITION MOUNTED" --msgbox "Your $pbout partition has been mounted at /mnt/boot$typefs" 10 70
+    fi
+
+    dialog --clear --backtitle "$upper_title" --title "SWAP PARTITION" --defaultno --yesno "Create the swap filesystem?" 10 70
+    if [ $? = 0 ] ; then
+        # choose home partition
+        dialog --clear --backtitle "$upper_title" --title "CHOOSE SWAP PARTITION" --inputbox "Please choose your preferred swap partition in this way:\n\n/dev/hdaX --- X = number of the partition, e. g. 4 for /dev/hda4!" 10 70 2> $TMP/psout
+        psout=$(cat $TMP/psout)
+        mkswap $psout
+        swapon $psout
+        dialog --clear --backtitle "$upper_title" --title "SWAP SETUP" --msgbox "Ran: mkswap $psout and swapon $psout" 10 70
+    fi
+}
+
+# Main Program 
+# Welcome the user, allow for early exit if not interested
+kdialog --title "Welcome to mooOS Installer" --yesno "Welcome to mooOS Installer..  \nPlease, click OK to Continue or CANCEL to exit"
+
+# If the user decided to continue, present a menu
+if [[ $? -ne 1 ]]; then
+  installer_menu
 fi
