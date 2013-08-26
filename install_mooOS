@@ -7,7 +7,7 @@ exit 0
 function installer_menu () {
 	# Display menu and interact based on the user's input
 	   
-	yad --image=preferences-system-symbolic --width 300 --title="mooOS Installer" --text="Configure Installation" --form --field="Adminstrator:CB" --field="Username" --field="Hostname" --field="Password" --field="Re-Type Password" --field="Shell:FL" --field="Default Browser:FL" --field="Install codecs:CHK" --field="Minimal Install (no X):CHK" --field="LAMP Server:CHK" --field="Configure Packages:CHK" "Yes, sudo rights" "moo" "mooOS-Desktop" "" "" "/usr/bin/zsh"  "/usr/bin/firefox" TRUE FALSE FALSE TRUE --button="Revert to Default:2" --button="Next:0" --button="gtk-cancel:1"
+	yad --image=preferences-system-symbolic --width 300 --title="mooOS Installer" --text="Configure Installation" --form --field="Adminstrator:CB" --field="Username" --field="Hostname" --entry --hide-text --field="Re-Type Password" --field="Shell:FL" --field="Default Browser:FL" --field="Install codecs:CHK" --field="Minimal Install (no X):CHK" --field="LAMP Server:CHK" --field="Configure Packages:CHK" 'Yes, sudo rights!Yes, sudo NOPASSWD!None' "moo" "mooOS-Desktop" "" "" "/usr/bin/zsh"  "/usr/bin/firefox" TRUE FALSE FALSE TRUE --button="Revert to Default:2" --button="Next:0" --button="gtk-cancel:1"
 
 
 
