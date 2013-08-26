@@ -2,6 +2,7 @@
 # Install mooOS
 THIS_DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+exit 0
 
 function installer_menu () {
 	# Display menu and interact based on the user's input
