@@ -1,0 +1,3 @@
+#!/bin/sh
+
+subl3 ~/Dev/mooOS_backups/key_binds ~/Dev/mooOS_backups/key_binds2 ~/Dev/mooOS_backups/Welcome
