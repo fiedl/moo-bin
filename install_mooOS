@@ -1,19 +1,18 @@
 #!/bin/sh
 # Install mooOS
 
+do_sudo=
 ## root script
 if [ $(id -u) -ne 0 ]; then
-    kdialog --title "Welcome to mooOS Installer" --msgbox  "Welcome to mooOS Installer..  \nPlease, RE-RUN this installer as root (with sudo)"
-    exit 0
+   do_sudo="sudo "
 fi
 
 # Main Program 
 # Welcome the user, allow for early exit if not interested
-kdialog --title "Welcome to mooOS Installer" --yesno "Welcome to mooOS Installer..  \nContinue?"
+dialog --title "mooOS Installer" --yesno "Welcome to mooOS Installer..  \nContinue?" 10 30
 
 # If the user decided to continue, moo
 if [[ $? -ne 1 ]]; then
 	chmod +x /home/moo/Github/mooOS-dev-tools/installer/installer.sh
- 	/home/moo/Github/mooOS-dev-tools/installer/installer.sh
+ 	$do_sudo/home/moo/Github/mooOS-dev-tools/installer/installer.sh
 fi
-
