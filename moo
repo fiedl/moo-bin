@@ -32,12 +32,6 @@ if [ ! -d "/mnt/linux-pdq/home" ] ; then
 	sshfs pdq@192.168.0.10:/ /mnt/linux-pdq -C -p 34567
 fi
 
-## mount data
-tc1="/media/truecrypt3/test"
-if [ ! -f "$tc1" ] ; then
- 	urxvtc -name "Decrypt data" -title "Decrypt data" -e ~/bin/tc3
-fi
-
 ## Start dmenu clipboard (dmenuclip/dmenurl)
 #killall -q clipbored
 #clipbored 
