@@ -64,7 +64,7 @@ urxvtc -name "Logs" -e sudo journalctl -f
 ## Start weather monitor
 #[ -z "$(pidof ctw)" ] && urxvtc -name "Weather" -e ctw CAXX0548
 ## Start clock
-[ -z "$(pidof tty-clock)" ] && urxvtc -name "Clock" -e tty-clock -tc
+#[ -z "$(pidof tty-clock)" ] && urxvtc -name "Clock" -e tty-clock -tc
 ## Start CPU temperature monitor
 [ -z "$(pidof cpus_temp)" ] && urxvtc -name "CPUS" -e cpus_temp
 ## Start Internet radio player
@@ -92,7 +92,7 @@ fi
 ## Start youtube viewer
 [ -z "$(pidof youtube-viewer)" ] && urxvtc -name "youtube" -e youtube-viewer --prefer-https --prefer-webm --use-colors --quiet -7 -S -C --mplayer="/usr/bin/vlc" --mplayer-args="-q"
 ## Start dropbox
-[ -z "$(pidof dropbox)" ] && dropboxd &
+#[ -z "$(pidof dropbox)" ] && dropboxd &
 ## Start Arch Linux update notifier
 [ -z "$(pidof aarchup)" ] && /usr/bin/aarchup --loop-time 60 --aur --icon "$HOME/.icons/pacman_icon_48x48.png" &
 ## Start email client (start delay of 30 seconds to give proxy time to start)
