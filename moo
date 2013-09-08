@@ -32,6 +32,9 @@ if [ ! -d "/mnt/linux-pdq/home" ] ; then
 	sshfs pdq@192.168.0.10:/ /mnt/linux-pdq -C -p 34567
 fi
 
+## redshift
+xflux -g 90 -k 3800
+
 ## Start dmenu clipboard (dmenuclip/dmenurl)
 #killall -q clipbored
 #clipbored 
