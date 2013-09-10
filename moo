@@ -22,7 +22,7 @@ VID_QUEUE="/home/pdq/Videos/24 Complete Series DVDRip XviD"
 ## Start system information display
 #[ -z "$(pidof conky)" ] && conky -d -c "$HOME"/.config/conky/.conkye17 &
 
-if [ ! -d "/mnt/linux-pdq/home" ] ; then
+if [ ! -d "/mnt/linux-pdq/home" ] && [ "$USER" = "pdq"]; then
 	## Remote applications (pdq@linux / pdq@192.168.0.10 - ssh keys read by keychain from ~/.zprofile
 	## Main term
 	urxvtc -name "ssh Term" -e ssh 192.168.0.10 -p34567
@@ -32,7 +32,7 @@ if [ ! -d "/mnt/linux-pdq/home" ] ; then
 	sshfs pdq@192.168.0.10:/ /mnt/linux-pdq -C -p 34567
 fi
 
-## redshift
+## redshift screen brightness softening
 xflux -g 90 -k 3800
 
 ## Start dmenu clipboard (dmenuclip/dmenurl)
@@ -40,6 +40,7 @@ xflux -g 90 -k 3800
 #clipbored 
 
 ## Start IM server and IRC client
+[ -z "$(pidof bitlbee)" ] && urxvtc -name "bitlbee" -e sudo bitlbee -D
 [ -z "$(pidof weechat-curses)" ] && urxvtc -name "IRC1" -e weechat-curses && urxvtc -name "IRC2" -e weechat-curses -d ~/.weechat-priv
 
 ## Start custom keyboard shortcuts
@@ -59,7 +60,7 @@ urxvtc -name "MOCP" -e mocp
 ## Start GPU monitor
 [ -z "$(pidof nvidia-smi)" ] && urxvtc -name "GPU" -e nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
 ## Start local logs
-[ -z "$(pidof multitail)" ] && urxvtc -name "More Logs" -e multitail -ci red -n 6 -f "/mnt/linux-pdq/media/truecrypt1/private/transmission-daemon/posttorrent.log"
+[ -d "/mnt/linux-pdq/media/truecrypt1/private/transmission-daemon/posttorrent.log" ] && [ -z "$(pidof multitail)" ] && urxvtc -name "More Logs" -e multitail -ci red -n 6 -f "/mnt/linux-pdq/media/truecrypt1/private/transmission-daemon/posttorrent.log"
 ## Start system logs
 urxvtc -name "Logs" -e sudo journalctl -f
 ## Start RSS reader
