@@ -1,32 +1,10 @@
 #!/bin/bash
-screenshot='screenshot';
-nano=`date '+%d-%m-%y-%N'`;
-extension='.png';
-file="$HOME/$screenshot-$nano$extension";
-sleep 1; scrot -s -b -q 50 $file;
-curl -# -F "image"=@"$file" -F "key"="75670950fcce02a80d17f30cf3612eb4" http://imgur.com/api/upload.xml|\
-      	
-      grep -Eo 'http[^<]*.png'|sed 's/^<.\|_./\U&/g;'|xclip && xclip -o |xclip -selection c && notify-send 'DONE!' '(^.^)' --icon=dialog-information 
 
-     
-      exit 0
+if [ $(id -u) -eq 0 ]; then
+	echo 'root baby, yeah!'
+else
+	echo 'user baby, yeah!'
+	sudo $0
+fi
 
-
-
-# TR_TORRENT_NAME="Epic 2013 HDRiP XViD UNiQUE"
-# SRC_DIR="/mnt/linux-pdq/media/truecrypt1/Down/$TR_TORRENT_NAME"
-
-# cd "$SRC_DIR"
-# COUNT=$(ls -1 *.nfo 2>/dev/null | wc -l)
-# if [ $COUNT == 0 ]; then
-#     FFILE=$(find "$SRC_DIR/" -type f -exec ls -s {} \; | sort -nr | awk 'NR==1 { $1=""; sub(/^ /, ""); print }')
-#     IS_VIDEO=$(file -ib "$FFILE" | grep video)
-#     if [ "$IS_VIDEO" ]; then
-#     	FILENAME=$(basename "$FFILE")
-#         NFOFILE="$(echo $TR_TORRENT_NAME.nfo | tr -s ' ' '_')"
-#         /usr/bin/mediainfo "$FILENAME" > "$SRC_DIR/$NFOFILE"
-#     fi
-# fi
-#  cd ~
-
-# exit 0
+exit 0
