@@ -1,3 +1,42 @@
 #!/bin/sh
-IMAGEPATH=Dropbox/Public/$(date +%m%d%S).png && scrot -cd 3 $IMAGEPATH && dropbox puburl $IMAGEPATH | xclip
-notify-send "Screenshot Done" "URL copied to clipboard $IMAGEPATH"
+
+## usage: screenshot
+##https://dl.dropboxusercontent.com/u/9702684/22312.png
+
+DROPBOX_PATH=$HOME/Dropbox
+PUBLIC_USE=1 ## 1/0 (On/Off)
+
+SCREENSHOTS_DIR=Screenshots  ## ~/Dropbox/Screenshots
+FILENAME=$(date +%m%d%S).png
+EXTRA='usewithtor '          ## for no proxy leave blank
+
+## ze magic
+
+## create screenshots directory locally and remotely if not exist
+mkdir -p $DROPBOX_PATH/$SCREENSHOTS_DIR
+${EXTRA}dropbox_uploader mkdir Screenshots
+
+## let user know proxy is in use
+if [ "$EXTRA" != "" ]; then
+	echo "Using proxy...this may take a while... "
+fi
+
+## take screenshot
+PWD=$(pwd)
+cd "$DROPBOX_PATH/$SCREENSHOTS_DIR"
+scrot -cd 3 $FILENAME && ${EXTRA}dropbox_uploader upload $FILENAME $SCREENSHOTS_DIR/
+cd "$PWD"
+
+## create share link
+IMAGEPATH=$(usewithtor dropbox_uploader share $SCREENSHOTS_DIR/$FILENAME | cut -c15-) 
+
+## copy share link to clipboard
+echo $IMAGEPATH | xclip
+
+## output to user link is copied
+echo "Screenshot completed. URL copied to clipboard $IMAGEPATH"
+
+## notify user link is copied
+notify-send "Screenshot completed" "URL copied to clipboard $IMAGEPATH"
+
+exit 0

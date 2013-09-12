@@ -1,0 +1,34 @@
+#!/bin/sh
+
+VENDOR=$(lspci | awk '/VGA/ {print $5}')
+REQUIRE_REBOOT=0
+case "$VENDOR" in
+    Intel)
+        X_DRIVER="i810"
+        MAKER="Intel Corporation"
+        ;;
+    nVidia)
+        X_DRIVER="nv"
+        MAKER="nVidia Corporation"
+        REQUIRE_REBOOT=1
+        ;;
+    NVIDIA)
+        X_DRIVER="nvidia"
+        MAKER="NVIDIA Corporation"
+        REQUIRE_REBOOT=1
+        ;;
+    ATI)
+        X_DRIVER="ati"
+        MAKER="ATI Technologies Inc"
+        REQUIRE_REBOOT=1
+        ;;
+    *)
+        X_DRIVER="vesa"
+        MAKER="VESA-capable"
+        ;;
+esac
+
+echo "Found a $MAKER device, will try to use the $X_DRIVER driver."
+
+#[ -e /etc/X11/xorg.conf ] && mv /etc/X11/xorg.conf /etc/X11/xorg.conf.orig
+#ln -sf /etc/X11/xorg.$X_DRIVER /etc/X11/xorg.conf
