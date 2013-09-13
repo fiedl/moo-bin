@@ -11,22 +11,25 @@
 
 ## ADVANCED OPTIONS:
 
-# -c, --count
+# -b, (bbcode)
+#      generate bbcode link for linuxdistrocommunity.com forums.
+
+# -c, (count)
 #           Display a countdown when used with delay.
 
-# -d, --delay NUM
+# -d, (delay) NUM
 #           Wait NUM seconds before taking a shot.
 
-# -q, --quality NUM
+# -q, (quality) NUM
 #      Image  quality  (1-100) high value means high size, low compression. Default: 100.
 
-# -m, --multidisp
+# -m, (multidisp)
 #      For multiple heads, grab shot from each and join them together.
 
-# -s, --select
+# -s, (select)
 #      Interactively select a window or rectangle with the mouse.
 
-# -t, --thumb NUM
+# -t, (thumb) NUM
 #      generate thumbnail too. NUM is the percentage of the original size for the thumbnail to be.
 
 
@@ -34,6 +37,9 @@
 
 ## screenshot with countdown of 3 seconds
 # scr -cd 3
+
+## screenshot with countdown of 3 seconds
+# scr -bcd 3
 
 ## interactive screenshot
 # scr -s
@@ -69,7 +75,9 @@ DROPBOX_UID=$HOME/.dropbox/UID ## this file will be automagically created
 SCREENSHOTS_DIR=screens 
 
 ## You DON'T need to change this:
-FILENAME=$(date +%m%d%S).png
+TNAME=$(date +%m%d%S)
+FILENAME=$TNAME.png
+FILENAME_THUMB=$TNAME-thumb.png
 
 ## You DON'T need to change this:
 SCROT_ARGS="-q 100 $@"
@@ -96,9 +104,12 @@ PUBLIC_URL=https://dl.dropboxusercontent.com/u/$UID_INFO
 if [ $PUBLIC_USE -eq 1 ]; then
 	DROPBOX_PATH=$HOME/Dropbox/Public
 	REMOTE_PATH=Public/
+	THUMBS_ON=1
 else
 	DROPBOX_PATH=$HOME/Dropbox
 	REMOTE_PATH=
+	THUMBPATH=
+	THUMBS_ON=0
 fi
 
 ## create screenshots directory locally if not exist
@@ -117,17 +128,27 @@ fi
 ## take screenshot
 PWD=$(pwd)
 if [ $LOCAL_COPY -eq 1 ]; then
-	cd "$DROPBOX_PATH/$SCREENSHOTS_DIR"
+	PWD2="$DROPBOX_PATH/$SCREENSHOTS_DIR"
+	cd $PWD2
 else
-	cd /tmp
+	PWD2=/tmp
+	cd $PWD2
 fi
 
-while getopts "sVcd:q:mst:" opt
+while getopts "bcd:mq:st:" opt
 do
 	case $opt in
-		V) echo "$(basename $0): Version: 0.0.1 Date: 09/13/2013"
-		   exit 0;;
-		s) echo 'Select window now...';;
+		b)  if [ $PUBLIC_USE -eq 1 ]; then
+				SCROT_ARGS="$SCROT_ARGS -t 20"
+				THUMBS_ON=1
+			else
+				echo "BBCode feature only works in PUBLIC_USE=1."
+				echo "No BBCode will; be created, sorry."
+			fi
+		;;
+		V)  echo "$(basename $0): Version: 0.0.1 Date: 09/13/2013"
+		    exit 0;;
+		s)  echo 'Select window now...';;
 	esac
 done
 
@@ -145,12 +166,18 @@ fi
 ## upload screenshot to Dropbox remote server
 ${EXTRA}$DBU_BIN upload $FILENAME $REMOTE_PATH$SCREENSHOTS_DIR/
 
+if [ $THUMBS_ON -eq 1 ]; then
+	## upload thumbnail to Dropbox remote server
+	${EXTRA}$DBU_BIN upload $FILENAME_THUMB $REMOTE_PATH$SCREENSHOTS_DIR/
+fi
+
 ## back to where we started from
 cd "$PWD"
 
 ## create share link
 if [ $PUBLIC_USE -eq 1 ]; then
-	IMAGEPATH=$PUBLIC_URL/$SCREENSHOTS_DIR/$FILENAME 
+	IMAGEPATH=$PUBLIC_URL/$SCREENSHOTS_DIR/$FILENAME
+	THUMBPATH=$PUBLIC_URL/$SCREENSHOTS_DIR$FILENAME_THUMB
 else
 	IMAGEPATH=$(${EXTRA}$DBU_BIN share $REMOTE_PATH$SCREENSHOTS_DIR/$FILENAME | cut -c15-) 
 fi
@@ -171,5 +198,18 @@ notify-send "Screenshot completed" "URL copied to clipboard $IMAGEPATH"
 
 ## opem image up for viewing in web browser
 $BROWSER $IMAGEPATH 2> /dev/null &
+
+## create BBCode for linuxdistrocommunity.com forums
+echo -n "Copy BBCode link to your clipboard? y to confirm: "
+read choice
+if [ $choice = "y" ] ; then
+	if [ "$THUMBPATH" != "" ] && [ $THUMBS_ON -eq 1 ]; then
+		## copy BBCode text to  clipboard
+		echo "[URL=$IMAGEPATH][IMG]$THUMBPATH[/IMG][/URL]" | xclip
+		## notify user BBCode is copied
+		notify-send "Success" "BBCode text is copied to clipboard"
+		echo "BBCode text: [URL=$IMAGEPATH][IMG]$THUMBPATH[/IMG][/URL]"
+	fi
+fi
 
 exit 0
