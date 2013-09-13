@@ -2,7 +2,7 @@
 ## screenshot utility by pdq for ldc
 ## https://www.linuxdistrocommunity.com/forums/index.php
 
-## DEPENDS: this utility depends on having a dropbox account, scrot, xclip and pngcrush. 
+## DEPENDS: this utility depends on having a dropbox account, scrot, xclip and (optionally )pngcrush. 
 ## DEPENDS: https://github.com/andreafabrizi/Dropbox-Uploader (set this up as per README)
 ## (The Dropbox application itself is not required.)
 
