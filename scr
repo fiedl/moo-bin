@@ -1,5 +1,5 @@
 #!/bin/sh
-## screenshot utility by pdq for ldc
+## screenshot utility by pdq
 ## https://www.linuxdistrocommunity.com/forums/index.php
 
 ## DEPENDS: this utility depends on having a dropbox account, scrot, xclip and (optionally) pngcrush. 
