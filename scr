@@ -17,10 +17,10 @@
 #      generate bbcode link for linuxdistrocommunity.com forums.
 
 # -c, (count)
-#           Display a countdown when used with delay.
+#      Display a countdown when used with delay.
 
 # -d, (delay) NUM
-#           Wait NUM seconds before taking a shot.
+#      Wait NUM seconds before taking a shot.
 
 # -q, (quality) NUM
 #      Image  quality  (1-100) high value means high size, low compression. Default: 100.
