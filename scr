@@ -4,6 +4,8 @@
 
 ## DEPENDS: this utility depends on having a dropbox account, scrot, xclip and (optionally) pngcrush. 
 ## DEPENDS: https://github.com/andreafabrizi/Dropbox-Uploader (set this up as per README)
+## INSTALL DEPENDS : http://www.webupd8.org/2013/09/dropbox-uploader-012-released-bash.html
+
 ## (The Dropbox application itself is not required.)
 
 ## BASIC USAGE: scr
