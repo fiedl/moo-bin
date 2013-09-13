@@ -203,10 +203,10 @@ notify-send "Screenshot completed" "URL copied to clipboard $IMAGEPATH"
 $BROWSER $IMAGEPATH 2> /dev/null &
 
 ## create BBCode for linuxdistrocommunity.com forums
-echo -n "Copy BBCode link to your clipboard? y to confirm: "
-read choice
-if [ $choice = "y" ] ; then
-	if [ "$THUMBPATH" != "" ] && [ $THUMBS_ON -eq 1 ]; then
+if [ "$THUMBPATH" != "" ] && [ $THUMBS_ON -eq 1 ]; then
+	echo -n "Copy BBCode link to your clipboard? y to confirm: "
+	read choice
+	if [ $choice = "y" ] ; then
 		## copy BBCode text to  clipboard
 		echo "[URL=$IMAGEPATH][IMG]$THUMBPATH[/IMG][/URL]" | xclip
 		## notify user BBCode is copied
