@@ -187,6 +187,7 @@ fi
 ## if not store local copy, remoe the temporary image file
 if [ $LOCAL_COPY -ne 1 ]; then
 	rm -f /tmp/$FILENAME
+	rm -f /tmo/$FILENAME_THUMB
 fi
 
 ## copy share link to clipboard
