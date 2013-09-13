@@ -55,6 +55,7 @@ LOCAL_COPY=1 ## 1/0 (On/Off) # [Default 1]
 
 ## You COULD change this:
 EXTRA='usewithtor '          ## for no proxy leave blank
+#EXTRA=''                    ## for no proxy leave blank
 
 ## END CONFIGURATION
 
