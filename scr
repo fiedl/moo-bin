@@ -2,15 +2,20 @@
 ## screenshot utility by pdq for ldc
 ## https://www.linuxdistrocommunity.com/forums/index.php
 
-## DEPENDS: this utility depends on having a dropbox account, scrot and pngcrush. The Dropbox application itself is not required.
+## DEPENDS: this utility depends on having a dropbox account, scrot, xclip and pngcrush. 
 ## DEPENDS: https://github.com/andreafabrizi/Dropbox-Uploader (set this up as per README)
+## (The Dropbox application itself is not required.)
 
 ## BASIC USAGE: scr
 
+
 ## ADVANCED OPTIONS:
 
-# -b, --border
-#      When selecting a window, grab wm border too
+# -c, --count
+#           Display a countdown when used with delay.
+
+# -d, --delay NUM
+#           Wait NUM seconds before taking a shot.
 
 # -q, --quality NUM
 #      Image  quality  (1-100) high value means high size, low compression. Default: 100.
@@ -24,8 +29,23 @@
 # -t, --thumb NUM
 #      generate thumbnail too. NUM is the percentage of the original size for the thumbnail to be.
 
+
+## ADVANCED USAGES:
+
+## screenshot with countdown of 3 seconds
+# scr -cd 3
+
+## interactive screenshot
+# scr -s
+
+## START CONFIGURATION
+
 ## Path to dropbox-uploader executable
 DBU_BIN=/usr/bin/dropbox_uploader ## Default /usr/bin/dropbox_uploader
+
+## Path to web browser
+#BROWSER="vbp"
+BROWSER="firefox"
 
 ## Type of Dropbox link
 PUBLIC_USE=1 ## 1/0 (On/Off) # On allows for direct links, Off uses shared (javascript) links. [Default 1]
@@ -36,10 +56,10 @@ LOCAL_COPY=1 ## 1/0 (On/Off) # [Default 1]
 ## You COULD change this:
 EXTRA='usewithtor '          ## for no proxy leave blank
 
-## End of confirguration
+## END CONFIGURATION
 
 
-## ze code magic
+## ZE CODE MAGIC
 
 ## You DON'T need to change this
 DROPBOX_UID=$HOME/.dropbox/UID ## this file will be automagically created
@@ -51,7 +71,7 @@ SCREENSHOTS_DIR=screens
 FILENAME=$(date +%m%d%S).png
 
 ## You DON'T need to change this:
-SCROT_ARGS="-q 100 -cd 3 $@"
+SCROT_ARGS="-q 100 $@"
 
 ## request user dropbox uid file
 if [ ! -f $DROPBOX_UID ]; then
@@ -101,6 +121,15 @@ else
 	cd /tmp
 fi
 
+while getopts "sVcd:q:mst:" opt
+do
+	case $opt in
+		V) echo "$(basename $0): Version: 0.0.1 Date: 09/13/2013"
+		   exit 0;;
+		s) echo 'Select window now...';;
+	esac
+done
+
 scrot $SCROT_ARGS $FILENAME
 
 if [ -f "/usr/bin/pngcrush" ]; then
@@ -138,5 +167,8 @@ echo "Screenshot completed. URL copied to clipboard $IMAGEPATH"
 
 ## notify user link is copied
 notify-send "Screenshot completed" "URL copied to clipboard $IMAGEPATH"
+
+## opem image up for viewing in web browser
+$BROWSER $IMAGEPATH 2> /dev/null &
 
 exit 0
