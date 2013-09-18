@@ -81,7 +81,7 @@ urxvtc -name "Logs" -title "Logs" -e sudo journalctl -f
 [ -z "$(pidof nvidia-smi)" ] && urxvtc -name "GPU" -title "GPU" -e nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
 
 ## Start RSS reader
-[ -z "$(pidof canto-curses)" ] && urxvtc -name "RSS" -title "RSS" -e canto-cursesgggggg
+[ -z "$(pidof canto-curses)" ] && urxvtc -name "RSS" -title "RSS" -e canto-curses
 
 ## Start weather monitor
 #[ -z "$(pidof ctw)" ] && urxvtc -name "Weather" -title "Weather" -e ctw CAXX0548
