@@ -52,8 +52,8 @@
 DBU_BIN=/usr/bin/dropbox_uploader ## Default /usr/bin/dropbox_uploader
 
 ## Path to web browser
-#BROWSER="vbp"
-BROWSER="firefox"
+BROWSER="vbp"
+#BROWSER="firefox"
 
 ## Type of Dropbox link
 PUBLIC_USE=1 ## 1/0 (On/Off) # On allows for direct links, Off uses shared (javascript) links. [Default 1]
@@ -66,6 +66,10 @@ EXTRA='usewithtor '          ## for no proxy leave blank
 #EXTRA=''                    ## for no proxy leave blank
 
 ## END CONFIGURATION
+
+
+
+
 
 
 ## ZE CODE MAGIC
@@ -106,7 +110,6 @@ PUBLIC_URL=https://dl.dropboxusercontent.com/u/$UID_INFO
 if [ $PUBLIC_USE -eq 1 ]; then
 	DROPBOX_PATH=$HOME/Dropbox/Public
 	REMOTE_PATH=Public/
-	THUMBS_ON=1
 else
 	DROPBOX_PATH=$HOME/Dropbox
 	REMOTE_PATH=
