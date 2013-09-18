@@ -1,11 +1,12 @@
 #!/usr/bin/sh
 
-VID_DIR="$HOME/Videos/webvideos/"
+VID_DIR="$HOME/Videos/tmp/"
 YTUSER="$@"
 YTUSER=$(echo $YTUSER | tr " " "+")
 START_HERE=$(pwd)
 
-cd "$VID_DIR"
+mkdir -p "$VID_DIR$YTUSER"
+cd "$VID_DIR$YTUSER"
 grake "https://www.youtube.com/user/$YTUSER" | cclive
 cd "$START_HERE"
 
