@@ -92,6 +92,9 @@ urxvtc -name "Logs" -title "Logs" -e sudo journalctl -f
 ## Start CPU temperature monitor
 [ -z "$(pidof cpus_temp)" ] && urxvtc -name "CPUS" -title "CPUS" -e cpus_temp
 
+## Start system monitor
+[ -z "$(pidof gkrellm)" ] && gkrellm &
+
 ## Start Internet radio player
 #[ -z "$(pidof pyradio)" ] && urxvtc -name "Radio" -title "Radio" -e pyradio 
 
