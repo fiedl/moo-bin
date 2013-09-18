@@ -49,6 +49,68 @@ if [ $MOUNT_LAN1_FILESYSTEM -eq 1 ]; then
 	fi
 fi
 
+## Default applications to start with moo
+
+## Daemons
+
+## redshift screen brightness softening
+## Usage: xflux [-z zipcode | -l latitude] [-g longitude] [-k colortemp (default 3400)] [-nofork]
+## protip: Say where you are (use -z or -l).
+[ -z "$(pidof xflux)" ] && xflux -z 37213 -k 3800
+
+## Start dmenu clipboard (dmenuclip/dmenurl)
+#killall -q clipbored
+#clipbored
+
+## Terminal applications
+
+## Main terms
+urxvtc -name "Term" -title "Term"
+urxvtc -name "tERM" -title "tERM"
+
+## Start system logs
+urxvtc -name "Logs" -title "Logs" -e sudo journalctl -f
+
+## Start top (terminal task manager)
+#[ -z "$(pidof htop)" ] && urxvtc -name "HTOP" -title "HTOP" -e htop
+
+## Start CPU frequency monitor
+[ -z "$(pidof watch)" ] && urxvtc -name "CPU Freq" -title "CPU Freq" -e watch grep \"cpu MHz\" /proc/cpuinfo
+
+## Start GPU monitor
+[ -z "$(pidof nvidia-smi)" ] && urxvtc -name "GPU" -title "GPU" -e nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
+
+## Start RSS reader
+[ -z "$(pidof canto-curses)" ] && urxvtc -name "RSS" -title "RSS" -e canto-cursesgggggg
+
+## Start weather monitor
+#[ -z "$(pidof ctw)" ] && urxvtc -name "Weather" -title "Weather" -e ctw CAXX0548
+
+## Start clock
+#[ -z "$(pidof tty-clock)" ] && urxvtc -name "Clock" -title "Clock" -e tty-clock -tc
+
+## Start CPU temperature monitor
+[ -z "$(pidof cpus_temp)" ] && urxvtc -name "CPUS" -title "CPUS" -e cpus_temp
+
+## Start Internet radio player
+#[ -z "$(pidof pyradio)" ] && urxvtc -name "Radio" -title "Radio" -e pyradio 
+
+## Start dolphin
+#[ -z "$(pidof dolphin)" ] && dolphin &
+
+## Start steam
+#[ -z "$(pidof steam)" ] && steam &
+
+## Start youtube viewer
+[ -z "$(pidof youtube-viewer)" ] && urxvtc -name "youtube" -e youtube-viewer --prefer-https --prefer-webm --use-colors --quiet -7 -S -C --mplayer="/usr/bin/vlc" --mplayer-args="-q"
+
+## Start Arch Linux update notifier
+[ -z "$(pidof aarchup)" ] && /usr/bin/aarchup --loop-time 60 --aur --icon "$HOME/.icons/pacman_icon_48x48.png" &
+
+## Start sillyness
+#[ -z "$(pidof cmatrix)" ] && urxvtc -name "Shall we play a game" -title "Shall we play a game" -e cmatrix -C cyan
+#mplayer ~/nude.mp4 -noconsolecontrols -loop 0 &
+
 ## Default startup applications (If private data is mounted or there is no private data to be mounted)
 if [ -d "$PATH_TO_DATA/home" ] || [ $PRIV_ENABLED -eq 0 ]; then
 
@@ -96,67 +158,5 @@ if [ -d "$PATH_TO_DATA/home" ] || [ $PRIV_ENABLED -eq 0 ]; then
 	#[ -z "$(pidof claws-mail)" ] && sleep 30s && usewithtor claws-mail &
 	[ -z "$(pidof mutt)" ] && sleep 3m && urxvtc -name "Mail" -title "Mail" -e torsocks mutt
 fi
-
-## Default applications to start with moo
-
-## Daemons
-
-## redshift screen brightness softening
-## Usage: xflux [-z zipcode | -l latitude] [-g longitude] [-k colortemp (default 3400)] [-nofork]
-## protip: Say where you are (use -z or -l).
-[ -z "$(pidof xflux)" ] && xflux -z 10044 -k 3800
-
-## Start dmenu clipboard (dmenuclip/dmenurl)
-#killall -q clipbored
-#clipbored
-
-## Terminal applications
-
-## Main terms
-urxvtc -name "Term" -title "Term"
-urxvtc -name "tERM" -title "tERM"
-
-## Start system logs
-urxvtc -name "Logs" -title "Logs" -e sudo journalctl -f
-
-## Start top (terminal task manager)
-#[ -z "$(pidof htop)" ] && urxvtc -name "HTOP" -title "HTOP" -e htop
-
-## Start CPU frequency monitor
-[ -z "$(pidof watch)" ] && urxvtc -name "CPU Freq" -title "CPU Freq" -e watch grep \"cpu MHz\" /proc/cpuinfo
-
-## Start GPU monitor
-[ -z "$(pidof nvidia-smi)" ] && urxvtc -name "GPU" -title "GPU" -e nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
-
-## Start RSS reader
-[ -z "$(pidof canto-curses)" ] && urxvtc -name "RSS" -title "RSS" -e canto-curses
-
-## Start weather monitor
-#[ -z "$(pidof ctw)" ] && urxvtc -name "Weather" -title "Weather" -e ctw CAXX0548
-
-## Start clock
-#[ -z "$(pidof tty-clock)" ] && urxvtc -name "Clock" -title "Clock" -e tty-clock -tc
-
-## Start CPU temperature monitor
-[ -z "$(pidof cpus_temp)" ] && urxvtc -name "CPUS" -title "CPUS" -e cpus_temp
-
-## Start Internet radio player
-#[ -z "$(pidof pyradio)" ] && urxvtc -name "Radio" -title "Radio" -e pyradio 
-
-## Start dolphin
-#[ -z "$(pidof dolphin)" ] && dolphin &
-
-## Start steam
-#[ -z "$(pidof steam)" ] && steam &
-
-## Start youtube viewer
-[ -z "$(pidof youtube-viewer)" ] && urxvtc -name "youtube" -e youtube-viewer --prefer-https --prefer-webm --use-colors --quiet -7 -S -C --mplayer="/usr/bin/vlc" --mplayer-args="-q"
-
-## Start Arch Linux update notifier
-[ -z "$(pidof aarchup)" ] && /usr/bin/aarchup --loop-time 60 --aur --icon "$HOME/.icons/pacman_icon_48x48.png" &
-
-## Start sillyness
-#[ -z "$(pidof cmatrix)" ] && urxvtc -name "Shall we play a game" -title "Shall we play a game" -e cmatrix -C cyan
-#mplayer ~/nude.mp4 -noconsolecontrols -loop 0 &
 
 exit 0
