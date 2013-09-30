@@ -1,4 +1,25 @@
 #!/bin/bash
 
+pkgver=$(LC_ALL=C date -u +%Y%m%d)
+cd /tmp
+rm blacklist.txt
+wget https://projects.parabolagnulinux.org/blacklist.git/plain/blacklist.txt -O blacklist.txt
+
+cut -d: -f1,2 blacklist.txt | \
+      sed "s/:$//" | \
+      grep -v ":" | \
+      #grep -E -o '.{0,99}:' | \
+      #sed "s/://g" | \
+      grep -v '^#' | \
+
+      ## example cheat line
+      sed "s/steam/zteam/g" | \
+      sed "s/nvidia/zvidia/g" | \
+      ## end
+
+      #sed "s/:/ /g" | \
+      sort -u > list_a
+
+less list_a
 
 exit 0
