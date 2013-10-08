@@ -41,13 +41,14 @@ if [ "${TERM_USED}" == "urxvtc" ]; then
 	BG9=''
 	BG10=''
 	BG11=''
+	BG12=''
 else
 	NAME='--name='
 	TITLE='--title='
 	BG1=" --background=/home/$USER/Pictures/wallpaper/star_wars_ds.jpg "
 	BG2=" --background=/home/$USER/Pictures/wallpaper/1085710-comic_characters_comics.jpg "
 	BG3=" --background=/home/$USER/Pictures/wallpaper/V-for-Vendetta-v-for-vendetta-13512847-1440-900.jpg "
-	BG4=" --background=/home/$USER/Pictures/wallpaper/o1089025.jpg "
+	BG4=" --background=/home/$USER/Pictures/wallpaper/1088274-pokemon.png "
 	BG5=" --background=/home/$USER/Pictures/wallpaper/Archlinux_on_the_wall_by_Zildj4n.jpg "
 	BG6=" --background=/home/$USER/Pictures/wallpaper/1085640-TF2SpyWallpaper.jpg "
 	BG7=" --background=/home/$USER/Pictures/wallpaper/1086093-wallpaper-2527221.jpg "
@@ -55,11 +56,11 @@ else
 	BG9=" --background=/home/$USER/Pictures/wallpaper/1085878-majoras_mask_legend_of_zelda.jpg "
 	BG10=" --background=/home/$USER/Pictures/wallpaper/1084835-Sniper Rifle.jpg "
 	BG11=" --background=/home/$USER/Pictures/wallpaper/example-02.png "
-	# BG12="--background=/home/$USER/Pictures/wallpaper/"
-	# BG13="--background=/home/$USER/Pictures/wallpaper/"
-	# BG14="--background=/home/$USER/Pictures/wallpaper/"
-	# BG15="--background=/home/$USER/Pictures/wallpaper/"
-	# BG16="--background=/home/$USER/Pictures/wallpaper/"
+	BG12=" --background=/home/$USER/Pictures/wallpaper/1084835-SniperRifle.jpg "
+	# BG13=" --background=/home/$USER/Pictures/wallpaper/"
+	# BG14=" --background=/home/$USER/Pictures/wallpaper/"
+	# BG15=" --background=/home/$USER/Pictures/wallpaper/"
+	# BG16=" --background=/home/$USER/Pictures/wallpaper/"
 fi
 
 ## Screencast start (edit for your specific needs/hardware configuration)
@@ -121,6 +122,9 @@ ${TERM_USED}${BG5} $NAME"Logs" $TITLE"Logs" -e sudo journalctl -f
 ## Start RSS reader
 [ -z "$(pidof canto-curses)" ] && ${TERM_USED} $NAME"RSS" $TITLE"RSS" -e canto-curses
 
+## Start RSS reader
+[ -z "$(pidof glances)" ] && ${TERM_USED}${BG12} $NAME"Glances" $TITLE"Glances" -e glances -e
+
 ## Start weather monitor
 #[ -z "$(pidof ctw)" ] && ${TERM_USED} $NAME"Weather" $TITLE"Weather" -e ctw CAXX0548
 
@@ -162,7 +166,7 @@ if [ -d "$PATH_TO_DATA/home" ] || [ $PRIV_ENABLED -eq 0 ]; then
 
 	## Start IM server and IRC client
 	[ -z "$(pidof bitlbee)" ] && ${TERM_USED} $NAME"bitlbee" -e sudo bitlbee -D
-	[ -z "$(pidof weechat-curses)" ] && ${TERM_USED}${BG4} $NAME"IRC1" $TITLE"IRC1" -e weechat-curses && ${TERM_USED}${BG8} $NAME"IRC2" $TITLE"IRC2" -e weechat-curses -d ~/.weechat-priv
+	[ -z "$(pidof weechat)" ] && ${TERM_USED}${BG4} $NAME"IRC1" $TITLE"IRC1" -e weechat && ${TERM_USED}${BG8} $NAME"IRC2" $TITLE"IRC2" -e weechat -d ~/.weechat-priv
 
 	## Start custom keyboard shortcuts
 	[ -z "$(pidof xbindkeys)" ] && xbindkeys &

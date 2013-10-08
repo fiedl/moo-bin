@@ -59,7 +59,7 @@
 
         if [ ${#RAR_FILES} -gt 0 ]; then
           for RAR_FILE in "${RAR_FILES[@]}"; do
-            unrar x -inul "$RAR_FILE" "$DEST_DIR"
+            unar x -inul "$RAR_FILE" "$DEST_DIR"
           done
           if [[ ! "$TR_TORRENT_PARAMETER" =~ "KEEP" ]]; then
             SLEEP=$(expr match "$TR_TORRENT_PARAMETER" '.*SLEEP\([0-9a-zA-Z]*\)')

@@ -17,10 +17,10 @@
 #      generate bbcode link for linuxdistrocommunity.com forums.
 
 # -c, (count)
-#      Display a countdown when used with delay.
+#           Display a countdown when used with delay.
 
 # -d, (delay) NUM
-#      Wait NUM seconds before taking a shot.
+#           Wait NUM seconds before taking a shot.
 
 # -q, (quality) NUM
 #      Image  quality  (1-100) high value means high size, low compression. Default: 100.
@@ -49,33 +49,29 @@
 ## START CONFIGURATION
 
 ## Path to dropbox-uploader executable
-DBU_BIN=/usr/bin/dropbox_uploader ## Default /usr/bin/dropbox_uploader
+#DBU_BIN=/usr/bin/dropbox_uploader ## Default /usr/bin/dropbox_uploader
 
 ## Path to web browser
-BROWSER="vbp"
+#BROWSER="vbp"
 #BROWSER="firefox"
 
 ## Type of Dropbox link
 PUBLIC_USE=1 ## 1/0 (On/Off) # On allows for direct links, Off uses shared (javascript) links. [Default 1]
 
 ## Save local copy?
-LOCAL_COPY=1 ## 1/0 (On/Off) # [Default 1]
+#LOCAL_COPY=1 ## 1/0 (On/Off) # [Default 1]
 
 ## You COULD change this:
-EXTRA='usewithtor '          ## for no proxy leave blank
+#EXTRA='usewithtor '          ## for no proxy leave blank
 #EXTRA=''                    ## for no proxy leave blank
 
 ## END CONFIGURATION
 
 
-
-
-
-
 ## ZE CODE MAGIC
 
 ## You DON'T need to change this
-DROPBOX_UID=$HOME/.dropbox/UID ## this file will be automagically created
+#DROPBOX_UID=$HOME/.dropbox/UID ## this file will be automagically created
 
 ## You DON'T need change this:
 SCREENSHOTS_DIR=screens 
@@ -89,56 +85,57 @@ FILENAME_THUMB=$TNAME-thumb.png
 SCROT_ARGS="-q 100 $@"
 
 ## request user dropbox uid file
-if [ ! -f $DROPBOX_UID ]; then
-	${EXTRA}$DBU_BIN info | grep UID: | cut -c6- > $DROPBOX_UID
-fi
+#if [ ! -f $DROPBOX_UID ]; then
+#	${EXTRA}$DBU_BIN info | grep UID: | cut -c6- > $DROPBOX_UID
+#fi
 
 ## create required uid file
-UID_INFO=$(cat $DROPBOX_UID)
-if [ "$UID_INFO" = "" ]; then
-	echo "Install and configure drobox-uploader."
-	echo "Visit: http://www.webupd8.org/2013/09/dropbox-uploader-012-released-bash.html"
-	echo "Then re-reun this command. Exiting in 10 seconds"
-	rm "$DROPBOX_UID"
-	sleep 10s
-	exit 1
-fi
+# UID_INFO=$(cat $DROPBOX_UID)
+# if [ "$UID_INFO" = "" ]; then
+# 	echo "Install and configure drobox-uploader."
+# 	echo "Visit: http://www.webupd8.org/2013/09/dropbox-uploader-012-released-bash.html"
+# 	echo "Then re-reun this command. Exiting in 10 seconds"
+# 	rm "$DROPBOX_UID"
+# 	sleep 10s
+# 	exit 1
+# fi
 
-## You DON'T need to chaneg this
-PUBLIC_URL=https://dl.dropboxusercontent.com/u/$UID_INFO
+# ## You DON'T need to chaneg this
+# PUBLIC_URL=https://dl.dropboxusercontent.com/u/$UID_INFO
 
-if [ $PUBLIC_USE -eq 1 ]; then
-	DROPBOX_PATH=$HOME/Dropbox/Public
-	REMOTE_PATH=Public/
-else
-	DROPBOX_PATH=$HOME/Dropbox
+# if [ $PUBLIC_USE -eq 1 ]; then
+# 	SCREENS_PATH=$HOME/Dropbox/Public
+# 	REMOTE_PATH=Public/
+# 	THUMBS_ON=1
+# else
+	SCREENS_PATH=$HOME/Pictures
 	REMOTE_PATH=
 	THUMBPATH=
 	THUMBS_ON=0
-fi
+#fi
 
 ## create screenshots directory locally if not exist
-if [ $LOCAL_COPY -eq 1 ]; then
-	mkdir -p $DROPBOX_PATH/$SCREENSHOTS_DIR
-fi
+#if [ $LOCAL_COPY -eq 1 ]; then
+	mkdir -p $SCREENS_PATH/$SCREENSHOTS_DIR
+#fi
 
 ## create screenshots directory remotely if not exist
-${EXTRA}$DBU_BIN mkdir $REMOTE_PATH$SCREENSHOTS_DIR
+#${EXTRA}$DBU_BIN mkdir $REMOTE_PATH$SCREENSHOTS_DIR
 
 ## let user know proxy is in use
-if [ "$EXTRA" != "" ]; then
-	echo "Using proxy...this may take a while... "
-fi
+#if [ "$EXTRA" != "" ]; then
+#	echo "Using proxy...this may take a while... "
+#fi
 
 ## take screenshot
 PWD=$(pwd)
-if [ $LOCAL_COPY -eq 1 ]; then
-	PWD2="$DROPBOX_PATH/$SCREENSHOTS_DIR"
-	cd $PWD2
-else
-	PWD2=/tmp
-	cd $PWD2
-fi
+#if [ $LOCAL_COPY -eq 1 ]; then
+PWD2="$SCREENS_PATH/$SCREENSHOTS_DIR"
+cd $PWD2
+#else
+#	PWD2=/tmp
+#	cd $PWD2
+#fi
 
 while getopts "bcd:mq:st:" opt
 do
@@ -169,53 +166,54 @@ if [ -f "/usr/bin/pngcrush" ]; then
 fi
 
 ## upload screenshot to Dropbox remote server
-${EXTRA}$DBU_BIN upload $FILENAME $REMOTE_PATH$SCREENSHOTS_DIR/
+#${EXTRA}$DBU_BIN upload $FILENAME $REMOTE_PATH$SCREENSHOTS_DIR/
 
-if [ $THUMBS_ON -eq 1 ]; then
+#if [ $THUMBS_ON -eq 1 ]; then
 	## upload thumbnail to Dropbox remote server
-	${EXTRA}$DBU_BIN upload $FILENAME_THUMB $REMOTE_PATH$SCREENSHOTS_DIR/
-fi
+#	${EXTRA}$DBU_BIN upload $FILENAME_THUMB $REMOTE_PATH$SCREENSHOTS_DIR/
+#fi
 
 ## back to where we started from
 cd "$PWD"
 
 ## create share link
-if [ $PUBLIC_USE -eq 1 ]; then
-	IMAGEPATH=$PUBLIC_URL/$SCREENSHOTS_DIR/$FILENAME
-	THUMBPATH=$PUBLIC_URL/$SCREENSHOTS_DIR/$FILENAME_THUMB
-else
-	IMAGEPATH=$(${EXTRA}$DBU_BIN share $REMOTE_PATH$SCREENSHOTS_DIR/$FILENAME | cut -c15-) 
-fi
+# if [ $PUBLIC_USE -eq 1 ]; then
+# 	IMAGEPATH=$PUBLIC_URL/$SCREENSHOTS_DIR/$FILENAME
+# 	THUMBPATH=$PUBLIC_URL/$SCREENSHOTS_DIR/$FILENAME_THUMB
+# else
+# 	IMAGEPATH=$(${EXTRA}$DBU_BIN share $REMOTE_PATH$SCREENSHOTS_DIR/$FILENAME | cut -c15-) 
+# fi
 
 ## if not store local copy, remoe the temporary image file
-if [ $LOCAL_COPY -ne 1 ]; then
-	rm -f /tmp/$FILENAME
-	rm -f /tmo/$FILENAME_THUMB
-fi
+# if [ $LOCAL_COPY -ne 1 ]; then
+# 	rm -f /tmp/$FILENAME
+# 	rm -f /tmo/$FILENAME_THUMB
+# fi
 
 ## copy share link to clipboard
-echo $IMAGEPATH | xclip
+#echo $IMAGEPATH | xclip
 
 ## output to user link is copied
-echo "Screenshot completed. URL copied to clipboard $IMAGEPATH"
-
+#echo "Screenshot completed. URL copied to clipboard $IMAGEPATH"
+echo "Screenshot completed."
 ## notify user link is copied
-notify-send "Screenshot completed" "URL copied to clipboard $IMAGEPATH"
+#notify-send "Screenshot completed" "URL copied to clipboard $IMAGEPATH"
+notify-send "Screenshot completed" "Yay!"
 
-## opem image up for viewing in web browser
-$BROWSER $IMAGEPATH 2> /dev/null &
+## opem image up for viewing in file manager
+dolphin $SCREENS_PATH/$SCREENSHOTS_DIR 2> /dev/null &
 
 ## create BBCode for linuxdistrocommunity.com forums
-if [ "$THUMBPATH" != "" ] && [ $THUMBS_ON -eq 1 ]; then
-	echo -n "Copy BBCode link to your clipboard? y to confirm: "
-	read choice
-	if [ $choice = "y" ] ; then
-		## copy BBCode text to  clipboard
-		echo "[URL=$IMAGEPATH][IMG]$THUMBPATH[/IMG][/URL]" | xclip
-		## notify user BBCode is copied
-		notify-send "Success" "BBCode text is copied to clipboard"
-		echo "BBCode text: [URL=$IMAGEPATH][IMG]$THUMBPATH[/IMG][/URL]"
-	fi
-fi
+# if [ "$THUMBPATH" != "" ] && [ $THUMBS_ON -eq 1 ]; then
+# 	echo -n "Copy BBCode link to your clipboard? y to confirm: "
+# 	read choice
+# 	if [ $choice = "y" ] ; then
+# 		## copy BBCode text to  clipboard
+# 		echo "[URL=$IMAGEPATH][IMG]$THUMBPATH[/IMG][/URL]" | xclip
+# 		## notify user BBCode is copied
+# 		notify-send "Success" "BBCode text is copied to clipboard"
+# 		echo "BBCode text: [URL=$IMAGEPATH][IMG]$THUMBPATH[/IMG][/URL]"
+# 	fi
+# fi
 
 exit 0
