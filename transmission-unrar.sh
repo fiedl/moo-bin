@@ -28,11 +28,11 @@
 
     # Actual processing starts here.
     if [[ "$TR_TORRENT_PARAMETER" =~ "EXIT" ]]; then
-      echo $NOW "Exiting $TR_TORRENT_NAME" >> $LOG_FILE
+      echo "Exiting $TR_TORRENT_NAME" >> $LOG_FILE
       exit 0
     fi
 
-    echo $NOW "Completed: $PRETTY_NAME" >> $LOG_FILE
+    echo "Completed: $PRETTY_NAME" >> $LOG_FILE
 
     cd "$SRC_DIR"
     COUNT=$(ls -1 *.nfo 2>/dev/null | wc -l)
@@ -70,7 +70,7 @@
             #vlc "$DEST_DIR/$TR_TORRENT_NAME.*" --playlist-enqueue
             #transmission-remote -n $TR_USERNAME:$TR_PASSWORD -t$TR_TORRENT_ID --remove-and-delete
           fi
-          echo $NOW "Unpacked: $PRETTY_NAME" >> $LOG_FILE
+          echo "Unpacked: $PRETTY_NAME" >> $LOG_FILE
         fi
       fi
     fi

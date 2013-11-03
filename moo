@@ -14,6 +14,8 @@ VID_QUEUE="/home/$USER/Videos/Sliders"
 TERM_USED=terminology
 #TERM_USED=urxvtc
 
+WEATHER_CODE=$(cat /home/$USER/.weather_key)
+
 ## LAN addresses
 MOUNT_LAN1_FILESYSTEM=1 ## 1/0 (On/Off) 
 LAN1='192.168.0.10'
@@ -48,16 +50,16 @@ if [ "${TERM_USED}" == "urxvtc" ]; then
 else
 	NAME='--name='
 	TITLE='--title='
-	BG1=" --background=/home/$USER/Pictures/wallpaper/star_wars_ds.jpg "
+	BG1=" --background=/usr/share/backgrounds/wallpaper46.jpg "
 	BG2=" --background=/home/$USER/Pictures/wallpaper/1085710-comic_characters_comics.jpg "
 	BG3=" --background=/home/$USER/Pictures/wallpaper/V-for-Vendetta-v-for-vendetta-13512847-1440-900.jpg "
 	BG4=" --background=/home/$USER/Pictures/wallpaper/1088274-pokemon.png "
 	BG5=" --background=/home/$USER/Pictures/wallpaper/Archlinux_on_the_wall_by_Zildj4n.jpg "
-	BG6=" --background=/home/$USER/Pictures/wallpaper/1085640-TF2SpyWallpaper.jpg "
+	BG6=" --background=/usr/share/backgrounds/wallpaper43.jpg "
 	BG7=" --background=/home/$USER/Pictures/wallpaper/1086093-wallpaper-2527221.jpg "
 	BG8=" --background=/home/$USER/Pictures/wallpaper/1088466-samus_aran_metroid.png "
 	BG9=" --background=/usr/share/backgrounds/wallpaper31.png "
-	BG10=" --background=/home/$USER/Pictures/wallpaper/1084835-Sniper Rifle.jpg "
+	BG10=" --background=/home/$USER/Pictures/wallpaper/1081952-v_v_for_vendetta.png "
 	BG11=" --background=/home/$USER/Pictures/wallpaper/example-02.png "
 	BG12=" --background=/home/$USER/Pictures/wallpaper/1084835-SniperRifle.jpg "
 	BG13=" --background=/usr/share/backgrounds/wallpaper28.png "
@@ -117,7 +119,7 @@ ${TERM_USED}${BG5} $NAME"Logs" $TITLE"Logs" -e sudo journalctl -f
 #[ -z "$(pidof htop)" ] && ${TERM_USED} $NAME"HTOP" $TITLE"HTOP" -e htop
 
 ## Start CPU frequency monitor
-#[ -z "$(pidof watch)" ] && ${TERM_USED} $NAME"CPU Freq" $TITLE"CPU Freq" -e watch grep \"cpu MHz\" /proc/cpuinfo
+[ -z "$(pidof cpu_freq)" ] && ${TERM_USED}${BG1} $NAME"CPU Freq" $TITLE"CPU Freq" -e cpu_freq
 
 ## Start GPU monitor
 [ -z "$(pidof nvidia-smi)" ] && ${TERM_USED}${BG14} $NAME"GPU" $TITLE"GPU" -e nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
@@ -129,7 +131,7 @@ ${TERM_USED}${BG5} $NAME"Logs" $TITLE"Logs" -e sudo journalctl -f
 [ -z "$(pidof glances)" ] && ${TERM_USED}${BG12} $NAME"Glances" $TITLE"Glances" -e glances -e
 
 ## Start weather monitor
-#[ -z "$(pidof ctw)" ] && ${TERM_USED} $NAME"Weather" $TITLE"Weather" -e ctw CAXX0548
+[ -z "$(pidof ctw)" ] && ${TERM_USED}${BG10} $NAME"Weather" $TITLE"Weather" -e ctw $WEATHER_CODE
 
 ## Start clock
 #[ -z "$(pidof tty-clock)" ] && ${TERM_USED} $NAME"Clock" $TITLE"Clock" -e tty-clock -tc
