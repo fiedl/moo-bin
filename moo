@@ -116,7 +116,7 @@ ${TERM_USED}${BG7} $NAME"tERM" $TITLE"tERM"
 ${TERM_USED}${BG5} $NAME"Logs" $TITLE"Logs" -e sudo journalctl -f
 
 ## Start top (terminal task manager)
-#[ -z "$(pidof htop)" ] && ${TERM_USED} $NAME"HTOP" $TITLE"HTOP" -e htop
+[ -z "$(pidof htop)" ] && ${TERM_USED} $NAME"HTOP" $TITLE"HTOP" -e htop
 
 ## Start CPU frequency monitor
 [ -z "$(pidof cpu_freq)" ] && ${TERM_USED}${BG1} $NAME"CPU Freq" $TITLE"CPU Freq" -e cpu_freq
@@ -128,10 +128,10 @@ ${TERM_USED}${BG5} $NAME"Logs" $TITLE"Logs" -e sudo journalctl -f
 [ -z "$(pidof canto-curses)" ] && ${TERM_USED}${BG15} $NAME"RSS" $TITLE"RSS" -e canto-curses
 
 ## Start RSS reader
-[ -z "$(pidof glances)" ] && ${TERM_USED}${BG12} $NAME"Glances" $TITLE"Glances" -e glances -e
+#[ -z "$(pidof glances)" ] && ${TERM_USED}${BG12} $NAME"Glances" $TITLE"Glances" -e glances -e
 
 ## Start weather monitor
-[ -z "$(pidof ctw)" ] && ${TERM_USED}${BG10} $NAME"Weather" $TITLE"Weather" -e ctw $WEATHER_CODE
+#[ -z "$(pidof ctw)" ] && ${TERM_USED}${BG10} $NAME"Weather" $TITLE"Weather" -e ctw $WEATHER_CODE
 
 ## Start clock
 #[ -z "$(pidof tty-clock)" ] && ${TERM_USED} $NAME"Clock" $TITLE"Clock" -e tty-clock -tc
@@ -155,7 +155,7 @@ ${TERM_USED}${BG5} $NAME"Logs" $TITLE"Logs" -e sudo journalctl -f
 #[ -z "$(pidof steam)" ] && steam &
 
 ## Start youtube viewer
-[ -z "$(pidof youtube-viewer)" ] && ${TERM_USED}${BG6} $NAME"youtube" $TITLE"youtube" -e youtube-viewer --prefer-https --prefer-webm --use-colors --quiet -7 -S -C --mplayer="/usr/bin/vlc" --mplayer-args="-q"
+#[ -z "$(pidof youtube-viewer)" ] && ${TERM_USED}${BG6} $NAME"youtube" $TITLE"youtube" -e youtube-viewer --prefer-https --prefer-webm --use-colors --quiet -7 -S -C --mplayer="/usr/bin/vlc" --mplayer-args="-q"
 
 ## Start Arch Linux update notifier
 [ -z "$(pidof aarchup)" ] && /usr/bin/aarchup --loop-time 60 --aur --icon "$HOME/.icons/pacman_icon_48x48.png" &
@@ -182,7 +182,8 @@ if [ -d "$PATH_TO_DATA/home" ] || [ $PRIV_ENABLED -eq 0 ]; then
 	${TERM_USED}${BG9} $NAME"MOCP" $TITLE"MOCP" -e mocp
 
 	## Start local logs
-	[ -d "$PATH_TO_DATA/media/truecrypt1/private/transmission-daemon" ] && [ -z "$(pidof multitail)" ] && ${TERM_USED}${BG11} $NAME"More Logs" $TITLE"More Logs" -e multitail -ci red -n 6 -f "$PATH_TO_DATA/media/truecrypt1/private/transmission-daemon/posttorrent.log"
+	#[ -d "$PATH_TO_DATA/media/truecrypt1/private/transmission-daemon" ] && [ -z "$(pidof multitail)" ] && ${TERM_USED}${BG11} $NAME"More Logs" $TITLE"More Logs" -e multitail -ci red -n 6 -f "$PATH_TO_DATA/media/truecrypt1/private/transmission-daemon/posttorrent.log"
+	[ -d "$PATH_TO_DATA/media/truecrypt1/private/transmission-daemon" ] && [ -z "$(pidof multitail)" ] && ${TERM_USED}${BG11} $NAME"More Logs" $TITLE"More Logs" -e more_logs
 
 	## GUI applications
 
@@ -198,18 +199,18 @@ if [ -d "$PATH_TO_DATA/home" ] || [ $PRIV_ENABLED -eq 0 ]; then
 	#[ -z "$(pidof kdenlive)" ] && kdenlive &
 
 	## Start web browser
-	#[ -z "$(pidof firefox)" ] && firefox &
-	if [ -z "$(pidof vimb)" ]; then
-		vb -u "https://wiki.archlinux.org/index.php/User:Pdq" &
-		vbp -u "https://www.linuxdistrocommunity.com/forums/index.php" &
-	fi
+	[ -z "$(pidof iceweasel)" ] && iceweasel &
+	#if [ -z "$(pidof vimb)" ]; then
+	#	vb -u "https://wiki.archlinux.org/index.php/User:Pdq" &
+	#	vbp -u "https://www.linuxdistrocommunity.com/forums/index.php" &
+	#fi
 
 	## Start dropbox
 	#[ -z "$(pidof dropbox)" ] && dropboxd &
 
 	## Start email client (start delay of 30 seconds to give proxy time to start)
 	#[ -z "$(pidof claws-mail)" ] && sleep 30s && usewithtor claws-mail &
-	[ -z "$(pidof mutt)" ] && sleep 3m && ${TERM_USED} $NAME"Mail" $TITLE"Mail" -e torsocks mutt
+	[ -z "$(pidof mutt)" ] && sleep 1m && ${TERM_USED} $NAME"Mail" $TITLE"Mail" -e torsocks mutt
 fi
 
 exit 0
