@@ -11,8 +11,8 @@
 #VID_QUEUE="/home/$USER/Videos/Star Trek TNG"
 VID_QUEUE="/home/$USER/Videos/Sliders"
 
-TERM_USED=terminology
-#TERM_USED=urxvtc
+#TERM_USED=terminology
+TERM_USED=urxvtc
 
 WEATHER_CODE=$(cat /home/$USER/.weather_key)
 
