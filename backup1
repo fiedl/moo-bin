@@ -1,0 +1,31 @@
+#!/bin/bash
+
+## local
+bk_port=34567                                       # port
+bk_src="pdq@192.168.0.10:/media/truecrypt1/"     # source
+bk_dest="pdq@192.168.0.10:/media/truecrypt2" # destination
+bk_flags="--copy-links --stats --progress --exclude-from '/media/truecrypt1/.excludes-crypt1'" # flags
+
+bk_srchome="/home/pdq/"     # sourcehome
+bk_desthome="pdq@192.168.0.10:/media/truecrypt1/backups" # destinationhome
+bk_flagshome="--copy-links --stats --progress --exclude-from '/media/truecrypt1/.excludes-home1'" # flags
+
+#truecrypt1 -> truecrypt2
+if [ -d "/home/pdq" ] && [ -d "/mnt/linux-pdq/media/truecrypt1/test" ] && [ -f "/mnt/linux-pdq/media/truecrypt2/test" ] ; then
+	echo "failure of ultimate proportions!"
+	exit 1
+fi
+
+## backup to github
+echo "Backing up personal repos to Github..."
+gh -b
+
+## copy ~ to backup
+echo "Backing up home directory to backup directory..."
+rsync -avzrcPhn -e "ssh -p $bk_port" $bk_flagshome $bk_srchome $bk_desthome # -n, --dry-run perform a trial run with no changes made
+
+## copy truecrypt1 to truecrypt2
+echo "Backing up truecrypt1 to truecrypt2 (external LAN)..."
+#rsync -avzrcPhn -e "ssh -p $bk_port" $bk_flags $bk_src $bk_dest # -n, --dry-run perform a trial run with no changes made
+
+exit 0
