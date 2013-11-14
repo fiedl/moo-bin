@@ -12,7 +12,7 @@ bk_desthome="pdq@192.168.0.10:/media/truecrypt1/backups" # destinationhome
 bk_flagshome="--copy-links --stats --progress --delete"  # flags
 
 #truecrypt1 -> truecrypt2
-if [ -d "/home/pdq" ] && [ -d "/mnt/linux-pdq/media/truecrypt1/test" ] && [ -f "/mnt/linux-pdq/media/truecrypt2/test" ] ; then
+if [ -d "/home/pdq" ] || [ -d "/mnt/linux-pdq/media/truecrypt1/test" ] || [ -f "/mnt/linux-pdq/media/truecrypt2/test" ] ; then
 	echo "failure of ultimate proportions!"
 	exit 1
 fi
