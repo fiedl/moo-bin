@@ -1,18 +1,18 @@
-#!/bin/bash
+#!/usr/bin/bash
 # pacman update
 echo ":: updating system..."
-echo "sudo pacman-color -Syu"
-sudo pacman-color -Syu
+echo "sudo pacman -Syyu"
+sudo pacman -Syyu
 echo " "
 echo ":: update complete..."
 echo " "
 sleep 2s
-echo ":: this window will automatically close after 15 minutes"
+echo ":: this window will automatically close after 5 minutes"
 echo ":: ctrl+c to manually exit"
 notify-send "Pacman" \
             "Update complete" \
-            -i /home/pdq/.config/awesome/icons/pacman_icon_48x48.png
+            -i $HOME/.icons/pacman_icon_48x48.png
             
    
-sleep 15m
+sleep 5m
 exit

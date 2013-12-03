@@ -1,5 +1,5 @@
-#!/bin/bash
-echo ":: updating system..."
+#!/usr/bin/bash
+echo ":: updating system [AUR]..."
 echo "pacaur -Syua"
 #packer-color -Syu --auronly
 pacaur -Syua
@@ -8,10 +8,10 @@ echo " "
 echo ":: update complete..."
 echo " "
 sleep 2s
-echo ":: this window will automatically close after 15 minutes"
+echo ":: this window will automatically close after 5 minutes"
 echo ":: ctrl+c to manually exit"
-notify-send "AUR" \
+notify-send "[AUR]" \
             "Update complete" \
-            -i /home/pdq/.config/awesome/icons/pacman_icon_48x48.png
-sleep 15m
+            -i $HOME/.icons//pacman_icon_48x48.png
+sleep 5m
 exit
