@@ -2,10 +2,11 @@ steam
 codecs
 codecs64
 lwks
-teamviewer
-python2-sqlalchemy
 lib32-nvidia-libgl-full-beta
 lib32-nvidia-utils-full-beta
+nvidia-libgl
+teamviewer
+python2-sqlalchemy
 roccat-tools-arvo
 roccat-tools-common
 roccat-tools-isku
