@@ -1,0 +1,10 @@
+#!/usr/bin/sh
+
+WORK_DIR="/media/truecrypt3/mooOS/work" # work
+
+sudo umount $WORK_DIR/x86_64/root-image/dev
+sudo umount $WORK_DIR/x86_64/root-image/
+sudo umount $WORK_DIR/i686/root-image/dev
+sudo umount $WORK_DIR/i686/root-image/
+
+exit 0
