@@ -13,6 +13,9 @@ dialog --title "mooOS Installer" --yesno "Welcome to mooOS Installer..  \nContin
 
 # If the user decided to continue, moo
 if [[ $? -ne 1 ]]; then
-	chmod +x /home/moo/Github/mooOS-dev-tools/installer/installer.sh
- 	$do_sudo/home/moo/Github/mooOS-dev-tools/installer/installer.sh
+	cd /home/$USER/Github/
+	rm -r mooOS-dev-tools/
+	git clone git://github.com/idk/mooOS-dev-tools.git
+	chmod +x /home/$USER/Github/mooOS-dev-tools/installer/installer.sh
+ 	$do_sudo/home/$USER/Github/mooOS-dev-tools/installer/installer.sh
 fi
