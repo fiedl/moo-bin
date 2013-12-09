@@ -15,11 +15,17 @@ dialog --title "mooOS Installer" --yesno "Welcome to mooOS Installer..  \nContin
 
 # If the user decided to continue, moo
 if [[ $? -ne 1 ]]; then
-	cd /home/$USER/Github/
+	cd /home/moo/Github/
 	rm -rf mooOS-dev-tools/
 	git clone git://github.com/idk/mooOS-dev-tools.git
-	chmod +x /home/$USER/Github/mooOS-dev-tools/installer/installer.sh
- 	$do_sudo/home/$USER/Github/mooOS-dev-tools/installer/installer.sh
+	if [ -d "/home/moo/Github/mooOS-dev-tools" ]; then
+		chmod +x /home/moo/Github/mooOS-dev-tools/installer/installer.sh
+	 	$do_sudo/home/moo/Github/mooOS-dev-tools/installer/installer.sh
+	else
+		echo ""
+		echo "Please wait a minute while the network is automatically configured..."
+		sleep 10s
+	fi
 fi
 
 cd $PWD
