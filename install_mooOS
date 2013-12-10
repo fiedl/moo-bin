@@ -23,7 +23,8 @@ if [[ $? -ne 1 ]]; then
 	 	$do_sudo/home/moo/Github/mooOS-dev-tools/installer/installer.sh
 	else
 		echo ""
-		echo "Please wait a minute while the network is automatically configured..."
+		su moo -c "urxvtc -name \"Logs\" -e sudo journalctl -f"
+		echo "Please wait a minute while the network is automatically configured and then re-run Installer..."
 		sleep 10s
 	fi
 fi
