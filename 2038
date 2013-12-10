@@ -1,5 +1,19 @@
 #!/bin/bash
 
+
+pout=$1
+sed -i "s,/dev/sda3,$pout,g" ~/syslinux.cfg
+sed -i "s/Arch /mooOS GNU\//g" ~/syslinux.cfg
+
+
+
+
+
+
+
+
+exit 0
+
 pkgver=$(LC_ALL=C date -u +%Y%m%d)
 cd /tmp
 rm blacklist.txt
