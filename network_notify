@@ -6,9 +6,11 @@ do
 	wget -q --timeout=5 https://archlinux.org
 	if [[ $? -eq 0 ]]; then
         notify-send "Networking is up!" -i "network"
+        rm index.*
         break
 	else
         notify-send "Networking is connecting!" -i "error"
+        rm index.*
         sleep 30s
 	fi
 done
