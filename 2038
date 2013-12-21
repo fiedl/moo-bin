@@ -1,35 +1,35 @@
 #!/bin/bash
 
+######### START CONFIGURATION #########
+. moo_config
 
-while true
+######### START FUNCTIONS #########
+. moo_functions
+
+arches="32 64"
+PWD=$(pwd)
+for mm in $arches
 do
-	wget -q --timeout=5 https://archlinux.org
-	if [[ $? -eq 0 ]]; then
-        notify-send "DNS Networking is up!" -i "network"
-        sleep 30s
-        #break
-	else
-        notify-send "DNS Networking is connecting!" -i "error"
-        sleep 30s
-        break
-	fi
+	cd ${MOO_HOME}abs/mooOS-pkgs-$mm/
+	mv $(ls | grep "efl-git-1" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "efl-git-debug-1" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "elementary-git-1" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "elementary-git-debug-1" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "elementary_test-git-1" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "elementary_test-git-debug-1" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "enlightenment17-git-0" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "enlightenment17-git-debug" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "evas_generic_loaders-git-1" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "evas_generic_loaders-git-debug-1" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "pulseaudio-mixer-cli-git" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "pyradio-git" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "sqlmap-git" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "terminology-git-0" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "terminology-git-debug-0" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "urxvt-font-size-git" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
+	mv $(ls | grep "youtube-viewer-git" | sort -r | head -2) ${MOO_HOME}abs/staging_$mm/
 done
-
-
-
-exit 0
-
-
-pout=$1
-sed -i "s,/dev/sda3,$pout,g" ~/syslinux.cfg
-sed -i "s/Arch /mooOS GNU\//g" ~/syslinux.cfg
-
-
-
-
-
-
-
+cd "$PWD"
 
 exit 0
 
