@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+   pacstrap -C /mnt/etc/pacman.conf /mnt sudo git rsync wget dialog zsh $(cat /home/moo/Github/mooOS-dev-tools/packages.both) $(cat /home/moo/Github/mooOS-dev-tools/packages.x86_64) $(cat /home/moo/Github/mooOS-dev-tools/packages.extra)
