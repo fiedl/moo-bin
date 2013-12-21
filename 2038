@@ -1,6 +1,21 @@
 #!/bin/bash
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+exit 0
+
+
 pout=$1
 sed -i "s,/dev/sda3,$pout,g" ~/syslinux.cfg
 sed -i "s/Arch /mooOS GNU\//g" ~/syslinux.cfg
