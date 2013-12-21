@@ -1,15 +1,19 @@
 #!/bin/bash
 
 
-
-
-
-
-
-
-
-
-
+while true
+do
+	wget -q --timeout=5 https://archlinux.org
+	if [[ $? -eq 0 ]]; then
+        notify-send "DNS Networking is up!" -i "network"
+        sleep 30s
+        #break
+	else
+        notify-send "DNS Networking is connecting!" -i "error"
+        sleep 30s
+        break
+	fi
+done
 
 
 

@@ -1,0 +1,16 @@
+#!/usr/bin/bash
+# notify user when network is up
+
+while true
+do
+	wget -q --timeout=5 https://archlinux.org
+	if [[ $? -eq 0 ]]; then
+        notify-send "Networking is up!" -i "network"
+        break
+	else
+        notify-send "Networking is connecting!" -i "error"
+        sleep 30s
+	fi
+done
+
+exit 0

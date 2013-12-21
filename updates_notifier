@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+
+## Start Arch Linux update notifier
+[ -z "$(pidof aarchup)" ] && /usr/bin/aarchup --loop-time 60 --aur --icon "$HOME/.icons/pacman_icon_48x48.png" &
+
+exit 0
