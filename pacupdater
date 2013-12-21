@@ -1,14 +1,14 @@
 #!/usr/bin/bash
 # pacman update
-echo ":: updating system..."
-echo "sudo pacman -Syyu"
-sudo pacman -Syyu
-echo " "
-echo ":: update complete..."
-echo " "
+echo ":: updating system..." 2>&1 | tee -a ~/.log
+echo "sudo pacman -Syyu" 2>&1 | tee -a ~/.log
+sudo pacman -Syyu 2>&1 | tee -a ~/.log
+echo " " 2>&1 | tee -a ~/.log
+echo ":: update complete..." 2>&1 | tee -a ~/.log
+echo " " 2>&1 | tee -a ~/.log
 sleep 2s
-echo ":: this window will automatically close after 5 minutes"
-echo ":: ctrl+c to manually exit"
+echo ":: this window will automatically close after 5 minutes" 2>&1 | tee -a ~/.log
+echo ":: ctrl+c to manually exit" 2>&1 | tee -a ~/.log
 notify-send "Pacman" \
             "Update complete" \
             -i $HOME/.icons/pacman_icon_48x48.png
