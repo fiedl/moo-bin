@@ -1,16 +1,5 @@
 #!/bin/bash
 
-######### START CONFIGURATION #########
-. moo_config
-
-######### START FUNCTIONS #########
-. moo_functions
-
-echo "Current version: 0.$MOO_VERSION"
-
-echo "Next Version: 0.$(( $(echo $MOO_VERSION) + 1 ))"
-exit 0
-
 pkgver=$(LC_ALL=C date -u +%Y%m%d)
 cd /tmp
 rm blacklist.txt
