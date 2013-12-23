@@ -49,7 +49,6 @@ package() {
 	install -D -m 755 "killit" "$pkgdir/usr/bin/"
 	install -D -m 755 "lamp" "$pkgdir/usr/bin/"
 	install -D -m 755 "mkiso" "$pkgdir/usr/bin/"
-	install -D -m 755 "mochg" "$pkgdir/usr/bin/"
 	install -D -m 755 "moo" "$pkgdir/usr/bin/"
 	install -D -m 755 "moo_config" "$pkgdir/usr/bin/"
 	install -D -m 755 "moo_functions" "$pkgdir/usr/bin/"
