@@ -1,6 +1,10 @@
-#!/usr/bin/sh
+#!/usr/bin/bash
 ## Autostart Script - ran after startx
 ## Author pdq 11-27-2012 - 04-18-2013 07-30-2013
+if [ $(id -u) -eq 0 ]; then
+	echo "run this script as user..."
+	exit 0
+fi
 
 ## run moo from command line or Everything Launcher/dmenu/etc
 
