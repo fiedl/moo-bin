@@ -1,3 +1,9 @@
 #!/usr/bin/bash
 
-subl3 /usr/share/moo-tools/misc/key_binds.rst /usr/share/moo-tools/misc/key_binds2.rst /usr/share/moo-tools/misc/Welcome.html
+if  [ -f /opt/sublime_text_3/sublime_text ]; then
+	subl3 /usr/share/moo-tools/misc/key_binds.rst /usr/share/moo-tools/misc/key_binds2.rst /usr/share/moo-tools/misc/Welcome.html
+else
+	urxvtc -name "mooOS" -e nano /usr/share/moo-tools/misc/Welcome.html
+fi
+
+exit 0
