@@ -1,33 +1,36 @@
 #!/usr/bin/bash
 
 DIALOG=dialog
-
 is_mnt_is_device_is_freespace() {
-	chosen_device="$1"
-	min_space_required=7864320 ## 7.5 GiB
-	is_mounted=$(mountpoint -q $chosen_device && echo 1 || echo 0)
+    chosen_device="$1"
+    min_space_required="$2"
+    is_mounted=$(mountpoint -q $chosen_device && echo 1 || echo 0)
 
-	if [ $is_mounted -eq 1 ]; then
-		df "$chosen_device" | tail -n+2 | while read fs size used avail use mount ; do
-		    if [[ $avail ]] ; then
-				freespace_left=$(echo $avail | grep -o '[0-9]*')
-				#echo $freespace_left
-				if [ $freespace_left -lt $min_space_required ]; then
-	        		$DIALOG --clear --backtitle "$upper_title" --title "WARNING" --msgbox "Not enough freespace left on the target device. $fs is mounted at $chosen_device\nMinimum freespace required: $min_space_required kilobytes.\nActual freespace on device/mount: $freespace_left kilobytes.\n\nReturning to menu..." 20 70
-			        current_selection 1
-			        installer_menu
-			        return 0
-				else
-					$DIALOG --clear --backtitle "$upper_title" --title "SUCCESS" --msgbox "Sufficient freespace left on the target device. $fs is mounted at $chosen_device.\nMinimum freespace required: $min_space_required bytes.\nActual freespace on device/mount: $freespace_left kilobytes.\n\nContinuing..." 20 70
-				fi
-			fi
-		done
-	else
-		$DIALOG --clear --backtitle "$upper_title" --title "WARNING" --msgbox "Nothing is mounted on $chosen_device.\n\nReturning to menu..." 20 70
-		current_selection 3
-	    installer_menu
-	    return 0
-	fi
+    if [ $is_mounted -eq 1 ]; then
+        df "$chosen_device" | tail -n+2 | while read fs size used avail use mount ; do
+            if [[ $avail ]] ; then
+                freespace_left=$(echo $avail | grep -o '[0-9]*')
+                #echo $freespace_left
+                if [ $freespace_left -lt $min_space_required ]; then
+                    $DIALOG --clear --backtitle "$upper_title" --title "WARNING" --msgbox "Not enough freespace left on the target device.\n\n$fs is mounted at $chosen_device\n\nMinimum freespace required: $min_space_required kilobytes.\n\nActual freespace on device/mount: $freespace_left kilobytes.\n\nReturning to menu..." 20 70
+                    return 0
+                else
+                    $DIALOG --clear --backtitle "$upper_title" --title "SUCCESS" --msgbox "Sufficient freespace left on the target device.\n\n$fs is mounted at $chosen_device.\n\nMinimum freespace required: $min_space_required bytes.\n\nActual freespace on device/mount: $freespace_left kilobytes.\n\nContinuing..." 20 70
+                    return 1
+                fi
+            fi
+        done
+    else
+        $DIALOG --clear --backtitle "$upper_title" --title "WARNING" --msgbox "Nothing is mounted on $chosen_device.\n\nReturning to menu..." 20 70
+        return 0
+    fi
 }
+is_mnt_is_device_is_freespace $1 6023456
+is_good=$?
+if [ $is_good -eq 1 ]; then  ## 5.7 GiB
+	echo "true"
+else
+	echo "false"
+fi
 
-is_mnt_is_device_is_freespace $1
+exit 0
