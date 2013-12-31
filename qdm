@@ -4,33 +4,16 @@ moo=pdq
 DIALOG=dialog
 PACKAGES=$(cat /usr/share/moo-tools/packages.both)
 
-rm -f /home/$moo/.log
-echo "Initialize log" >> /home/$moo/.log
 
-echo "Installing base base-devel packages" >> /home/$moo/.log
-
-#sudo pacman -Syu --noconfirm >> /home/$moo/.log
-
-tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/test$$
-trap 'rm -f $tempfile; stty sane; exit 1' 1 2 3 15
-
-dialog --clear --backtitle "$upper_title" --title "Installing packages" \
-    --begin 7 1 --tailboxbg /home/$moo/.log 20 80 \
-    --and-widget \
-    --begin 1 20 --msgbox "Press <Enter> when install completed" 5 40 \
-    2>$tempfile &
-mypid=$!
-
-pacman -Syu --quiet --noconfirm >> /home/$moo/.log 2>&1
-
-echo "
-Install completed! You may proceed..." >> /home/$moo/.log
-#$DIALOG --clear --backtitle "$upper_title" --title "base base-devel install completed" --msgbox "Proceed." 10 30
+if [ "$PACKAGES" != "" ]; then
+    echo 1
+else
+	echo 2
+fi
 
 
-wait $mypid
-rm -f $tempfile
-$DIALOG --clear --backtitle "$upper_title" --title "Installing packages completed" --msgbox "Yo" 10 30
+
+
 
 
 exit 0
