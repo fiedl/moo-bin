@@ -24,7 +24,7 @@ PWD=$(pwd)
 ## figure out architecture type
 archtype="$(uname -m)"
 
-upper_title="Welcome to mooOS backup utility $archtype"
+upper_title="Welcome to mooOS 0.$MOO_NEW_VERSION backup utility $archtype"
 
 
 # dialog --clear --backtitle "$upper_title" --title "Preferences" --yes-label "Text Mode" --no-label "Graphical Mode" --yesno "Chose the backup utility Type." 20 70
@@ -77,7 +77,7 @@ mkmoo_menu() {
         2 $clr"Update github repos"$clr_end \
         3 $clr"Update local repos"$clr_end \
         4 $clr"Update remote repos"$clr_end \
-        5 $clr"Bump mooOS version"$clr_end \
+        5 $clr"Bump mooOS version 0.$MOO_NEW_VERSION"$clr_end \
         6 $clr"Build mooOS"$clr_end \
         7 $clr"Sync mooOS"$clr_end \
         8 $clr"Exit" 2>$_TEMP
@@ -141,11 +141,10 @@ update_moo() {
 		sudo pacman -Syu && pacaur -Syua$devel --noedit --rebuild
 		echo "Applied x86_64 AUR updates Then hit [ENTER]:"
 		read wee
-		
-		notify-send "Applied x86_64 AUR updates" -i "$MOO_ICON"
 
-		current_selection 2
+		notify-send "Applied x86_64 AUR updates" -i "$MOO_ICON"
 	fi
+	current_selection 2
 }
 
 update_moohub() {
@@ -153,8 +152,8 @@ update_moohub() {
 	if [ $? = 0 ] ; then
 		su -l "root" -c "pacman -Qqe  | grep -vx \"$(pacman -Qqg base)\" | grep -vx \"$(cat ${MOO_TOOLS_PATH}exclude_pkgs)\" > ${MOO_TOOLS_PATH}packages.both"
 		gh -b 2>&1 | $DIALOG --clear --backtitle "$upper_title" --title "Updating github repos" --ok-label "Continue" --programbox 20 70
-		current_selection 3
 	fi
+	current_selection 3
 }
 
 repackage_this() {
@@ -170,10 +169,10 @@ repackage_this() {
 		wget "$urls" 2>&1 | $DIALOG --clear --backtitle "$upper_title" --title "Grabbing package" --progressbox 20 70
 	done
 	if [ "$package_type" == "x86_64" ] || [ "$package_type" == "any" ]; then
-		makepkg -sf$package_install 2>&1 | $DIALOG --clear --backtitle "$upper_title" --title "Repackaging package" --progressbox 20 70
+		makepkg -sf$package_install --noconfirm 2>&1 | $DIALOG --clear --backtitle "$upper_title" --title "Repackaging package" --progressbox 20 70
 	fi
 	if [ "$package_type" == "i686" ] || [ "$package_type" == "any" ]; then
-		schroot -p -- makepkg -sf$package_install 2>&1 | $DIALOG --clear --backtitle "$upper_title" --title "Repackaging package" --progressbox 20 70
+		schroot -p -- makepkg -sf$package_install --noconfirm 2>&1 | $DIALOG --clear --backtitle "$upper_title" --title "Repackaging package" --progressbox 20 70
 	fi
 	cd "$PWD"
 }
@@ -781,13 +780,14 @@ build_moo() {
 		do
 			$DIALOG --clear --backtitle "$upper_title" --title "mooOS" --yesno "Do you wish to make $moo iso?" 10 30
 			if [ $? = 0 ] ; then
-				 sudo ${MOO_TOOLS_PATH}create_iso/build.sh -v -a "$moo" -o "$ISO_DIR" -w "$WORK_DIR" -N "$ISO_NAME" -V "$ISO_VERSION" -L "$ISO_LABEL" 2>&1 | $DIALOG --clear --backtitle "$upper_title" --title "Building moo iso" --programbox 20 70
+				umount_work_env $moo
+				sudo ${MOO_TOOLS_PATH}create_iso/build.sh -v -a "$moo" -o "$ISO_DIR" -w "$WORK_DIR" -N "$ISO_NAME" -V "$ISO_VERSION" -L "$ISO_LABEL" 2>&1 | $DIALOG --clear --backtitle "$upper_title" --title "Building moo iso" --programbox 20 70
 			fi
 
 			$DIALOG --clear --backtitle "$upper_title" --title "Build complete" --msgbox "$moo iso build complete" 20 70
 			umount_work_env $moo
 		done
-		current_selection 7
+	current_selection 7
 }
 
 bump_moo() {
