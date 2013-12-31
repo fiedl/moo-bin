@@ -3,9 +3,14 @@
 ## pdq 08-13-2013 - PRESENT
 ## License: GPL3
 
-## This script is run as $USER then following that as root
-## This script creates the mooOS livecd ISO image files from current OS
+## This utility is run as $USER
+## This utility creates the mooOS livecd ISO image files from current OS
 
+## DO NOT RUN AS ROOT
+if [ $(id -u) -eq 0 ]; then
+	$DIALOG --clear --backtitle "$upper_title" --title "Exiting Script" --msgbox "Do not run this utility as root or super user" 10 40
+    exit 0
+fi
 
 ## DO NOT EDIT BELOW UNLESS YOU KNOW WHAT YOURE DOING ##
 
@@ -16,7 +21,7 @@
 #. /usr/share/moo-tools/create_iso/moo_functions
 
  ## set live user
-[ $SUDO_USER ] && moo=$SUDO_USER || moo=$(whoami)
+moo=$(whoami)
 
 ## store current working directory 
 PWD=$(pwd)
@@ -25,7 +30,6 @@ PWD=$(pwd)
 archtype="$(uname -m)"
 
 upper_title="Welcome to mooOS 0.$MOO_NEW_VERSION backup utility $archtype"
-
 
 # dialog --clear --backtitle "$upper_title" --title "Preferences" --yes-label "Text Mode" --no-label "Graphical Mode" --yesno "Chose the backup utility Type." 20 70
 # if [ $? = 0 ] ; then
@@ -50,11 +54,6 @@ _TEMP=/tmp/answer$$
 mkdir -p /tmp/tmp 2>/dev/null
 _CURRENT=/tmp/$moo-cur
 
-if [ $(id -u) -eq 0 ]; then ## as $USER
-	$DIALOG --clear --backtitle "$upper_title" --title "Exiting Script" --msgbox "Do not run this utility as root or super user" 10 40
-    exit 0
-fi
-
 ## functions
 exiting_mkmoo() {
     clear
@@ -68,7 +67,6 @@ current_selection() {
 }
 
 mkmoo_menu() {
-
     CUR=$(cat $_CURRENT)
     $DIALOG \
         --default-item "$CUR" --colors --backtitle "$upper_title" --title "$upper_title" \
@@ -81,12 +79,10 @@ mkmoo_menu() {
         6 $clr"Build mooOS"$clr_end \
         7 $clr"Sync mooOS"$clr_end \
         8 $clr"Exit" 2>$_TEMP
-
     if [ $? = 1 ] || [ $? = 255 ] ; then
         exiting
         return 0
     fi
-
     choice=$(cat $_TEMP)
     case $choice in
         1) update_moo;;
@@ -132,6 +128,7 @@ update_moo() {
 
 		$DIALOG --clear --backtitle "$upper_title" --title "Updating packages" --msgbox "Applying i686 updates" 10 40
 		schroot -p -- sudo pacman -Syu && schroot -p -- pacaur -Syua$devel --noedit --rebuild
+		echo ""
 		echo "Applied i686 AUR updates? Then hit [ENTER]:"
 		read wee
 
@@ -139,6 +136,7 @@ update_moo() {
 
 		$DIALOG --clear --backtitle "$upper_title" --title "Updating packages" --msgbox "Applying x86_64 updates" 10 40
 		sudo pacman -Syu && pacaur -Syua$devel --noedit --rebuild
+		echo ""
 		echo "Applied x86_64 AUR updates Then hit [ENTER]:"
 		read wee
 
