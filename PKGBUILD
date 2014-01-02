@@ -50,7 +50,6 @@ package() {
 	install -D -m 755 "lamp" "$pkgdir/usr/bin/lamp"
 	install -D -m 755 "more_logs" "$pkgdir/usr/bin/more_logs"
 	install -D -m 755 "network_notify" "$pkgdir/usr/bin/network_notify"
-	install -D -m 755 "packerupdater" "$pkgdir/usr/bin/packerupdater"
 	install -D -m 755 "pacupdater" "$pkgdir/usr/bin/pacupdater"
 	install -D -m 755 "pkgsinfo" "$pkgdir/usr/bin/pkgsinfo"
 	install -D -m 755 "scr" "$pkgdir/usr/bin/scr"

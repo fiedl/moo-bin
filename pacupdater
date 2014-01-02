@@ -5,14 +5,22 @@ echo "sudo pacman -Syyu"
 sudo pacman -Syu
 echo " "
 echo ":: update complete..."
-echo " "
-sleep 2s
-echo ":: this window will automatically close after 5 minutes"
-echo ":: ctrl+c to manually exit"
-notify-send "Pacman" \
+echo "Updated main packages. [Enter] to update AUR packages."
+notify-send "Main" \
             "Update complete" \
-            -i $HOME/.icons/pacman_icon_48x48.png
-            
-   
-sleep 5m
-exit
+            -i /usr/share/moo-tools/mooOS.png
+read foobar
+echo ":: updating system [AUR]..."
+echo "pacaur -Syua"
+#packer -Syu --auronly
+pacaur -Syua
+#yaourt -Syua
+echo " "
+echo ":: update complete..."
+echo "Updated AUR packages. [Enter] to close."
+notify-send "[AUR]" \
+            "Update complete" \
+            -i /usr/share/moo-tools/mooOS.png
+read foobar
+
+exit 0
