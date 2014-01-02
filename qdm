@@ -6,24 +6,16 @@
 ## This utility is run as $USER
 ## This utility creates the mooOS livecd ISO image files from current OS
 
-## DO NOT EDIT BELOW UNLESS YOU KNOW WHAT YOURE DOING ##
-
-######### START CONFIGURATION ##########
-. /etc/moo.cfg
-
-pkgs_list=$(pacman -Qqe | grep -vx "$(pacman -Qqg base)" | grep -vx "$(cat ${MOO_TOOLS_PATH}exclude_pkgs)")
-
-sudo echo $pkgs_list
-# > ${MOO_TOOLS_PATH}packages.both
-
-
-exit 0
-
 ## DO NOT RUN AS ROOT
 if [ $(id -u) -eq 0 ]; then
 	$DIALOG --clear --backtitle "$upper_title" --title "Exiting Script" --msgbox "Do not run this utility as root or super user" 10 40
     exit 0
 fi
+
+## DO NOT EDIT BELOW UNLESS YOU KNOW WHAT YOURE DOING ##
+
+######### START CONFIGURATION ##########
+. /etc/moo.cfg
 
 ######### START FUNCTIONS ##############
 #. /usr/share/moo-tools/create_iso/moo_functions
@@ -37,7 +29,7 @@ PWD=$(pwd)
 ## figure out architecture type
 archtype="$(uname -m)"
 
-upper_title="Welcome to mooOS 0.$MOO_NEW_VERSION backup utility $archtype"
+upper_title="Welcome to mooOS $archtype"
 
 # dialog --clear --backtitle "$upper_title" --title "Preferences" --yes-label "Text Mode" --no-label "Graphical Mode" --yesno "Chose the backup utility Type." 20 70
 # if [ $? = 0 ] ; then
