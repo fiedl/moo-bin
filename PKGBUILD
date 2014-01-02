@@ -1,7 +1,7 @@
 # Maintainer: pdq <pdq@localhost>
 pkgname=moo-scripts
 pkgver=0.1
-pkgrel=3
+pkgrel=4
 pkgdesc="mooOS binaries/scripts"
 arch=(any)
 url="https://github.com/idk/bin.git"
