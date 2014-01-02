@@ -38,18 +38,9 @@ upper_title="Welcome to mooOS $archtype"
 #     DIALOG=${DIALOG=Xdialog}
 # fi
 
-# Bash
-# Process all of the *.zip files in the current directory.
-files=(*.zip)
-$DIALOG --gauge "Working..." 20 75 < <(
-    area[0]=23
-	area[1]=37
-	area[2]=UFOs
-	i=0
-   	for in $area; do
-      	echo $((100*(++i)/n))
-      	sleep 10s
-   	done
-)
 
+password2=$($DIALOG --clear --backtitle "$upper_title" --title "[ RE-TYPE PASSWORD ]" --insecure  --passwordbox "Please re-type your password:\n\n" 10 70 2>&1 >/dev/tty)
+
+
+echo $password2
 exit 0
