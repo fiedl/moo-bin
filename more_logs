@@ -1,2 +1,8 @@
 #!/usr/bin/bash
-multitail -sw 50,100 -sn 3,3 --no-repeat -ci red -n 10 -f /mnt/linux-pdq/media/truecrypt1/private/transmission-daemon/posttorrent.log -ci white -n 10 -f /mnt/linux-pdq/var/log/httpd/access_log -I /mnt/linux-pdq/var/log/httpd/error_log -ci green -n 10 -f /var/log/pacman.log -ci yellow -R 2 -l "netstat -t" -ci red /var/log/dansguardian/access.log -ci green /var/log/pgl/pgld.log
+multitail -sw 50,100 -sn 3,3 --no-repeat \
+-ci red -n 10 -f /mnt/linux-pdq/media/truecrypt1/private/transmission-daemon/posttorrent.log \
+-ci white -n 10 -f /mnt/linux-pdq/var/log/httpd/access_log -I /mnt/linux-pdq/var/log/httpd/error_log \
+-ci green -R 2 /var/log/pacman.log \
+#-ci yellow -R 2 -l "netstat -t" \
+-ci red /var/log/dansguardian/access.log \
+#-ci green /var/log/pgl/pgld.log
