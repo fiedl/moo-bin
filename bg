@@ -1,8 +1,37 @@
 #!/bin/bash
-for file in ~/Videos/vids/*; do
-	echo "$file"
-done
-echo "Pick a background"
-read bg
-killall mplayer
-mplayer ~/Videos/vids/$bg.wmv -rootwin -vf scale=1440:900 -noconsolecontrols -loop 0
+
+PWD=$(pwd)
+
+move_files() {
+    SRC=$1
+    if [ ! -d "$SRC" ]; then
+        echo "$SRC does not exist"
+        exit 1
+    fi
+
+    cd $SRC
+    echo "Moving files from $SRC Directory"
+    filetypes=".mp4 .avi .kdenlive .iso .jpg .jpeg .png .gif .mp3"
+    for t in $filetypes
+    do 
+        count=$(ls -1 *$t 2>/dev/null | wc -l)
+        if [ $count != 0 ]; then
+            case $t in
+               # .mp4|.avi) mv *$t ~/Videos;;
+               # .kdenlive) mv *$t ~/kdenlive;;
+               # .iso) mv *$t ~/Documents;;  
+                .jpg|.jpeg|.png|.gif) mv *$t ~/Pictures;;
+                #.mp3|flac) mv *$t ~/Music;;
+            esac
+            echo "moving something"
+        fi
+    done
+    echo "Files moved successfully!"
+}
+
+move_files ~
+#move_files ~/Documents
+move_files ~/Music
+
+cd "$PWD"
+exit 0
