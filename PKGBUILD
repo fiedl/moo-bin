@@ -1,13 +1,13 @@
 # Maintainer: pdq <pdq@localhost>
 pkgname=moo-scripts
 pkgver=0.1
-pkgrel=5
+pkgrel=6
 pkgdesc="mooOS binaries/scripts"
 arch=(any)
 url="https://github.com/idk/bin.git"
 license=('GPL3')
 makedepends=('git')
-depends=('bash' 'dialog' 'rsync' 'arch-install-scripts' 'update-mirrorlist' 'efl-git' 'gtk3' 'hicolor-icon-theme' 'desktop-file-utils')
+depends=('dialog' 'rsync' 'arch-install-scripts' 'update-mirrorlist' 'gtk3' 'hicolor-icon-theme' 'desktop-file-utils')
 groups=moo
 #conflicts=('abc' 'xyz')
 #source=("")
