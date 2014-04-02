@@ -3,13 +3,13 @@
 
 while true
 do
-	wget -q --timeout=5 https://archlinux.org -O "/dev/null"
+	wget -q --timeout=5 https://sourceforge.net -O "/dev/null"
 	if [[ $? -eq 0 ]]; then
-        notify-send "TOR is up" -i "network"
+        notify-send "Network (TOR) is up" -i "network"
         break
 	else
-        notify-send "TOR is initializing" -i "error"
-        sleep 10s
+        notify-send "Network (TOR) is initializing" -i "error"
+        sleep 9s
 	fi
 done
 
