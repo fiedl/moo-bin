@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+autocutsel -fork
+autocutsel -selection PRIMARY -fork
+exit 0
