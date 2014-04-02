@@ -1,7 +1,7 @@
 # Maintainer: pdq <pdq@localhost>
 pkgname=moo-scripts
 pkgver=0.1
-pkgrel=6
+pkgrel=7
 pkgdesc="mooOS binaries/scripts"
 arch=(any)
 url="https://github.com/idk/bin.git"
@@ -39,6 +39,7 @@ package() {
     cp -r "$srcdir/$pkgname/" "${pkgdir}/usr/share/"
 	msg2 "Installing mooOS executables."
 	install -D -m 755 "2038" "$pkgdir/usr/bin/2038"
+	install -D -m 755 "autocutsel_launcher" "$pkgdir/usr/bin/autocutsel_launcher"
 	install -D -m 755 "cfg_2_src" "$pkgdir/usr/bin/cfg_2_src"
 	install -D -m 755 "check_url" "$pkgdir/usr/bin/check_url"
 	install -D -m 755 "cpu_freq" "$pkgdir/usr/bin/cpu_freq"
