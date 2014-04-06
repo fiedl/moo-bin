@@ -1,7 +1,7 @@
 # Maintainer: pdq <pdq@localhost>
 pkgname=moo-scripts
 pkgver=0.2
-pkgrel=1
+pkgrel=2
 pkgdesc="mooOS binaries/scripts"
 arch=(any)
 url="https://github.com/idk/bin.git"
@@ -61,6 +61,7 @@ package() {
 	install -D -m 755 "tc1" "$pkgdir/usr/bin/tc1"
 	install -D -m 755 "tc2" "$pkgdir/usr/bin/tc2"
 	install -D -m 755 "tc3" "$pkgdir/usr/bin/tc3"
+	install -D -m 755 "e19_startups" "$pkgdir/usr/bin/e19_startups"
 	install -D -m 755 "transmission-unrar" "$pkgdir/usr/bin/transmission-unrar"
 	install -D -m 755 "updates_notifier" "$pkgdir/usr/bin/updates_notifier"
 	install -D -m 755 "urlLauncher" "$pkgdir/usr/bin/urlLauncher"
