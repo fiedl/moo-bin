@@ -7,8 +7,8 @@
 #ogg123 -q "${HOME}/.config/awesome/sounds/voice-please-confirm.ogg"
 
 # ssh-agent
-[ -z "$(pidof keychain)" ] && eval $(keychain --eval --agents ssh -Q --quiet id_rsa)
+#[ -z "$(pidof keychain)" ] && eval $(keychain --eval --agents ssh -Q --quiet id_rsa)
 
-[ -z "$(pidof gpg-agent)" ] && eval $(gpg-agent --daemon) &
+#[ -z "$(pidof gpg-agent)" ] && eval $(gpg-agent --daemon) &
 
 exit 0
