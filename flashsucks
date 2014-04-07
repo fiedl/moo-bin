@@ -1,0 +1,65 @@
+#!/usr/bin/sh
+## pdq@archlinux
+## FlashSucks 0.0.3 by pdq
+## This file is part of moo-scripts
+## https://github.com/idk/bin
+
+## This script is for playing embedded videos on web pages, right click link or right click when on desired page
+## 08-04-2013
+
+## can be used in firefox with addon Open With 5.3.1 https://addons.mozilla.org/en-US/firefox/addon/open-with/
+## Copy embedded video link - /usr/bin/flashsucks copy
+## Play embedded video link in VLC - /usr/bin/flashsucks
+
+if [ ! -f /usr/bin/grake ]; then
+	echo "Missing package: grake [Command line tool for scanning webpages for Youtube links]"
+	exit 1
+elif [ ! -f /usr/bin/xclip ]; then
+	echo "Missing package: xclip [Command line interface to the X11 clipboard]"
+	exit 1
+elif [ ! -f /usr/bin/vlc ]; then
+	echo "Missing package: vlc [A multi-platform MPEG, VCD/DVD, and DivX player]"
+	exit 1
+elif [ ! -f /usr/bin/zenity ]; then
+	echo "Missing package: zenity [Display graphical dialog boxes from shell scripts]"
+	exit 1
+elif [ ! -f /usr/bin/youtube-viewer ]; then
+	echo "Missing package: youtube-viewer [A command line utility for viewing youtube-videos in MPlayer."
+	exit 1
+fi
+
+if [ "$1" != "" ]; then
+	if [ "$1" = "copy" ]; then
+		grake -q --proxy="http://127.0.0.1:8118" "$2" | head -1 | xclip
+		/usr/bin/notify-send "Link copied to clipboard"
+		exit 0
+	elif [ "$1" = "play" ]; then
+		_PROXY=$(zenity --list --radiolist --width 200 --height 200 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Use Proxy" TRUE Yes FALSE No)
+		_RES=$(zenity --list --radiolist --width 200 --height 230 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Resolution" TRUE 240p  FALSE 480p FALSE 720p FALSE 1080p)
+		_USEPROX=$([ "$_PROXY" == "Yes" ] && echo "--http-proxy=127.0.0.1:8118 " || echo "")
+		vlc $_USEPROX--preferred-resolution "$_RES" "$2"
+	else
+		_PROXY=$(zenity --list --radiolist --width 200 --height 200 --text "Flash ssucks" --title="Play video in VLC" --column "Choice" --column "Use Proxy" TRUE Yes FALSE No)
+		_RES=$(zenity --list --radiolist --width 200 --height 230 --text "Flash ssucks" --title="Play video in VLC" --column "Choice" --column "Resolution" TRUE 240p  FALSE 480p FALSE 720p FALSE 1080p)
+		_USEPROX=$([ "$_PROXY" == "Yes" ] && echo "--http-proxy=127.0.0.1:8118 " || echo "")
+		grake -q --proxy="http://127.0.0.1:8118" "$1" | vlc $_USEPROX--preferred-resolution="$_RES" -
+	fi
+
+	# _ACTION=$(zenity --list --radiolist --width 230 --height 230 --text "Flash sucks" --title="Rate, Favorite or Subscribe" --column "Choice" --column "Action" TRUE Nothing FALSE Like FALSE Dislike FALSE Favorite FALSE Subscribe)
+	# _DOACTION=
+	# if [ "$_ACTION" == "Like" ]; then
+	# 	_DOACTION="--like='$1'"
+	# elif [ "$_ACTION" == "Dislike" ]; then
+	# 	_DOACTION="--dislike='$1'"
+	# elif [ "$_ACTION" == "Favorite" ]; then
+	# 	_DOACTION="--favorite='$1'"
+	# elif [ "$_ACTION" == "Subscribe" ]; then
+	# 	_DOACTION="--subscribe='$1'" ## TODO
+	# fi
+
+	# if [ ! -z "$_DOACTION" ]; then
+	# 	zenity --info --text "$(youtube-viewer --prefer-https --noI $_DOACTION)"
+	# fi
+fi
+
+exit 0

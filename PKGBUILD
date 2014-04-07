@@ -1,13 +1,13 @@
 # Maintainer: pdq <pdq@localhost>
 pkgname=moo-scripts
 pkgver=0.2
-pkgrel=3
+pkgrel=4
 pkgdesc="mooOS binaries/scripts"
 arch=(any)
 url="https://github.com/idk/bin.git"
 license=('GPL3')
 makedepends=('git')
-depends=('dialog' 'rsync' 'arch-install-scripts' 'update-mirrorlist' 'gtk3' 'hicolor-icon-theme' 'desktop-file-utils')
+depends=('dialog' 'rsync' 'arch-install-scripts' 'update-mirrorlist' 'gtk3' 'hicolor-icon-theme' 'desktop-file-utils' 'grake' 'youtube-viewer' 'xclip' 'zenity')
 groups=moo
 #conflicts=('abc' 'xyz')
 #source=("")
@@ -55,6 +55,7 @@ package() {
 	install -D -m 755 "pacupdater" "$pkgdir/usr/bin/pacupdater"
 	install -D -m 755 "pkgsinfo" "$pkgdir/usr/bin/pkgsinfo"
 	install -D -m 755 "scr" "$pkgdir/usr/bin/scr"
+	install -D -m 755 "flashsucks" "$pkgdir/usr/bin/flashsucks"
 	install -D -m 755 "screenfetch" "$pkgdir/usr/bin/screenfetch"
 	install -D -m 755 "startup_hint" "$pkgdir/usr/bin/startup_hint"
 	install -D -m 755 "sudo_subl3" "$pkgdir/usr/bin/sudo_subl3"
