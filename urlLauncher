@@ -4,7 +4,7 @@
 ## This script is for playing linked videos from IRC or terminal console programs (see ~/.Xdefaults)
 ## 08-04-2013
 
-BROWSER="vbp"
+BROWSER="firefox"
 case "$1" in
 	-video)
 		if torsocks wget "$2" --spider 2>&1 | grep --quiet "200 OK" ; then 
