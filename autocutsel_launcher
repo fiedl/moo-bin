@@ -1,4 +1,7 @@
 #!/usr/bin/bash
-autocutsel -fork
-autocutsel -selection PRIMARY -fork
+if [ -f /usr/bin/autocutsel ]; then
+    killall -q autocutsel
+	autocutsel -fork
+	autocutsel -selection PRIMARY -fork
+fi
 exit 0
