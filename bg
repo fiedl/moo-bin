@@ -1,37 +1,11 @@
 #!/bin/bash
 
-PWD=$(pwd)
+#strace -eopen unity > unitystrace.log
+#LD_DEBUG=files unity > unity.log 2>&1
+#valgrind -v --leak-check=full unity 2>&1 > unityvalgrind.log
 
-move_files() {
-    SRC=$1
-    if [ ! -d "$SRC" ]; then
-        echo "$SRC does not exist"
-        exit 1
-    fi
+Xephyr -ac -br -noreset -screen 1024x768 :2.0 &
+sleep 1
+DISPLAY=:2.0 gnome-session
 
-    cd $SRC
-    echo "Moving files from $SRC Directory"
-    filetypes=".mp4 .avi .kdenlive .iso .jpg .jpeg .png .gif .mp3"
-    for t in $filetypes
-    do 
-        count=$(ls -1 *$t 2>/dev/null | wc -l)
-        if [ $count != 0 ]; then
-            case $t in
-               # .mp4|.avi) mv *$t ~/Videos;;
-               # .kdenlive) mv *$t ~/kdenlive;;
-               # .iso) mv *$t ~/Documents;;  
-                .jpg|.jpeg|.png|.gif) mv *$t ~/Pictures;;
-                #.mp3|flac) mv *$t ~/Music;;
-            esac
-            echo "moving something"
-        fi
-    done
-    echo "Files moved successfully!"
-}
-
-move_files ~
-#move_files ~/Documents
-move_files ~/Music
-
-cd "$PWD"
 exit 0
