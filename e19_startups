@@ -1,5 +1,5 @@
 #!/bin/bash
-[ -z "$(pidof urxvtd)" ] && [ -f /usr/bin/urxvtd ] && urxvtd -q -o -f
+#[ -z "$(pidof urxvtd)" ] && [ -f /usr/bin/urxvtd ] && urxvtd -q -o -f
 
 # welcome audio message
 #ogg123 -q "${HOME}/.config/awesome/sounds/voice-welcome.ogg"
@@ -7,8 +7,7 @@
 #ogg123 -q "${HOME}/.config/awesome/sounds/voice-please-confirm.ogg"
 
 # ssh-agent
-#[ -z "$(pidof keychain)" ] && eval $(keychain --eval --agents ssh -Q --quiet id_rsa)
-
-#[ -z "$(pidof gpg-agent)" ] && eval $(gpg-agent --daemon) &
+eval $(keychain --eval --agents ssh -Q --quiet id_rsa) &
+eval $(gpg-agent --daemon) &
 
 exit 0
