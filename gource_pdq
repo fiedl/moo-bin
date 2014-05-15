@@ -1,0 +1,30 @@
+#/!bin/bash
+
+## store current working directory 
+PWD=$(pwd)
+
+mkdir -p /tmp/gource.pdq
+cd /tmp/gource.pdq
+
+gource --output-custom-log mooOS-dev-tools ~/github/mooOS-dev-tools
+gource --output-custom-log moo-skel ~/github/moo-skel
+gource --output-custom-log mooOS-wallpapers ~/github/mooOS-wallpapers
+gource --output-custom-log moo-octopi ~/github/moo-octopi
+gource --output-custom-log geeh ~/github/geeh
+gource --output-custom-log zsh ~/github/zsh
+gource --output-custom-log bin ~/github/bin
+gource --output-custom-log vb-pdq ~/github/vb-pdq
+gource --output-custom-log gtmsu_service ~/github/gtmsu_service
+gource --output-custom-log eggdrop-scripts ~/github/eggdrop-scripts
+gource --output-custom-log brutaldoom ~/github/brutaldoom
+gource --output-custom-log nonfree ~/github/nonfree
+gource --output-custom-log scr ~/github/scr
+gource --output-custom-log php ~/github/php
+gource --output-custom-log pdq-utils ~/github/pdq-utils
+gource --output-custom-log weechat-X ~/github/weechat-X
+cat mooOS-dev-tools moo-skel mooOS-wallpapers moo-octopi geeh zsh bin vb-pdq gtmsu_service eggdrop-scripts brutaldoom nonfree scr php pdq-utils weechat-X | sort -n > combined.txt
+gource -seconds-per-day 1 -user-image-dir ~/Desktop/a combined.txt -1280x720 -o - | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec libvpx -b 10000K ~/Videos/mooOS-$(date +%d%B%Y_%H:%M).webm
+rm -rf /tmp/gource.pdq
+cd "$PWD"
+
+exit 0
