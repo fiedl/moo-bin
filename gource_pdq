@@ -7,23 +7,40 @@ mkdir -p /tmp/gource.pdq
 cd /tmp/gource.pdq
 
 gource --output-custom-log mooOS-dev-tools ~/github/mooOS-dev-tools
+sed -i -r "s#(.+)\|#\1|/mooOS-dev-tools#" mooOS-dev-tools
 gource --output-custom-log moo-skel ~/github/moo-skel
+sed -i -r "s#(.+)\|#\1|/moo-skel#" moo-skel
 gource --output-custom-log mooOS-wallpapers ~/github/mooOS-wallpapers
+sed -i -r "s#(.+)\|#\1|/mooOS-wallpapers#" mooOS-wallpapers
 gource --output-custom-log moo-octopi ~/github/moo-octopi
+sed -i -r "s#(.+)\|#\1|/moo-octopi#" moo-octopi
 gource --output-custom-log geeh ~/github/geeh
+sed -i -r "s#(.+)\|#\1|/geeh#" geeh
 gource --output-custom-log zsh ~/github/zsh
+sed -i -r "s#(.+)\|#\1|/zsh#" zsh
 gource --output-custom-log bin ~/github/bin
+sed -i -r "s#(.+)\|#\1|/zsh#" zsh
 gource --output-custom-log vb-pdq ~/github/vb-pdq
+sed -i -r "s#(.+)\|#\1|/vb-pdq#" vb-pdq
 gource --output-custom-log gtmsu_service ~/github/gtmsu_service
+sed -i -r "s#(.+)\|#\1|/gtmsu_service#" gtmsu_service
 gource --output-custom-log eggdrop-scripts ~/github/eggdrop-scripts
+sed -i -r "s#(.+)\|#\1|/eggdrop-scripts#" eggdrop-scripts
 gource --output-custom-log brutaldoom ~/github/brutaldoom
+sed -i -r "s#(.+)\|#\1|/brutaldoom#" brutaldoom
 gource --output-custom-log nonfree ~/github/nonfree
+sed -i -r "s#(.+)\|#\1|/nonfree#" nonfree
 gource --output-custom-log scr ~/github/scr
+sed -i -r "s#(.+)\|#\1|/scr#" scr
 gource --output-custom-log php ~/github/php
+sed -i -r "s#(.+)\|#\1|/php#" php
 gource --output-custom-log pdq-utils ~/github/pdq-utils
+sed -i -r "s#(.+)\|#\1|/pdq-utils#" pdq-utils
 gource --output-custom-log weechat-X ~/github/weechat-X
+sed -i -r "s#(.+)\|#\1|/weechat-X#" weechat-X
+
 cat mooOS-dev-tools moo-skel mooOS-wallpapers moo-octopi geeh zsh bin vb-pdq gtmsu_service eggdrop-scripts brutaldoom nonfree scr php pdq-utils weechat-X | sort -n > combined.txt
-gource -seconds-per-day 1 -user-image-dir ~/Desktop/a combined.txt -1280x720 -o - | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec libvpx -b 10000K ~/Videos/mooOS-$(date +%d%B%Y_%H:%M).webm
+gource -seconds-per-day 0.5 --auto-skip-seconds 0.1 -user-image-dir ~/Desktop/a combined.txt -1280x720 -o - | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec libvpx -b 10000K ~/Videos/mooOS-$(date +%d%B%Y_%H:%M).webm
 rm -rf /tmp/gource.pdq
 cd "$PWD"
 
