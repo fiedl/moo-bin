@@ -1,0 +1,22 @@
+#!/bin/bash
+# manage backup1
+
+# must be run as root
+if [[ $EUID != 0 ]]; then
+  printf "%s\n" "You must be root to run this."
+  exit 1
+fi
+
+# unecrypt and mount container
+if [[ "$1" == "open" ]]; then
+	cryptsetup open --type luks /dev/sdz1 backup1
+	mount -t ext4 /dev/mapper/backup1 /media/backup1
+# close
+elif [[ "$1" == "close" ]]; then
+	umount /media/backup1
+	cryptsetup close backup1
+else
+  printf "%s\n" "Options are open or close."
+fi
+
+exit 0

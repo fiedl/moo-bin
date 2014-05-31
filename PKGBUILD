@@ -1,13 +1,14 @@
 # Maintainer: pdq <pdq@localhost>
 pkgname=moo-scripts
 pkgver=0.2
-pkgrel=5
+pkgrel=6
 pkgdesc="mooOS binaries/scripts"
 arch=(any)
 url="https://github.com/idk/bin.git"
 license=('GPL3')
 makedepends=('git')
-depends=('dialog' 'rsync' 'arch-install-scripts' 'update-mirrorlist' 'gtk3' 'hicolor-icon-theme' 'desktop-file-utils' 'grake' 'youtube-viewer' 'xclip' 'zenity')
+depends=('dialog' 'rsync' 'arch-install-scripts' 'hicolor-icon-theme' 'desktop-file-utils' 'xclip' 'zenity')
+optdepends=('grake' 'gtk3' 'update-mirrorlist' 'youtube-viewer')
 groups=moo
 #conflicts=('abc' 'xyz')
 #source=("")
@@ -59,6 +60,9 @@ package() {
 	install -D -m 755 "screenfetch" "$pkgdir/usr/bin/screenfetch"
 	install -D -m 755 "startup_hint" "$pkgdir/usr/bin/startup_hint"
 	install -D -m 755 "sudo_subl3" "$pkgdir/usr/bin/sudo_subl3"
+	install -D -m 755 "bc1" "$pkgdir/usr/bin/bc1"
+	install -D -m 755 "bc2" "$pkgdir/usr/bin/bc2"
+	install -D -m 755 "bc3" "$pkgdir/usr/bin/bc3"
 	install -D -m 755 "tc1" "$pkgdir/usr/bin/tc1"
 	install -D -m 755 "tc2" "$pkgdir/usr/bin/tc2"
 	install -D -m 755 "tc3" "$pkgdir/usr/bin/tc3"
