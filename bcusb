@@ -1,0 +1,22 @@
+#!/bin/bash
+# manage USBcrypt
+
+# must be run as root
+if [[ $EUID != 0 ]]; then
+	printf "%s\n" "You must be root to run this."
+	exit 1
+fi
+
+# unecrypt and mount container
+if [[ "$1" == "open" ]]; then
+	cryptsetup open --type luks /dev/sdc1 USBcrypt
+	mount -t ext4 /dev/mapper/USBcrypt /media/USBcrypt
+# close
+elif [[ "$1" == "close" ]]; then
+	umount /media/USBcrypt
+	cryptsetup close USBcrypt
+else
+	printf "%s\n" "Options are open or close."
+fi
+
+exit 0

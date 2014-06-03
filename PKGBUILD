@@ -1,7 +1,7 @@
 # Maintainer: pdq <pdq@localhost>
 pkgname=moo-scripts
 pkgver=0.2
-pkgrel=6
+pkgrel=7
 pkgdesc="mooOS binaries/scripts"
 arch=(any)
 url="https://github.com/idk/bin.git"
@@ -63,6 +63,7 @@ package() {
 	install -D -m 755 "bc1" "$pkgdir/usr/bin/bc1"
 	install -D -m 755 "bc2" "$pkgdir/usr/bin/bc2"
 	install -D -m 755 "bc3" "$pkgdir/usr/bin/bc3"
+	install -D -m 755 "bcusb" "$pkgdir/usr/bin/bcusb"
 	install -D -m 755 "tc1" "$pkgdir/usr/bin/tc1"
 	install -D -m 755 "tc2" "$pkgdir/usr/bin/tc2"
 	install -D -m 755 "tc3" "$pkgdir/usr/bin/tc3"

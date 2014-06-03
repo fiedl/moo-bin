@@ -3,8 +3,8 @@
 
 # must be run as root
 if [[ $EUID != 0 ]]; then
-  printf "%s\n" "You must be root to run this."
-  exit 1
+  	printf "%s\n" "You must be root to run this."
+  	exit 1
 fi
 
 # unecrypt and mount container
@@ -16,7 +16,7 @@ elif [[ "$1" == "close" ]]; then
 	umount /media/backup2
 	cryptsetup close backup2
 else
-  printf "%s\n" "Options are open or close."
+  	printf "%s\n" "Options are open or close."
 fi
 
 exit 0
