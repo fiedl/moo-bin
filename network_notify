@@ -3,7 +3,7 @@
 
 while true
 do
-	wget -q --timeout=5 https://sourceforge.net -O "/dev/null"
+	wget -q --timeout=10 https://sourceforge.net -O "/dev/null"
 	if [[ $? -eq 0 ]]; then
         notify-send "Network (TOR) is up" -i "network"
         break
