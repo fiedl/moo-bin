@@ -1,4 +1,26 @@
-#!/bin/sh
+#!/bin/bash
 
-urxvtc -name "qqq" -e ssh 192.168.0.10 -p34567 -t "truecrypt -t -d && sudo reboot"
-truecrypt -t -d && reboot
+# Linux Distro Community Podcast
+
+starring="setkeh preecher"
+
+Show_Format() {
+	for segment in "News_and_Current_Events \
+					Forum_Topics \
+					Free_and_Open_Source_News \
+					Monthly_Giveaways \
+					Linux_Gaming \
+					Special_Guests"; do
+		echo ${segment//[[:blank:]]/}
+	done
+}
+
+live_show_begins="Sunday 11:00PM EST / Monday 03:00AM UTC"
+## Youtube and download links available after Podcast has ended
+
+echo "Welcome to the Linux Distro Community Podcast"
+echo "Hosted by: $starring"
+echo "Live at: $live_show_begins"
+Show_Format
+
+exit 0
