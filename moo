@@ -12,8 +12,8 @@ fi
 #VID_QUEUE="/home/$USER/Videos/24 Complete Series DVDRip XviD/Season.06"
 #VID_QUEUE="/home/$USER/Videos/tempvideo"
 #VID_QUEUE="/home/$USER/Videos/movies"
-#VID_QUEUE="/home/$USER/Videos/Star Trek TNG"
-VID_QUEUE="/home/$USER/Videos/Star Trek Voyager"
+VID_QUEUE="/home/$USER/Videos/Star Trek TNG"
+#VID_QUEUE="/home/$USER/Videos/Star Trek Voyager"
 #VID_QUEUE="/home/$USER/Videos/Sliders"
 
 #TERM_USED=terminology
@@ -117,8 +117,8 @@ fi
 ## Terminal applications
 
 ## Main terms
-${TERM_USED}${BG3} $NAME"Term" $TITLE"Term"
-${TERM_USED}${BG7} $NAME"tERM" $TITLE"tERM"
+#${TERM_USED}${BG3} $NAME"Term" $TITLE"Term"
+#${TERM_USED}${BG7} $NAME"tERM" $TITLE"tERM"
 
 ## Start system logs
 #${TERM_USED}${BG5} $NAME"Logs" $TITLE"Logs" -e sudo journalctl -f
@@ -159,9 +159,6 @@ ${TERM_USED}${BG7} $NAME"tERM" $TITLE"tERM"
 ## Start dolphin
 #[ -z "$(pidof dolphin)" ] && dolphin &
 
-## Start steam
-#[ -z "$(pidof steam)" ] && steam &
-
 ## Start youtube viewer
 #[ -z "$(pidof youtube-viewer)" ] && ${TERM_USED}${BG6} $NAME"youtube" $TITLE"youtube" -e youtube-viewer --prefer-https --prefer-webm --use-colors --quiet -7 -S -C --mplayer="/usr/bin/vlc" --mplayer-args="-q"
 
@@ -195,13 +192,17 @@ if [ -d "$PATH_TO_DATA/home" ] || [ $PRIV_ENABLED -eq 0 ]; then
 
 	## GUI applications
 
+	## Start steam
+	#[ -z "$(pidof steam)" ] &&
+	SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0 steam --console &
+
 	## Start vlc media player and playlist
 	if [ -d "$VID_QUEUE" ] ; then
 		[ -z "$(pidof vlc)" ] && vlc "$VID_QUEUE" &
 	fi
 
 	## Start text editor
-	[ -z "$(pidof sublime_text)" ] && subl3 &
+	#[ -z "$(pidof sublime_text)" ] && subl3 &
 
 	## Start video editor
 	#[ -z "$(pidof kdenlive)" ] && kdenlive &
