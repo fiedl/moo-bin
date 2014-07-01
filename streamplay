@@ -8,7 +8,7 @@
 INRES="1920x1080" # input resolution
 #OUTRES="1024x640" # Output resolution
 OUTRES="1280x720" # Output resolution
-FPS="29" # target FPS
+FPS="30" # target FPS
 QUAL="medium" # one of the many FFMPEG preset on (k)ubuntu found in /usr/share/ffmpeg
 # If you have low bandwidth, put the qual preset on 'fast' (upload bandwidth)
 # If you have medium bandwitch put it on normal to medium
