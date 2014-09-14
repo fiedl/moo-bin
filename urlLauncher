@@ -4,16 +4,29 @@
 ## This script is for playing linked videos from IRC or terminal console programs (see ~/.Xdefaults)
 ## 08-04-2013
 
-BROWSER="firefox"
+## uncomment below to override default browser
+#BROWSER="firefox"
+[ -z "$BROWSER" ] && export BROWSER=firefox # if not set default to firefox
+
+## chose your media player, leave 1 commented out
+_PLAYER=mpv
+#_PLAYER=vlc
+
 case "$1" in
 	-video)
 		if torsocks wget "$2" --spider 2>&1 | grep --quiet "200 OK" ; then 
 			_PROXY=$(zenity --list --radiolist --width 200 --height 230 --text "Flash sucks" --title="" --column "Choice" --column "Use Proxy" TRUE Yes FALSE No)
-			_RES=$(zenity --list --radiolist --width 200 --height 200 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Resolution" TRUE 240p FALSE 480p FALSE 720p FALSE 1080p)
-			_USEPROX=$([ "$_PROXY" == "Yes" ] && echo "--http-proxy=127.0.0.1:8118 " || echo "")
+			if [ "$_PLAYER" = "vlc" ]; then
+				_RES=$(zenity --list --radiolist --width 200 --height 200 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Resolution" TRUE 240p FALSE 480p FALSE 720p FALSE 1080p)
+				_USEPROX=$([ "$_PROXY" == "Yes" ] && echo "--http-proxy=127.0.0.1:8118 " || echo "")
+				vlc $_USEPROX--preferred-resolution "$_RES" "$2"
+			elif [ "$_PLAYER" = "mpv" ]; then
+				_USEPROX=$([ "$_PROXY" == "Yes" ] && echo "http_proxy=http://127.0.0.1:8118 ; " || echo "")
+				$_USEPROX
+				mpv "$2" &
+			fi
 			#_USEPROX2=$([ "$_PROXY" == "Yes" ] && echo "--http_proxy=http://127.0.0.1:8118 " || echo "")
-			vlc $_USEPROX--preferred-resolution "$_RES" "$2"
-			# _ACTION=$(zenity --list --radiolist --width 230 --height 230 --text "Flash sucks" --title="Rate, Favorite or Subscribe" --column "Choice" --column "Action" TRUE Nothing FALSE Like FALSE Dislike FALSE Favorite FALSE Subscribe)
+    		# _ACTION=$(zenity --list --radiolist --width 230 --height 230 --text "Flash sucks" --title="Rate, Favorite or Subscribe" --column "Choice" --column "Action" TRUE Nothing FALSE Like FALSE Dislike FALSE Favorite FALSE Subscribe)
 			# _DOACTION=
 			# if [ "$_ACTION" == "Like" ]; then
 			# 	_DOACTION="--like='$2'"
@@ -45,7 +58,12 @@ case "$1" in
 		;;
 	-audio)
 		if torsocks wget "$2" --spider 2>&1 | grep --quiet "200 OK" ; then
-			vlc --http-proxy=127.0.0.1:8118 "$2" &
+			if [ "$_PLAYER" = "vlc" ]; then
+				vlc --http-proxy=127.0.0.1:8118 "$2" &
+			elif [ "$_PLAYER" = "mpv" ]; then
+				http_proxy=http://127.0.0.1:8118
+				mpv "$2" &
+			fi
 		fi
 		;;
 	-image)
