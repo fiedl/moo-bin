@@ -9,8 +9,8 @@
 [ -z "$BROWSER" ] && export BROWSER=firefox # if not set default to firefox
 
 ## chose your media player, leave 1 commented out
-_PLAYER=mpv
-#_PLAYER=vlc
+#_PLAYER=mpv
+_PLAYER=vlc
 
 case "$1" in
 	-video)
@@ -68,7 +68,8 @@ case "$1" in
 		;;
 	-image)
 		if torsocks wget "$2" --spider 2>&1 | grep --quiet "200 OK" ; then
-			torsocks feh -xZF "$2" &
+			#torsocks feh -xZF "$2" &
+			torsocks $BROWSER "$2" &
 		fi
 		;;
 	-www)
