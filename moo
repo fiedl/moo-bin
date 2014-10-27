@@ -96,130 +96,113 @@ if [ $MOUNT_LAN1_FILESYSTEM -eq 1 ]; then
 	#${TERM_USED}${BG2} $NAME"Log $LAN1" $TITLE"Log $LAN1" -e ssh -t $LAN1 -p$PORT1 sudo journalctl -f
 
 	## Mount server filesystem to localhost
-	if [ ! -d "$PATH_TO_DATA/home" ] ; then
-		sshfs $USER1@$LAN1:/ $PATH_TO_DATA -C -p $PORT1
-	fi
+	#if [ ! -d "$PATH_TO_DATA/home" ] ; then
+		[ ! -d "$PATH_TO_DATA/home" ] && sshfs $USER1@$LAN1:/ $PATH_TO_DATA -C -p $PORT1
+	#fi
 fi
 
 ## Default applications to start with moo
+cmd=(dialog --separate-output --checklist "Select options:" 22 76 16)
+options=(1 "Terminals local" on    # any option can be set to default to "on"
+	 2 "Terminals remote" off
+	 3 "System info" on
+	 4 "System logs" on
+	 5 "Extra logs" off
+	 6 "Text editors" on
+	 7 "IRC" on
+	 8 "Web Browsers" off
+	 9 "Steam" on
+	 10 "RSS reader" off
+	 11 "Video players" on
+	 12 "Sillyness" off)
+choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+clear
+for choice in $choices
+do
+	case $choice in
+		1)
+			${TERM_USED}${BG3} $NAME"Term" $TITLE"Term"
+			${TERM_USED}${BG7} $NAME"tERM" $TITLE"tERM"
+			## Start root term
+			${TERM_USED}${BG5} $NAME"Sysadmin" $TITLE"Sysadmin" -e sudo su
+			## Start top (terminal task manager)
+			#[ -z "$(pidof htop)" ] && ${TERM_USED} $NAME"HTOP" $TITLE"HTOP" -e htop
+		;;
+		2)
+			echo "Second Option"
+		;;
+		3)
+			[ -z "$(pidof cpu_freq)" ] && ${TERM_USED}${BG1} $NAME"CPU Freq" $TITLE"CPU Freq" -e cpu_freq
+			## Start GPU monitor
+			[ -z "$(pidof nvidia-smi)" ] && ${TERM_USED}${BG14} $NAME"GPU" $TITLE"GPU" -e nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
+			## Start CPU temperature monitor
+			[ -z "$(pidof cpus_temp)" ] && ${TERM_USED}${BG13} $NAME"CPUS" $TITLE"CPUS" -e cpus_temp
+			## Start glances
+			#[ -z "$(pidof glances)" ] && ${TERM_USED}${BG12} $NAME"Glances" $TITLE"Glances" -e glances -e
+			## Start weather monitor
+			#[ -z "$(pidof ctw)" ] && ${TERM_USED}${BG10} $NAME"Weather" $TITLE"Weather" -e ctw $WEATHER_CODE
+			## Start clock
+			#[ -z "$(pidof tty-clock)" ] && ${TERM_USED} $NAME"Clock" $TITLE"Clock" -e tty-clock -tc
+		;;
+		4)	
+			if [ -d "$PATH_TO_DATA/home" ] || [ $PRIV_ENABLED -eq 0 ]; then
+				${TERM_USED}${BG5} $NAME"Logs" $TITLE"Logs" -e sudo journalctl -f
+			fi
+		;;
+		5)	if [ -d "$PATH_TO_DATA/home" ] || [ $PRIV_ENABLED -eq 0 ]; then
+				[ -d "$PATH_TO_DATA/media/truecrypt1/private/transmission-daemon" ] && [ -z "$(pidof multitail)" ] && ${TERM_USED}${BG11} $NAME"More Logs" $TITLE"More Logs" -e more_logs
+			fi
+		;;
+		6)
+			subl3 &
+			#sudo subl3
+		;;
+		7)	if [ -d "$PATH_TO_DATA/home" ] || [ $PRIV_ENABLED -eq 0 ]; then
+				## Start IM server and IRC client
+				#[ -z "$(pidof bitlbee)" ] && ${TERM_USED} $NAME"bitlbee" -e sudo bitlbee -D
+				[ -z "$(pidof weechat)" ] && ${TERM_USED}${BG4} $NAME"IRC1" $TITLE"IRC1" -e weechat && ${TERM_USED}${BG8} $NAME"IRC2" $TITLE"IRC2" -e weechat -d ~/.weechat-priv
+			fi
+		;;
+		8)	if [ -d "$PATH_TO_DATA/home" ] || [ $PRIV_ENABLED -eq 0 ]; then
+				if [ -z "$(pidof firefox)" ]; then
+					firefox --profilemanager &
+					firefox -P tubefox -no-remote &
+				fi
+				#if [ -z "$(pidof vimb)" ]; then
+				#	vb -u "https://wiki.archlinux.org/index.php/User:Pdq" &
+				#	vbp -u "https://www.linuxdistrocommunity.com/forums/index.php" &
+				#fi
+			fi
+		;;
+		9)
+			if [ -d "$PATH_TO_DATA/home" ] || [ $PRIV_ENABLED -eq 0 ]; then
+				SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0 steam --console &
+			fi
+		;;
+		10)
+			export http_proxy=http://127.0.0.1:8118
+			[ -z "$(pidof canto-curses)" ] && ${TERM_USED}${BG15} $NAME"RSS" $TITLE"RSS" -e canto-curses
+			export http_proxy=
+		;;
+		11)	
+			if [ -d "$PATH_TO_DATA/home" ] || [ $PRIV_ENABLED -eq 0 ]; then
+				if [ -d "$VID_QUEUE" ] ; then
+					[ -z "$(pidof vlc)" ] && vlc "$VID_QUEUE" &
+				fi
+			fi
+		;;
+		12)	
+			[ -z "$(pidof cmatrix)" ] && ${TERM_USED} $NAME"Shall we play a game" $TITLE"Shall we play a game" -e cmatrix -C cyan
+			#mplayer ~/nude.mp4 -noconsolecontrols -loop 0 &
+		;;
+	esac
+done
 
-## Daemons
+## Daemons examples
 
 ## redshift screen brightness softening
 ## Usage: xflux [-z zipcode | -l latitude] [-g longitude] [-k colortemp (default 3400)] [-nofork]
 ## protip: Say where you are (use -z or -l).
 #[ -z "$(pidof xflux)" ] && xflux -z 37213 -k 3800
-
-## Start dmenu clipboard (dmenuclip/dmenurl)
-#killall -q clipbored
-#clipbored
-
-## Terminal applications
-
-## Main terms
-#${TERM_USED}${BG3} $NAME"Term" $TITLE"Term"
-#${TERM_USED}${BG7} $NAME"tERM" $TITLE"tERM"
-
-## Start system logs
-#${TERM_USED}${BG5} $NAME"Logs" $TITLE"Logs" -e sudo journalctl -f
-
-## Start top (terminal task manager)
-#[ -z "$(pidof htop)" ] && ${TERM_USED} $NAME"HTOP" $TITLE"HTOP" -e htop
-
-## Start CPU frequency monitor
-#[ -z "$(pidof cpu_freq)" ] && ${TERM_USED}${BG1} $NAME"CPU Freq" $TITLE"CPU Freq" -e cpu_freq
-
-## Start GPU monitor
-#[ -z "$(pidof nvidia-smi)" ] && ${TERM_USED}${BG14} $NAME"GPU" $TITLE"GPU" -e nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
-
-## Start RSS reader
-#[ -z "$(pidof canto-curses)" ] && ${TERM_USED}${BG15} $NAME"RSS" $TITLE"RSS" -e canto-curses
-
-## Start RSS reader
-#[ -z "$(pidof glances)" ] && ${TERM_USED}${BG12} $NAME"Glances" $TITLE"Glances" -e glances -e
-
-## Start weather monitor
-#[ -z "$(pidof ctw)" ] && ${TERM_USED}${BG10} $NAME"Weather" $TITLE"Weather" -e ctw $WEATHER_CODE
-
-## Start clock
-#[ -z "$(pidof tty-clock)" ] && ${TERM_USED} $NAME"Clock" $TITLE"Clock" -e tty-clock -tc
-
-## Start CPU temperature monitor
-#[ -z "$(pidof cpus_temp)" ] && ${TERM_USED}${BG13} $NAME"CPUS" $TITLE"CPUS" -e cpus_temp
-
-## Start torrent client
-#[ -z "$(pidof transmission-remote-cli)" ] && ${TERM_USED} $NAME"Transmission" $TITLE"Transmission" -e transmission-remote-cli -c 192.168.0.10:9091 
-
-## Start system monitor
-#[ -z "$(pidof gkrellm)" ] && gkrellm &
-
-## Start Internet radio player
-#[ -z "$(pidof pyradio)" ] && ${TERM_USED} $NAME"Radio" $TITLE"Radio" -e pyradio 
-
-## Start dolphin
-#[ -z "$(pidof dolphin)" ] && dolphin &
-
-## Start youtube viewer
-#[ -z "$(pidof youtube-viewer)" ] && ${TERM_USED}${BG6} $NAME"youtube" $TITLE"youtube" -e youtube-viewer --prefer-https --prefer-webm --use-colors --quiet -7 -S -C --mplayer="/usr/bin/vlc" --mplayer-args="-q"
-
-## Start Arch Linux update notifier
-#[ -z "$(pidof aarchup)" ] && /usr/bin/aarchup --loop-time 60 --aur --icon /usr/share/aarchup/archlogo.svg &
-
-## Start sillyness
-#[ -z "$(pidof cmatrix)" ] && ${TERM_USED} $NAME"Shall we play a game" $TITLE"Shall we play a game" -e cmatrix -C cyan
-#mplayer ~/nude.mp4 -noconsolecontrols -loop 0 &
-
-## Default startup applications (If private data is mounted or there is no private data to be mounted)
-if [ -d "$PATH_TO_DATA/home" ] || [ $PRIV_ENABLED -eq 0 ]; then
-
-	## Daemons
-
-	## Start IM server and IRC client
-	#[ -z "$(pidof bitlbee)" ] && ${TERM_USED} $NAME"bitlbee" -e sudo bitlbee -D
-	[ -z "$(pidof weechat)" ] && ${TERM_USED}${BG4} $NAME"IRC1" $TITLE"IRC1" -e weechat && ${TERM_USED}${BG8} $NAME"IRC2" $TITLE"IRC2" -e weechat -d ~/.weechat-priv
-
-	## Start custom keyboard shortcuts
-	#[ -z "$(pidof xbindkeys)" ] && xbindkeys &
-
-	## Terminal applications
-
-	## Start music on console player
-	#${TERM_USED}${BG9} $NAME"MOCP" $TITLE"MOCP" -e mocp
-
-	## Start local logs
-	#[ -d "$PATH_TO_DATA/media/truecrypt1/private/transmission-daemon" ] && [ -z "$(pidof multitail)" ] && ${TERM_USED}${BG11} $NAME"More Logs" $TITLE"More Logs" -e multitail -ci red -n 6 -f "$PATH_TO_DATA/media/truecrypt1/private/transmission-daemon/posttorrent.log"
-	#[ -d "$PATH_TO_DATA/media/truecrypt1/private/transmission-daemon" ] && [ -z "$(pidof multitail)" ] && ${TERM_USED}${BG11} $NAME"More Logs" $TITLE"More Logs" -e more_logs
-
-	## GUI applications
-
-	## Start steam
-	#[ -z "$(pidof steam)" ] &&
-	SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0 steam --console &
-
-	## Start vlc media player and playlist
-	if [ -d "$VID_QUEUE" ] ; then
-		[ -z "$(pidof vlc)" ] && vlc "$VID_QUEUE" &
-	fi
-
-	## Start text editor
-	#[ -z "$(pidof sublime_text)" ] && subl3 &
-
-	## Start video editor
-	#[ -z "$(pidof kdenlive)" ] && kdenlive &
-
-	## Start web browser
-	#[ -z "$(pidof firefox)" ] && firefox &
-	#if [ -z "$(pidof vimb)" ]; then
-	#	vb -u "https://wiki.archlinux.org/index.php/User:Pdq" &
-	#	vbp -u "https://www.linuxdistrocommunity.com/forums/index.php" &
-	#fi
-
-	## Start dropbox
-	#[ -z "$(pidof dropbox)" ] && dropboxd &
-
-	## Start email client (start delay of 30 seconds to give proxy time to start)
-	#[ -z "$(pidof claws-mail)" ] && sleep 30s && usewithtor claws-mail &
-	#[ -z "$(pidof mutt)" ] && sleep 1m && ${TERM_USED} $NAME"Mail" $TITLE"Mail" -e torsocks mutt
-fi
 
 exit 0
