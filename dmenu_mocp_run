@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+j4-dmenu-desktop --dmenu="dmenu -nb '#232323' -sb '#5391D0' -sf '#ffffff' -nf '#cccccc' -fn '-xos4-terminus-medium-r-*-*-13-*' -p MOO:"
+
+exit 0

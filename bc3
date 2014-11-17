@@ -15,8 +15,19 @@ if [[ "$1" == "open" ]]; then
 elif [[ "$1" == "close" ]]; then
 	umount /media/backup3
 	cryptsetup close backup3
+# test
+elif [[ "$1" == "test" ]]; then
+	if [[ -f "/media/backup3/test" ]]; then
+		exit 0
+	else
+	    exit 1
+	fi
 else
-  	printf "%s\n" "Options are open or close."
+  	printf "%s\n" "Options are open or close or test."
 fi
 
-exit 0
+if [[ -f "/media/backup3/test" ]]; then
+    exit 0
+else
+    exit 1
+fi

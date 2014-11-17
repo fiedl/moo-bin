@@ -14,7 +14,7 @@ _PLAYER=vlc
 
 case "$1" in
 	-video)
-		if torsocks wget "$2" --spider 2>&1 | grep --quiet "200 OK" ; then 
+		if torsocks wget "$2" --spider 2>&1 | grep --quiet "200 OK" ; then
 			_PROXY=$(zenity --list --radiolist --width 200 --height 230 --text "Flash sucks" --title="" --column "Choice" --column "Use Proxy" TRUE Yes FALSE No)
 			if [ "$_PLAYER" = "vlc" ]; then
 				_RES=$(zenity --list --radiolist --width 200 --height 200 --text "Flash sucks" --title="Play video in VLC" --column "Choice" --column "Resolution" TRUE 240p FALSE 480p FALSE 720p FALSE 1080p)
@@ -46,7 +46,7 @@ case "$1" in
 			# 		zenity --info --text "You must auth in to youtube.com. In the proceeding dialog, login then type :q to return."
 			# 		urxvtc -name "Auth" -e youtube-viewer $_USEPROX2--prefer-https --login
 			# 		zenity  --question --title "Alert"  --text "Would you like to now re-try the action?"
-			# 		if [ $? -eq 0 ] ; then 
+			# 		if [ $? -eq 0 ] ; then
 			# 			moo=$(youtube-viewer $_USEPROX2--prefer-https --noI $_DOACTION | grep --quiet "has been") && "yes"
 			# 			if [ "$moo" == "yes" ]; then
 			# 				zenity --info --text "Video has been successfully $_ACTIONd!"

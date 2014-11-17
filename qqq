@@ -1,26 +1,15 @@
 #!/bin/bash
 
-# Linux Distro Community Podcast
+# welcome audio message
+mplayer "${HOME}/.config/awesome/sounds/voice-welcome.ogg"
 
-starring="setkeh preecher"
+mplayer "${HOME}/.config/awesome/sounds/voice-please-confirm.ogg"
 
-Show_Format() {
-	for segment in "News_and_Current_Events \
-					Forum_Topics \
-					Free_and_Open_Source_News \
-					Monthly_Giveaways \
-					Linux_Gaming \
-					Special_Guests"; do
-		echo ${segment//[[:blank:]]/}
-	done
-}
+mplayer "${HOME}/.config/awesome/sounds/voice-piy.ogg"
 
-live_show_begins="Sunday 11:00PM EST / Monday 03:00AM UTC"
-## Youtube and download links available after Podcast has ended
+mplayer "${HOME}/.config/awesome/sounds/voice-accepted.ogg"
 
-echo "Welcome to the Linux Distro Community Podcast"
-echo "Hosted by: $starring"
-echo "Live at: $live_show_begins"
-Show_Format
+#mplayer "${HOME}/.config/awesome/sounds/voice-access-denied.ogg"
+
 
 exit 0

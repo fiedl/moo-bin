@@ -1,5 +1,5 @@
 #!/bin/bash
-# manage backup1
+# manage Storage
 
 # must be run as root
 if [[ $EUID != 0 ]]; then
@@ -9,14 +9,25 @@ fi
 
 # unecrypt and mount container
 if [[ "$1" == "open" ]]; then
-	cryptsetup open --type luks /dev/sdz1 backup1
-	mount -t ext4 /dev/mapper/backup1 /media/backup1
+	cryptsetup open --type luks /dev/sdc1 Storage
+	mount -t ext4 /dev/mapper/Storage /media/Storage
 # close
 elif [[ "$1" == "close" ]]; then
-	umount /media/backup1
-	cryptsetup close backup1
+	umount /media/Storage
+	cryptsetup close Storage
+# test
+elif [[ "$1" == "test" ]]; then
+	if [[ -f "/media/Storage/test" ]]; then
+		exit 0
+	else
+	    exit 1
+	fi
 else
-  	printf "%s\n" "Options are open or close."
+  	printf "%s\n" "Options are open or close or test."
 fi
 
-exit 0
+if [[ -f "/media/Storage/test" ]]; then
+    exit 0
+else
+    exit 1
+fi
