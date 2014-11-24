@@ -6,9 +6,9 @@
 ## Start config
 
 ## Path to video directory queue
-#VID_QUEUE="$HOME/Videos/24 Complete Series DVDRip XviD/Season.06"
+VID_QUEUE="$HOME/Videos/24 Complete Series DVDRip XviD/Season.06"
 #VID_QUEUE="$HOME/Videos/tempvideo"
-VID_QUEUE="$HOME/Videos/movies"
+#VID_QUEUE="$HOME/Videos/movies"
 #VID_QUEUE="$HOME/Videos/Star Trek TNG"
 #VID_QUEUE="$HOME/Videos/Star Trek Voyager"
 #VID_QUEUE="$HOME/Videos/Sliders"
@@ -17,7 +17,7 @@ VID_QUEUE="$HOME/Videos/movies"
 TERM_USED=urxvtc
 
 # Weather code
-WEATHER_CODE=$(cat $HOME/.weather_key)
+#WEATHER_CODE=$(cat $HOME/.weather_key)
 
 ## LAN addresses
 MOUNT_LAN1_FILESYSTEM=0 ## 1/0 (On/Off)
@@ -52,8 +52,8 @@ ask_something() {
 
 ## Auth sshkey
 echo "SSHkey Authorize:"
-mplayer "${HOME}/.config/awesome/sounds/voice-please-confirm.ogg"
-val $(keychain --eval --agents ssh -Q --quiet id_rsa)
+mplayer "${HOME}/.config/moo-sounds/sounds/voice-please-confirm.ogg" -volume 60 > /dev/null 2>&1
+eval $(keychain --eval --agents ssh -Q --quiet id_rsa)
 
 ## Define terminal titles, names and backgrounds
 if [ "${TERM_USED}" == "urxvtc" ]; then
@@ -61,7 +61,21 @@ if [ "${TERM_USED}" == "urxvtc" ]; then
 	[ -z "$(pidof urxvtd)" ] && urxvtd -q -o -f
 	NAME='-name '
 	TITLE='-title '
-	BG1=BG2=BG3=BG4=BG5=BG6=BG7=BG8=BG9=BG10=BG11=BG12=BG13=BG14=BG15=''
+	BG1=''
+	BG2=''
+	BG3=''
+	BG4=''
+	BG5=''
+	BG6=''
+	BG7=''
+	BG8=''
+	BG9=''
+	BG10=''
+	BG11=''
+	BG12=''
+	BG13=''
+	BG14=''
+	BG15=''
 else
 	# assumes you're using terminology
 	NAME='--name='
@@ -88,19 +102,23 @@ for mount in $mounts
 do
 	while true
 	do
-		if [ ! sudo $mount test ] ; then
-			echo "Mount $mount:"
-			mplayer "${HOME}/.config/awesome/sounds/voice-piy.ogg"
-			sudo $mount open
-		else
+		sudo $mount test
+		if [ $? = 0 ] ; then
 			echo "Mounted $mount"
 			break
+		else
+			echo "Mount $mount:"
+			mplayer "${HOME}/.config/moo-sounds/sounds/voice-piy.ogg" -volume 60 > /dev/null 2>&1
+			sudo $mount open
 		fi
 	done
 done
 
 ## Start devilspie2 for client window rules
-[ -z "$(pidof devilspie2)" ] && devilspie2 &
+if [[ "$USER" == "pdq" ]]; then
+	kill $(pidof devilspie2)
+	devilspie2 &
+fi
 
 ## Start xbindkeys for keyboard shortcuts for dmenu, dmenu_mocp, etc
 #[ -z "$(pidof xbindkeys)" ] && xbindkeys &
@@ -131,6 +149,7 @@ fi
 ## Start terminals
 ${TERM_USED}${BG3} $NAME"Term" $TITLE"Term"
 ${TERM_USED}${BG7} $NAME"tERM" $TITLE"tERM"
+${TERM_USED}${BG9} $NAME"TermTerm" $TITLE"TermTerm"
 
 ## Start root term
 ${TERM_USED}${BG5} $NAME"Sysadmin" $TITLE"Sysadmin" -e sudo su
@@ -173,42 +192,51 @@ export http_proxy=
 question="Start web browsers (Y/N)?\n"
 if ask_something; then
 	## Start firefox profiles
-	if [ -d "$HOME/.mozilla/firefox" ]; then
-		if [ -z "$(pidof firefox)" ]; then
-			#firejail firefox --profilemanager &
-			#firejail firefox -P tubefox -no-remote &
-			firejail firefox -P noproxyfox -no-remote &
-		fi
+	if [ -d "$HOME/.mozilla/firefox" ] && [ -z "$(pidof firefox)" ]; then
+		#firejail firefox --profilemanager &
+		#firejail firefox -P tubefox -no-remote &
+		firejail firefox -P noproxyfox -no-remote &
 	fi
 
 	## Start tor-browser-en
 	if [ -d "$HOME/.tor-browser-en/INSTALL" ]; then
-			firejail tor-browser-en &
-		fi
+		firejail tor-browser-en &
 	fi
 fi
 
 ## Start steam
-question="Start steam (Y/N)?\n"
-if ask_something; then
-	if [ -d "/media/Storage/games" ]; then
-		SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0 [ -z "$(pidof steam)" ] && steam --console &
+if [ ! -z "$(pidof steam)" ] && [ -d "/media/Storage/games" ]; then
+	question="Start steam (Y/N)?\n"
+	if ask_something; then
+		SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0 steam --console &
 	fi
 fi
 
 ## Start vlc playlist
-if [ -d "$HOME/Videos/tempvideo" ]; then
-	if [ -d "$VID_QUEUE" ] ; then
-		[ -z "$(pidof vlc)" ] && firejail vlc "$VID_QUEUE" &
-	fi
+if [ ! -z "$(pidof steam)" ] && [ -d "$HOME/Videos/tempvideo" ] && [ -d "$VID_QUEUE" ] ; then
+	[ -z "$(pidof vlc)" ] && firejail vlc "$VID_QUEUE" &
 fi
 
 ## Loaded desktop conformation sounds
-mplayer "${HOME}/.config/awesome/sounds/voice-accepted.ogg"
+mplayer "${HOME}/.config/moo-sounds/sounds/voice-accepted.ogg" -volume 60 > /dev/null 2>&1
+
+## Start launcher
+[ -z "$(pidof synapse)" ] && synapse &
+
 
 ## Reload and refresh client windows
-kill $(pidof devilspie2)
-devilspie2 &
+if [[ "$USER" == "pdq" ]]; then
+	kill $(pidof devilspie2)
+	(sleep 1s && devilspie2) &
+fi
+
+## Compositor
+kill $(pidof compton)
+compton -b &
+
+## Panel
+kill $(pidof lxpanel)
+(sleep 1s && lxpanel) &
 
 ## Daemons examples
 ## redshift screen brightness softening
