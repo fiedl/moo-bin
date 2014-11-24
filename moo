@@ -235,8 +235,8 @@ kill $(pidof compton)
 compton -b &
 
 ## Panel
-kill $(pidof lxpanel)
-(sleep 1s && lxpanel) &
+#kill $(pidof lxpanel)
+#(sleep 1s && lxpanel) &
 
 ## Daemons examples
 ## redshift screen brightness softening
