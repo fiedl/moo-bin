@@ -221,7 +221,7 @@ fi
 mplayer "${HOME}/.config/moo-sounds/sounds/voice-accepted.ogg" -volume 60 > /dev/null 2>&1
 
 ## Start launcher
-[ -z "$(pidof synapse)" ] && synapse &
+#[ -z "$(pidof synapse)" ] && synapse &
 
 
 ## Reload and refresh client windows
@@ -231,8 +231,8 @@ if [[ "$USER" == "pdq" ]]; then
 fi
 
 ## Compositor
-kill $(pidof compton)
-compton -b &
+#kill $(pidof compton)
+#compton -b &
 
 ## Panel
 #kill $(pidof lxpanel)
