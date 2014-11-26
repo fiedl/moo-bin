@@ -115,10 +115,10 @@ do
 done
 
 ## Start devilspie2 for client window rules
-if [[ "$USER" == "pdq" ]]; then
-	kill $(pidof devilspie2)
-	devilspie2 &
-fi
+#if [[ "$USER" == "pdq" ]]; then
+#	kill $(pidof devilspie2)
+#	devilspie2 &
+#fi
 
 ## Start xbindkeys for keyboard shortcuts for dmenu, dmenu_mocp, etc
 #[ -z "$(pidof xbindkeys)" ] && xbindkeys &
@@ -225,10 +225,10 @@ mplayer "${HOME}/.config/moo-sounds/sounds/voice-accepted.ogg" -volume 60 > /dev
 
 
 ## Reload and refresh client windows
-if [[ "$USER" == "pdq" ]]; then
-	kill $(pidof devilspie2)
-	(sleep 1s && devilspie2) &
-fi
+#if [[ "$USER" == "pdq" ]]; then
+#	kill $(pidof devilspie2)
+#	(sleep 1s && devilspie2) &
+#fi
 
 ## Compositor
 #kill $(pidof compton)
