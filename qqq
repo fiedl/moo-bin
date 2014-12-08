@@ -1,15 +1,24 @@
 #!/bin/bash
 
-# welcome audio message
-mplayer "${HOME}/.config/awesome/sounds/voice-welcome.ogg"
+CHOICES=$(dialog --stdout --ok-label "COMMIT" \
+--backtitle "Dragonkeepers Gentoo 1st line Installer v0.1" \
+--title "Setup" \
+--form "Script options" \
+15 50 0 \
+"Username:" 1 1 "$USER1" 1 10 20 0 \
+"Shell:" 2 1 "$SHELL1" 2 10 15 0 \
+"Hostname:" 3 1 "$HOSTNAME1" 3 10 20 0 \
+"HDD/PART:" 4 1 "$HDD1" 4 10 40 0 \
+|| echo "${CHOICES}")
 
-mplayer "${HOME}/.config/awesome/sounds/voice-please-confirm.ogg"
-
-mplayer "${HOME}/.config/awesome/sounds/voice-piy.ogg"
-
-mplayer "${HOME}/.config/awesome/sounds/voice-accepted.ogg"
-
-#mplayer "${HOME}/.config/awesome/sounds/voice-access-denied.ogg"
-
+echo $USER1
+echo
+echo $SHELL1
+echo
+echo $HOSTNAME1
+echo
+echo $HDD1
+echo
+#echo $CHOICES
 
 exit 0
