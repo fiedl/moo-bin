@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+
+kill $(pidof compton)
+compton -b
+
+kill $(pidof devilspie2)
+devilspie2 &
+
+nitrogen --restore

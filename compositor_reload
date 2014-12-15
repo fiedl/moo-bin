@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+kill $(pidof compton)
+compton -b

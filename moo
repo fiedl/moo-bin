@@ -29,6 +29,9 @@ PATH_TO_DATA=/mnt/linux-$USER1
 ## Mount encrypted drives
 mounts="bc1 bc3"
 
+if [ -f /usr/bin/firejail ]; then
+	FIREJAIL="firejail "
+fi
 ## End config
 
 ## Start code
@@ -158,16 +161,16 @@ ${TERM_USED}${BG5} $NAME"Sysadmin" $TITLE"Sysadmin" -e sudo su
 [ -z "$(pidof htop)" ] && ${TERM_USED} $NAME"HTOP" $TITLE"HTOP" -e htop
 
 ## Start CPU frequency monitor
-[ -z "$(pidof cpu_freq)" ] && ${TERM_USED}${BG1} $NAME"CPU Freq" $TITLE"CPU Freq" -e firejail cpu_freq
+[ -z "$(pidof cpu_freq)" ] && ${TERM_USED}${BG1} $NAME"CPU Freq" $TITLE"CPU Freq" -e ${FIREJAIL}cpu_freq
 
 ## Start GPU monitor
-[ -z "$(pidof nvidia-smi)" ] && ${TERM_USED}${BG14} $NAME"GPU" $TITLE"GPU" -e firejail nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
+[ -z "$(pidof nvidia-smi)" ] && ${TERM_USED}${BG14} $NAME"GPU" $TITLE"GPU" -e ${FIREJAIL}nvidia-smi -l 5 -q -d "MEMORY,TEMPERATURE"
 
 ## Start CPU temperature monitor
-[ -z "$(pidof cpus_temp)" ] && ${TERM_USED}${BG13} $NAME"CPUS" $TITLE"CPUS" -e firejail cpus_temp
+[ -z "$(pidof cpus_temp)" ] && ${TERM_USED}${BG13} $NAME"CPUS" $TITLE"CPUS" -e ${FIREJAIL}cpus_temp
 
 ## Start clock
-#[ -z "$(pidof tty-clock)" ] && ${TERM_USED} $NAME"Clock" $TITLE"Clock" -e firejail tty-clock -tc
+#[ -z "$(pidof tty-clock)" ] && ${TERM_USED} $NAME"Clock" $TITLE"Clock" -e ${FIREJAIL}tty-clock -tc
 
 ## Start System log
 ${TERM_USED}${BG5} $NAME"Logs" $TITLE"Logs" -e sudo journalctl -f
@@ -176,12 +179,12 @@ ${TERM_USED}${BG5} $NAME"Logs" $TITLE"Logs" -e sudo journalctl -f
 if [ -d "$HOME/.weechat/logs" ]; then
 	## Start IM server and IRC client
 	#[ -z "$(pidof bitlbee)" ] && ${TERM_USED} $NAME"bitlbee" -e sudo bitlbee -D
-	[ -z "$(pidof weechat)" ] && ${TERM_USED}${BG4} $NAME"IRC1" $TITLE"IRC1" -e firejail weechat && ${TERM_USED}${BG8} $NAME"IRC2" $TITLE"IRC2" -e firejail weechat -d ~/.weechat-priv
+	[ -z "$(pidof weechat)" ] && ${TERM_USED}${BG4} $NAME"IRC1" $TITLE"IRC1" -e ${FIREJAIL}weechat && ${TERM_USED}${BG8} $NAME"IRC2" $TITLE"IRC2" -e ${FIREJAIL}weechat -d ~/.weechat-priv
 fi
 
 ## Start RSS feed reader and daemon, using proxy
 export http_proxy=http://127.0.0.1:8118
-[ -z "$(pidof canto-curses)" ] && ${TERM_USED}${BG15} $NAME"RSS" $TITLE"RSS" -e firejail canto-curses
+[ -z "$(pidof canto-curses)" ] && ${TERM_USED}${BG15} $NAME"RSS" $TITLE"RSS" -e ${FIREJAIL}canto-curses
 export http_proxy=
 
 ## Start email client (start delay of 5 seconds to give proxy time to start)
@@ -193,14 +196,14 @@ question="Start web browsers (Y/N)?\n"
 if ask_something; then
 	## Start firefox profiles
 	if [ -d "$HOME/.mozilla/firefox" ] && [ -z "$(pidof firefox)" ]; then
-		#firejail firefox --profilemanager &
-		#firejail firefox -P tubefox -no-remote &
-		firejail firefox -P noproxyfox -no-remote &
+		#${FIREJAIL}firefox --profilemanager &
+		#${FIREJAIL}firefox -P tubefox -no-remote &
+		${FIREJAIL}firefox -P noproxyfox -no-remote &
 	fi
 
 	## Start tor-browser-en
 	if [ -d "$HOME/.tor-browser-en/INSTALL" ]; then
-		firejail tor-browser-en &
+		${FIREJAIL}tor-browser-en &
 	fi
 fi
 
@@ -214,7 +217,7 @@ fi
 
 ## Start vlc playlist
 if [ ! -z "$(pidof steam)" ] && [ -d "$HOME/Videos/tempvideo" ] && [ -d "$VID_QUEUE" ] ; then
-	[ -z "$(pidof vlc)" ] && firejail vlc "$VID_QUEUE" &
+	[ -z "$(pidof vlc)" ] && ${FIREJAIL}vlc "$VID_QUEUE" &
 fi
 
 ## Loaded desktop conformation sounds

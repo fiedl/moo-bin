@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+kill $(pidof devilspie2)
+devilspie2 &
