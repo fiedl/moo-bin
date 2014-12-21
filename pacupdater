@@ -1,26 +1,33 @@
 #!/usr/bin/bash
 # pacman update
-echo ":: updating system..."
-echo "sudo pacman -Syyu"
-sudo pacman -Syu
-echo " "
-echo ":: update complete..."
-echo "Updated main packages. [Enter] to update AUR packages."
-notify-send "Main" \
-            "Update complete" \
-            -i /usr/share/moo-tools/mooOS.png
-read foobar
-echo ":: updating system [AUR]..."
-echo "pacaur -Syua"
-#packer -Syu --auronly
-pacaur -Syua
-#yaourt -Syua
-echo " "
-echo ":: update complete..."
-echo "Updated AUR packages. [Enter] to close."
-notify-send "[AUR]" \
-            "Update complete" \
-            -i /usr/share/moo-tools/mooOS.png
-read foobar
+dialog --clear --backtitle "mooOS Package Management" --title "Update Official Packages" --defaultyes --yesno "Updating system\n\nsudo pacman -Syu" 10 40
+
+if [ $? = 0 ] ; then
+    sudo pacman -Syu
+    echo "Updated Official packages. [Enter] to proceed."
+    read foobar
+    dialog --clear --backtitle "mooOS Package Management" --title "Update Official Packages" --msgbox "Update complete" 10 40
+    notify-send "Main" \
+                "Update complete" \
+                -i /usr/share/moo-tools/mooOS.png
+fi
+
+dialog --clear --backtitle "mooOS Package Management" --title "Update AUR packages" --defaultyes --yesno "Updating AUR packages\npacaur -Syu" 10 30
+
+if [ $? = 0 ] ; then
+    dialog --clear --backtitle "mooOS Package Management" --title "Update AUR packages" --defaultno --yesno "With --devel?" 10 30
+    if [ $? = 0 ] ; then
+        devel=" --devel"
+    fi
+
+    pacaur -Syua${devel}
+    echo "Updated AUR packages. [Enter] to proceed."
+    read foobar
+    dialog --clear --backtitle "mooOS Package Management" --title "Update AUR Packages" --msgbox "Update complete" 10 40
+    notify-send "[AUR]" \
+                "Update complete" \
+                -i /usr/share/moo-tools/mooOS.png
+    read foobar
+fi
 
 exit 0
