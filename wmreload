@@ -6,4 +6,7 @@ compton -b
 kill $(pidof devilspie2)
 devilspie2 &
 
+kill $(pidof roccateventhandler)
+roccateventhandler &
+
 nitrogen --restore

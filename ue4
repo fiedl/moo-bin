@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd ~/github/UnrealEngine/Engine/Binaries/Linux
+
+./UE4Editor -opengl4
