@@ -183,9 +183,9 @@ if [ -d "$HOME/.weechat/logs" ]; then
 fi
 
 ## Start RSS feed reader and daemon, using proxy
-export http_proxy=http://127.0.0.1:8118
-[ -z "$(pidof canto-curses)" ] && ${TERM_USED}${BG15} $NAME"RSS" $TITLE"RSS" -e ${FIREJAIL}canto-curses
-export http_proxy=
+#export http_proxy=http://127.0.0.1:8118
+#[ -z "$(pidof canto-curses)" ] && ${TERM_USED}${BG15} $NAME"RSS" $TITLE"RSS" -e ${FIREJAIL}canto-curses
+#export http_proxy=
 
 ## Start email client (start delay of 5 seconds to give proxy time to start)
 #[ -z "$(pidof claws-mail)" ] && sleep 5s && usewithtor claws-mail &
@@ -195,11 +195,11 @@ export http_proxy=
 question="Start web browsers (Y/N)?\n"
 if ask_something; then
 	## Start firefox profiles
-	if [ -d "$HOME/.mozilla/firefox" ] && [ -z "$(pidof firefox)" ]; then
-		#${FIREJAIL}firefox --profilemanager &
-		#${FIREJAIL}firefox -P tubefox -no-remote &
-		${FIREJAIL}firefox -P noproxyfox -no-remote &
-	fi
+	#if [ -d "$HOME/.mozilla/firefox" ] && [ -z "$(pidof firefox)" ]; then
+		##${FIREJAIL}firefox --profilemanager &
+		##${FIREJAIL}firefox -P tubefox -no-remote &
+	#	${FIREJAIL}firefox -P noproxyfox -no-remote &
+	#fi
 
 	## Start tor-browser-en
 	if [ -d "$HOME/.tor-browser-en/INSTALL" ]; then
