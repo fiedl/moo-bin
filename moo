@@ -150,12 +150,12 @@ if [ $MOUNT_LAN1_FILESYSTEM -eq 1 ]; then
 fi
 
 ## Start terminals
-${TERM_USED}${BG3} $NAME"Term" $TITLE"Term"
-${TERM_USED}${BG7} $NAME"tERM" $TITLE"tERM"
+#${TERM_USED}${BG3} $NAME"Term" $TITLE"Term"
+#${TERM_USED}${BG7} $NAME"tERM" $TITLE"tERM"
 ${TERM_USED}${BG9} $NAME"TermTerm" $TITLE"TermTerm"
 
 ## Start root term
-${TERM_USED}${BG5} $NAME"Sysadmin" $TITLE"Sysadmin" -e sudo su
+#${TERM_USED}${BG5} $NAME"Sysadmin" $TITLE"Sysadmin" -e sudo su
 
 ## Start top (terminal task manager)
 [ -z "$(pidof htop)" ] && ${TERM_USED} $NAME"HTOP" $TITLE"HTOP" -e htop
@@ -176,11 +176,12 @@ ${TERM_USED}${BG5} $NAME"Sysadmin" $TITLE"Sysadmin" -e sudo su
 ${TERM_USED}${BG5} $NAME"Logs" $TITLE"Logs" -e sudo journalctl -f
 
 ## Start IRC clients
-if [ -d "$HOME/.weechat/logs" ]; then
+#if [ -d "$HOME/.weechat/logs" ]; then
 	## Start IM server and IRC client
 	#[ -z "$(pidof bitlbee)" ] && ${TERM_USED} $NAME"bitlbee" -e sudo bitlbee -D
-	[ -z "$(pidof weechat)" ] && ${TERM_USED}${BG4} $NAME"IRC1" $TITLE"IRC1" -e ${FIREJAIL}weechat && ${TERM_USED}${BG8} $NAME"IRC2" $TITLE"IRC2" -e ${FIREJAIL}weechat -d ~/.weechat-priv
-fi
+	#[ -z "$(pidof weechat)" ] && ${TERM_USED}${BG4} $NAME"IRC1" $TITLE"IRC1" -e ${FIREJAIL}weechat && ${TERM_USED}${BG8} $NAME"IRC2" $TITLE"IRC2" -e ${FIREJAIL}weechat -d ~/.weechat-priv
+	#[ -z "$(pidof weechat)" ] && ${TERM_USED}${BG4} $NAME"IRC1" $TITLE"IRC1" -e ${FIREJAIL}weechat
+#fi
 
 ## Start RSS feed reader and daemon, using proxy
 #export http_proxy=http://127.0.0.1:8118
@@ -192,8 +193,8 @@ fi
 #[ -z "$(pidof mutt)" ] && sleep 5s && ${TERM_USED} $NAME"Mail" $TITLE"Mail" -e torsocks mutt
 
 ## Start web browsers
-question="Start web browsers (Y/N)?\n"
-if ask_something; then
+#question="Start web browsers (Y/N)?\n"
+#if ask_something; then
 	## Start firefox profiles
 	#if [ -d "$HOME/.mozilla/firefox" ] && [ -z "$(pidof firefox)" ]; then
 		##${FIREJAIL}firefox --profilemanager &
@@ -202,23 +203,23 @@ if ask_something; then
 	#fi
 
 	## Start tor-browser-en
-	if [ -d "$HOME/.tor-browser-en/INSTALL" ]; then
-		${FIREJAIL}tor-browser-en &
-	fi
-fi
+#	if [ -d "$HOME/.tor-browser-en/INSTALL" ]; then
+#		${FIREJAIL}tor-browser-en &
+#	fi
+#fi
 
 ## Start steam
-if [ ! -z "$(pidof steam)" ] && [ -d "/media/Storage/games" ]; then
-	question="Start steam (Y/N)?\n"
-	if ask_something; then
-		SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0 steam --console &
-	fi
-fi
-
-## Start vlc playlist
-if [ ! -z "$(pidof steam)" ] && [ -d "$HOME/Videos/tempvideo" ] && [ -d "$VID_QUEUE" ] ; then
-	[ -z "$(pidof vlc)" ] && ${FIREJAIL}vlc "$VID_QUEUE" &
-fi
+# if [ ! -z "$(pidof steam)" ] && [ -d "/media/Storage/games" ]; then
+# 	question="Start steam (Y/N)?\n"
+# 	if ask_something; then
+# 		SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0 steam --console &
+# 	fi
+# fi
+# 
+# ## Start vlc playlist
+# if [ ! -z "$(pidof steam)" ] && [ -d "$HOME/Videos/tempvideo" ] && [ -d "$VID_QUEUE" ] ; then
+# 	[ -z "$(pidof vlc)" ] && ${FIREJAIL}vlc "$VID_QUEUE" &
+# fi
 
 ## Loaded desktop conformation sounds
 mplayer "${HOME}/.config/moo-sounds/sounds/voice-accepted.ogg" -volume 60 > /dev/null 2>&1
